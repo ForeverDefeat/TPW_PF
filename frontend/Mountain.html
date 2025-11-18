@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Montaña</title>
+  <link rel="stylesheet" href="css/estiloGlobal.css">
+  <link rel="stylesheet" href="css/estiloMountain.css">
+</head>
+
+<body>
+  <!-- ============================= -->
+  <!--   COMPONENTES DINÁMICOS      -->
+  <!-- ============================= -->
+
+  <!-- Aquí se carga header.html -->
+  <div id="header-container"></div>
+
+  <!-- Aquí se carga sidebar.html -->
+  <div id="sidebar-container"></div>
+
+
+  <!-- ============================= -->
+  <!--       CONTENIDO PRINCIPAL     -->
+  <!-- ============================= -->
+  <main id="main">
+    <!-- Banner -->
+    <div class="banner">
+      <div class="slides fade-in">
+        <img src="assets/mountainBanner1.jpg" alt="Foto 1">
+        <img src="assets/mountainBanner2.jpg" alt="Foto 2">
+        <img src="assets/mountainBanner3.jpg" alt="Foto 3">
+        <img src="assets/mountainBanner4.jpg" alt="Foto 4">
+      </div>
+      <button class="prev">&#10094;</button>
+      <!--  <p>Banner / Slider de imágenes (Ejemplo: fotos de turismo)</p> -->
+      <button class="next">&#10095;</button>
+
+    </div>
+
+    <!-- Destinos apilados -->
+    <h3>Destinos</h3>
+    <div class="destinos fade-in">
+      <div class="destino-card searchable-card">
+        <img src="assets/mountain1.png" alt="Montaña 1">
+        <div class="destino-info">
+          <h4>Montaña Colorada</h4>
+          <p>Formaciones rocosas rojizas que crean un paisaje casi lunar. Senderos de dificultad moderada con miradores
+            panorámicos ideales para fotografía al amanecer y atardecer. Recomendado para caminatas de medio día y
+            observación geológica.</p>
+        </div>
+      </div>
+
+      <div class="destino-card searchable-card">
+        <img src="assets/mountain2.png" alt="Montaña 2">
+        <div class="destino-info">
+          <h4>Montaña Verde</h4>
+          <p>Rodeada de bosques frondosos y praderas, perfecta para senderismo y picnic. Rutas bien señalizadas y zonas
+            de avistamiento de aves; apta para familias y caminantes principiantes. Temporada ideal: primavera y verano.
+          </p>
+        </div>
+      </div>
+
+      <div class="destino-card searchable-card">
+        <img src="assets/mountain3.png" alt="Montaña 3">
+        <div class="destino-info">
+          <h4>Montaña Blanca</h4>
+          <p>Cumbres con nieves persistentes que ofrecen paisajes espectaculares y actividades invernales. Requiere
+            equipo adecuado para frío y senderos más exigentes; popular entre esquiadores y montañistas. Mejores vistas
+            desde los miradores altos al mediodía.</p>
+        </div>
+      </div>
+
+      <div class="destino-card searchable-card">
+        <img src="assets/mountain4.png" alt="Montaña 4">
+        <div class="destino-info">
+          <h4>Montaña Azul</h4>
+          <p>Con lagunas cristalinas en la cima y amplias panorámicas que abarcan valles y cumbres lejanas. Ruta
+            recomendada para excursiones de día completo; ideal para fotografía de paisaje y observación de flora
+            alpina. Llevar agua y calzado resistente.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carrusel -->
+    <div class="carousel fade-in">
+      <h3>Top Montañas más visitadas</h3>
+      <div class="carousel-container">
+        <div class="carousel-card searchable-card">
+          <img src="assets/topmountain1.png" alt="Top Montaña 1">
+          <h4>Montaña Arcoiris</h4>
+          <p>Conocida por sus colores vibrantes y únicos.</p>
+        </div>
+        <div class="carousel-card searchable-card">
+          <img src="assets/topmountain2.png" alt="Top Montaña 2">
+          <h4>Montaña del Cóndor</h4>
+          <p>Destino popular para el avistamiento de aves.</p>
+        </div>
+        <div class="carousel-card searchable-card">
+          <img src="assets/topmountain3.jpg" alt="Top Montaña 3">
+          <h4>Montaña Mística</h4>
+          <p>Famosa por sus leyendas y sitios arqueológicos.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+  <!-- ============================= -->
+  <!--   SCRIPTS (ORDEN CORRECTO)   -->
+  <!-- ============================= -->
+
+  <!-- Carga componentes -->
+  <script src="js/components.js" type="module"></script>
+
+  <!-- Lógica principal -->
+  <script src="js/script.js" type="module"></script>
+</body>
+
+</html>

@@ -1,0 +1,13 @@
+<!-- Vista cuando NO ha iniciado sesión -->
+<div id="loggedOutView">
+    <a href="login.html" class="header-link">Iniciar Sesión</a>
+    <a href="register.html" class="header-link">Registrarse</a>
+</div>
+
+<!-- Vista cuando ha iniciado sesión -->
+<div id="loggedInView" style="display: none;">
+    <span id="usernameDisplay" class="username"></span>
+    <a href="add-destination.html" id="adminAddButton" class="header-link admin-button" style="display: none;">Añadir
+        Destino</a>
+    <button id="logoutButton" class="header-link logout-button">Cerrar Sesión</button>
+</div>

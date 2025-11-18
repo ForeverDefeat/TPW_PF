@@ -1,0 +1,76 @@
+/* Banner */
+.banner {
+  color: white;
+  padding: 60px 20px;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.banner h2 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+/* Newsletter form */
+.newsletter-form {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
+}
+
+.newsletter-form h3 {
+  margin-bottom: 15px;
+  color: #2c3e50;
+}
+
+.newsletter-form form {
+  display: flex;
+  flex-direction: column;
+}
+
+.newsletter-form label {
+  margin: 10px 0 5px;
+  font-weight: bold;
+}
+
+.newsletter-form input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.newsletter-form button {
+  margin-top: 15px;
+  padding: 10px;
+  background: #2c3e50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.newsletter-form button:hover {
+  background: #34495e;
+}
+
+/* Benefits */
+.benefits {
+  margin: 30px 0;
+}
+
+.benefits h3 {
+  margin-bottom: 10px;
+  color: #2c3e50;
+}
+
+.benefits ul {
+  list-style: disc;
+  margin-left: 20px;
+}
+
+.benefits ul li {
+  margin: 8px 0;
+  color: #555;
+}

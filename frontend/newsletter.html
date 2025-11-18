@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Turismo</title>
+    <link rel="stylesheet" href="css/estiloGlobal.css">
+    <link rel="stylesheet" href="css/estiloNewsletter.css">
+</head>
+
+<body>
+    <!-- ============================= -->
+    <!--   COMPONENTES DINÁMICOS      -->
+    <!-- ============================= -->
+
+    <!-- Aquí se carga header.html -->
+    <div id="header-container"></div>
+
+    <!-- Aquí se carga sidebar.html -->
+    <div id="sidebar-container"></div>
+
+
+    <!-- ============================= -->
+    <!--       CONTENIDO PRINCIPAL     -->
+    <!-- ============================= -->
+    <main id="main">
+        <!-- Banner -->
+        <div class="banner">
+            <h2>Suscríbete al Newsletter</h2>
+            <p>
+                Recibe en tu correo las últimas novedades, promociones y eventos turísticos de la región.
+            </p>
+        </div>
+
+        <!-- Formulario -->
+        <div class="newsletter-form">
+            <h3>Únete a nuestra comunidad viajera</h3>
+            <form>
+                <label for="name">Nombre completo:</label>
+                <input type="text" id="name" name="name" placeholder="Ingresa tu nombre" required>
+
+                <label for="email">Correo electrónico:</label>
+                <input type="email" id="email" name="email" placeholder="ejemplo@email.com" required>
+
+                <button type="submit">Suscribirse</button>
+            </form>
+        </div>
+
+        <!-- Beneficios -->
+        <div class="benefits">
+            <h3>¿Por qué suscribirte?</h3>
+            <ul>
+                <li>Acceso anticipado a eventos turísticos.</li>
+                <li>Promociones y descuentos exclusivos.</li>
+                <li>Recomendaciones personalizadas de destinos.</li>
+                <li>Noticias sobre cultura, playas y montañas locales.</li>
+            </ul>
+        </div>
+    </main>
+    <script src="js/components.js" type="module"></script>
+
+    <!-- Lógica principal -->
+    <script src="js/script.js" type="module"></script>
+</body>
+
+</html>

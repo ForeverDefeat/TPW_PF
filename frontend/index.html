@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portal de Turismo</title>
+
+    <!-- Estilos globales + página actual -->
+    <link rel="stylesheet" href="css/estiloGlobal.css" />
+    <link rel="stylesheet" href="css/estiloIndex.css" />
+</head>
+
+<body>
+
+    <!-- ============================= -->
+    <!--   COMPONENTES DINÁMICOS      -->
+    <!-- ============================= -->
+
+    <!-- Aquí se carga header.html -->
+    <div id="header-container"></div>
+
+    <!-- Aquí se carga sidebar.html -->
+    <div id="sidebar-container"></div>
+    
+
+    <!-- ============================= -->
+    <!--       CONTENIDO PRINCIPAL     -->
+    <!-- ============================= -->
+    <main id="main">
+        <div class="content fade-in">
+
+            <!-- Banner -->
+            <div class="banner">
+                <div class="slides">
+                    <img src="assets/inicio1.jpg" alt="Foto 1">
+                    <img src="assets/inicio2.png" alt="Foto 2">
+                    <img src="assets/inicio3.jpg" alt="Foto 3">
+                    <img src="assets/inicio4.png" alt="Foto 4">
+                    <img src="assets/inicio5.jpg" alt="Foto 5">
+                    <img src="assets/inicio6.jpg" alt="Foto 6">
+                </div>
+                <button class="prev">&#10094;</button>
+                <button class="next">&#10095;</button>
+            </div>
+
+            <!-- Totales -->
+            <section class="totals fade-in">
+                <div class="box">
+                    <h4>Playas</h4>
+                    <p>Total: <span>10</span></p>
+                </div>
+                <div class="box">
+                    <h4>Montañas</h4>
+                    <p>Total: <span>5</span></p>
+                </div>
+                <div class="box">
+                    <h4>Cultura</h4>
+                    <p>Total: <span>8</span></p>
+                </div>
+            </section>
+
+            <!-- Categorías -->
+            <section class="categories fade-in">
+                <h3>Main Categories</h3>
+
+                <div class="content-3col">
+
+                    <div class="cat-card">
+                        <img src="assets/playa1.png" alt="Playas">
+                        <h4>Playas</h4>
+                        <p>Explora arenas blancas, aguas cristalinas y destinos paradisíacos ideales para relajarte o practicar deportes acuáticos.</p>
+                    </div>
+
+                    <div class="cat-card">
+                        <img src="assets/mountain2.png" alt="Montañas">
+                        <h4>Montañas</h4>
+                        <p>Senderos, miradores y rutas de aventura entre los paisajes montañosos más impresionantes de la región.</p>
+                    </div>
+
+                    <div class="cat-card">
+                        <img src="assets/cultura3.png" alt="Cultura">
+                        <h4>Cultura</h4>
+                        <p>Sumérgete en la riqueza histórica, gastronómica y artística que define la esencia local.</p>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Mapa -->
+            <div class="map-section fade-in">
+                <h3>Interactive Map</h3>
+                <p>Aquí se mostrará el mapa con puntos de interés.</p>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ============================= -->
+    <!--   SCRIPTS (ORDEN CORRECTO)   -->
+    <!-- ============================= -->
+    
+    <!-- Carga componentes -->
+    <script src="js/components.js" type="module"></script>
+
+    <!-- Lógica principal -->
+    <script src="js/script.js" type="module"></script>
+
+</body>
+
+</html>

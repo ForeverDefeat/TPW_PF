@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - Portal de Turismo</title>
+    <link rel="stylesheet" href="css/estiloGlobal.css">
+    <link rel="stylesheet" href="css/estiloAuth.css">
+</head>
+
+<body>
+    <header>
+        <div class="left">
+            <div class="menu-container">
+                <div class="menu" id="menu">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+            <div class="brand">
+                <img src="icons/udemy.svg" alt="icono-udemy" class="logo">
+                <span class="name">apex</span>
+            </div>
+        </div>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Buscar destinos...">
+            <button id="searchButton">Buscar</button>
+        </div>
+        <div class="right">
+            <div id="loggedOutView">
+                <a href="login.html" class="header-link">Iniciar Sesión</a>
+                <a href="register.html" class="header-link">Registrarse</a>
+            </div>
+            <div id="loggedInView" style="display: none;">
+                <span id="usernameDisplay" class="username"></span>
+                <a href="add-destination.html" id="adminAddButton" class="header-link admin-button" style="display: none;">Añadir Destino</a>
+                <button id="logoutButton" class="header-link logout-button">Cerrar Sesión</button>
+            </div>
+        </div>
+    </header>
+
+    <aside class="sidebar" id="sidebar">
+        <nav>
+            <ul>
+                <li><a href="index.html"><img src="icons/home.svg" alt="Inicio"><span>Pagina de Inicio</span></a></li>
+                <li><a href="beach.html"><img src="icons/playa.png" alt="Playa"><span>Playa</span></a></li>
+                <li><a href="Mountain.html"><img src="icons/mountain.png" alt="Montaña"><span>Montañas</span></a></li>
+                <li><a href="culture.html"><img src="icons/cultura.png" alt="Cultura"><span>Cultura</span></a></li>
+                <li><a href="newsletter.html"><img src="icons/chat.svg" alt="Noticias"><span>Noticias</span></a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main id="main">
+        <div class="auth-container">
+            <h2>Iniciar Sesión</h2>
+            <p>Ingresa a tu cuenta para acceder a todas las funcionalidades.</p>
+            <form id="loginForm">
+                <label for="loginEmail">Correo Electrónico:</label>
+                <input type="email" id="loginEmail" name="email" placeholder="tu.correo@ejemplo.com" required>
+
+                <label for="loginPassword">Contraseña:</label>
+                <input type="password" id="loginPassword" name="password" required>
+
+                <button type="submit">Ingresar</button>
+
+                <p class="auth-redirect">¿No tienes una cuenta? <a href="register.html">Regístrate aquí</a>.</p>
+            </form>
+        </div>
+    </main>
+
+    <script src="js/script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,4 @@
+python -m http.server 3000
+
+si no se actualiza los estilos si has cambiado
+ctrl + F5 actualizacion forzosa

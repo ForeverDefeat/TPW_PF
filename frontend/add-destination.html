@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Añadir Destino - Panel Admin</title>
+    <link rel="stylesheet" href="css/estiloGlobal.css">
+    <link rel="stylesheet" href="css/estiloAdmin.css">
+</head>
+
+<body>
+    <header>
+        <div class="left">
+            <div class="menu-container">
+                <div class="menu" id="menu">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+            <div class="brand">
+                <img src="icons/udemy.svg" alt="icono-udemy" class="logo"><span class="name">apex</span>
+            </div>
+        </div>
+        <div class="right">
+            <div id="loggedOutView" style="display: none;"></div>
+            <div id="loggedInView">
+                <span id="usernameDisplay" class="username"></span>
+                <button id="logoutButton" class="header-link logout-button">Cerrar Sesión</button>
+            </div>
+        </div>
+    </header>
+    <aside class="sidebar" id="sidebar">
+        <nav>
+            <ul>
+                <li><a href="index.html"><img src="icons/home.svg" alt="Inicio"><span>Pagina de Inicio</span></a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main id="main">
+        <div class="admin-container">
+            <h2>Añadir Nuevo Destino Turístico</h2>
+            <form>
+                <label for="destName">Nombre del Destino:</label>
+                <input type="text" id="destName" placeholder="Ej: Playa Roja" required>
+
+                <label for="destDesc">Descripción Corta:</label>
+                <textarea id="destDesc" placeholder="Famosa por su arena rojiza..."></textarea>
+
+                <label for="destType">Tipo de Destino:</label>
+                <select id="destType">
+                    <option value="playa">Playa</option>
+                    <option value="montana">Montaña</option>
+                    <option value="cultura">Cultura</option>
+                </select>
+
+                <label for="destImg">URL de la Imagen:</label>
+                <input type="text" id="destImg" placeholder="Ej: assets/playa_nueva.png">
+
+                <button type="submit">Guardar Destino</button>
+            </form>
+        </div>
+    </main>
+    <script src="script.js"></script>
+</body>
+
+</html>

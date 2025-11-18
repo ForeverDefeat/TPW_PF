@@ -1,0 +1,145 @@
+/*Totals y categories*/
+
+ .totals {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 1.5rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.totals .box {
+  flex: 1;
+  min-width: 200px;
+  background: var(--background-color);
+  color: var(--text-color);
+  text-align: center;
+  padding: 25px;
+  border-radius: 12px;
+  font-weight: bold;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.totals .box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+
+.totals .box h4 {
+  margin-bottom: 8px;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+}
+
+.totals .box span {
+  font-size: 1.5rem;
+  color: #f1c40f;
+}
+
+/* --- Sección Categorías --- */
+.categories {
+  margin-bottom: 40px;
+}
+
+.categories h3 {
+  font-size: 1.6rem;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+/* --- Cuadrícula --- */
+.content-3col {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+/* --- Tarjetas cuadradas --- */
+.cat-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+  height: 260px; /* más cuadrado */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cat-card img {
+  width: 100%;
+  height: 140px; 
+  object-fit: cover;
+}
+
+.cat-card h4 {
+  font-size: 1rem;
+  margin: 10px 0 5px 0;
+  color: #34495e;
+}
+
+.cat-card p {
+  color: #555;
+  font-size: 0.9rem;
+  padding: 0 10px 10px 10px;
+}
+
+.cat-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* Mapa */
+.map-section {
+  background: #dfe6e9;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  .totals {
+    flex-direction: column;
+  }
+
+  .totals .box {
+    width: 100%;
+  }
+
+  .cat-card {
+    height: 240px;
+  }
+
+  .cat-card img {
+    height: 130px;
+  }
+}
+
+@media (max-width: 480px) {
+  .totals .box h4 {
+    font-size: 1rem;
+  }
+
+  .totals .box span {
+    font-size: 1.2rem;
+  }
+
+  .categories h3 {
+    font-size: 1.3rem;
+  }
+
+  .cat-card {
+    height: 220px;
+  }
+
+  .cat-card img {
+    height: 120px;
+  }
+}
