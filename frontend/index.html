@@ -13,69 +13,78 @@
 
 <body>
 
-    <!-- ============================= -->
-    <!--   COMPONENTES DINÁMICOS      -->
-    <!-- ============================= -->
-
     <!-- Aquí se carga header.html -->
     <div id="header-container"></div>
 
+      <div id="searchResults" class="search-results hidden"></div>
+
     <!-- Aquí se carga sidebar.html -->
     <div id="sidebar-container"></div>
-    
 
-    <!-- ============================= -->
-    <!--       CONTENIDO PRINCIPAL     -->
-    <!-- ============================= -->
+    <!-- Área para el modal de añadir destino -->
+    <div id="addDestinationArea"></div>
+
     <main id="main">
         <div class="content">
-
             <!-- Banner -->
-            <div class="banner">
-                <div class="slides">
+            <div class="banner fade-slider">
+                <div class="fade-slide active">
                     <img src="assets/inicio1.jpg" alt="Foto 1">
+                </div>
+                <div class="fade-slide">
                     <img src="assets/inicio2.png" alt="Foto 2">
+                </div>
+                <div class="fade-slide">
                     <img src="assets/inicio3.jpg" alt="Foto 3">
+                </div>
+                <div class="fade-slide">
                     <img src="assets/inicio4.png" alt="Foto 4">
+                </div>
+                <div class="fade-slide">
                     <img src="assets/inicio5.jpg" alt="Foto 5">
+                </div>
+                <div class="fade-slide">
                     <img src="assets/inicio6.jpg" alt="Foto 6">
                 </div>
-                <button class="prev">&#10094;</button>
-                <button class="next">&#10095;</button>
+
+                <button class="fade-prev">&#10094;</button>
+                <button class="fade-next">&#10095;</button>
             </div>
 
             <!-- Totales -->
             <section class="totals fade-in">
                 <div class="box">
                     <h4>Playas</h4>
-                    <p>Total: <span>10</span></p>
+                    <p>Total: <span id="totalPlayas">0</span></p>
                 </div>
                 <div class="box">
                     <h4>Montañas</h4>
-                    <p>Total: <span>5</span></p>
+                    <p>Total: <span id="totalMontanas">0</span></p>
                 </div>
                 <div class="box">
                     <h4>Cultura</h4>
-                    <p>Total: <span>8</span></p>
+                    <p>Total: <span id="totalCultura">0</span></p>
                 </div>
             </section>
 
             <!-- Categorías -->
             <section class="categories fade-in">
-                <h3>Main Categories</h3>
+                <h3>Categories</h3>
 
                 <div class="content-3col">
 
                     <div class="cat-card">
                         <img src="assets/playa1.png" alt="Playas">
                         <h4>Playas</h4>
-                        <p>Explora arenas blancas, aguas cristalinas y destinos paradisíacos ideales para relajarte o practicar deportes acuáticos.</p>
+                        <p>Explora arenas blancas, aguas cristalinas y destinos paradisíacos ideales para relajarte o
+                            practicar deportes acuáticos.</p>
                     </div>
 
                     <div class="cat-card">
                         <img src="assets/mountain2.png" alt="Montañas">
                         <h4>Montañas</h4>
-                        <p>Senderos, miradores y rutas de aventura entre los paisajes montañosos más impresionantes de la región.</p>
+                        <p>Senderos, miradores y rutas de aventura entre los paisajes montañosos más impresionantes de
+                            la región.</p>
                     </div>
 
                     <div class="cat-card">
@@ -96,15 +105,37 @@
         </div>
     </main>
 
-    <!-- ============================= -->
-    <!--   SCRIPTS (ORDEN CORRECTO)   -->
-    <!-- ============================= -->
-    
     <!-- Carga componentes -->
     <script src="js/components.js" type="module"></script>
 
     <!-- Lógica principal -->
     <script src="js/script.js" type="module"></script>
+
+    <script type="module">
+        import { getCategoryCounts } from "./js/api.js";
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            const res = await getCategoryCounts();
+
+            if (!res.ok) return;
+
+            const counts = {
+                playa: 0,
+                montana: 0,
+                cultura: 0
+            };
+
+            // Convertir resultados SQL a objeto usable
+            res.counts.forEach(c => {
+                counts[c.category] = c.total;
+            });
+
+            // Insertar totales en el HTML
+            document.getElementById("totalPlayas").textContent = counts.playa;
+            document.getElementById("totalMontanas").textContent = counts.montana;
+            document.getElementById("totalCultura").textContent = counts.cultura;
+        });
+    </script>
 
 </body>
 

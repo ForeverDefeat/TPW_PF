@@ -10,9 +10,6 @@
 </head>
 
 <body>
-    <!-- ============================= -->
-    <!--   COMPONENTES DINÁMICOS      -->
-    <!-- ============================= -->
 
     <!-- Aquí se carga header.html -->
     <div id="header-container"></div>
@@ -20,108 +17,102 @@
     <!-- Aquí se carga sidebar.html -->
     <div id="sidebar-container"></div>
 
+    <div id="addDestinationArea"></div>
 
-    <!-- ============================= -->
-    <!--       CONTENIDO PRINCIPAL     -->
-    <!-- ============================= -->
     <main id="main">
         <!-- Contenido principal -->
         <div class="content">
 
             <!-- Banner -->
-            <div class="banner">
-                <div class="slides fade-in">
+            <<div class="banner fade-slider">
+
+                <div class="fade-slide active">
                     <img src="assets/playabanner1.jpg" alt="Foto 1">
+                </div>
+
+                <div class="fade-slide">
                     <img src="assets/playabanner2.jpg" alt="Foto 2">
+                </div>
+
+                <div class="fade-slide">
                     <img src="assets/playabanner3.jpg" alt="Foto 3">
                 </div>
-                <button class="prev">&#10094;</button>
-                <!--  <p>Banner / Slider de imágenes (Ejemplo: fotos de turismo)</p> -->
-                <button class="next">&#10095;</button>
 
-            </div>
+                <button class="fade-prev">&#10094;</button>
+                <button class="fade-next">&#10095;</button>
+        </div>
 
-            <!-- Destinos -->
-            <h3>Destinos</h3>
-            <div class="destinos fade-in">
-                <div class="card searchable-card">
-                    <img src="assets/playa1.png" alt="Playa Roja">
-                    <h4>Playa Roja - Natural</h4>
-                    <p>Famosa por su arena rojiza y paisajes únicos dentro de la Reserva de Paracas.</p>
-                </div>
-                <div class="card searchable-card">
-                    <img src="assets/playa2.png" alt="La Mina">
-                    <h4>La Mina - Familiar</h4>
-                    <p>Ideal para nadar y disfrutar en familia con aguas tranquilas y claras.</p>
-                </div>
-                <div class="card searchable-card">
-                    <img src="assets/playa3.png" alt="El Silencio">
-                    <h4>El Silencio - Aventura</h4>
-                    <p>Con olas grandes, es perfecta para practicar surf y deportes acuáticos.</p>
-                </div>
-                <div class="card searchable-card">
-                    <img src="assets/playa4.png" alt="Playa Blanca">
-                    <h4>Playa Blanca - Relax</h4>
-                    <p>Con arena blanca y un ambiente tranquilo para descansar y relajarse.</p>
-                </div>
-            </div>
 
-            <!-- Servicios -->
-            <div class="table-responsive fade-in">
-                <h3>Servicios de las Playas</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Beach</th>
-                            <th>Restaurantes</th>
-                            <th>Hoteles</th>
-                            <th>Water Sports</th>
-                            <th>Accesibilidad</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Playa Roja</td>
-                            <td>Restaurante Paracas</td>
-                            <td>No</td>
-                            <td>Kayak</td>
-                            <td>Acceso en bus turístico</td>
-                        </tr>
-                        <tr>
-                            <td>La Mina</td>
-                            <td>No</td>
-                            <td>Hotel Bahía</td>
-                            <td>No</td>
-                            <td>Acceso en auto</td>
-                        </tr>
-                        <tr>
-                            <td>El Silencio</td>
-                            <td>El Surfista Grill</td>
-                            <td>No</td>
-                            <td>Surf</td>
-                            <td>Acceso en carretera</td>
-                        </tr>
-                        <tr>
-                            <td>Playa Blanca</td>
-                            <td>No</td>
-                            <td>Hotel Playa Blanca</td>
-                            <td>No</td>
-                            <td>Acceso caminando</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+        </div>
+
+        <!-- Destinos -->
+        <h3>Destinos</h3>
+        <div class="destinos fade-in" id="destinosContainer"></div>
+
+        <!-- Servicios -->
+        <div class="table-responsive fade-in">
+            <h3>Servicios de las Playas</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Beach</th>
+                        <th>Restaurantes</th>
+                        <th>Hoteles</th>
+                        <th>Water Sports</th>
+                        <th>Accesibilidad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Playa Roja</td>
+                        <td>Restaurante Paracas</td>
+                        <td>No</td>
+                        <td>Kayak</td>
+                        <td>Acceso en bus turístico</td>
+                    </tr>
+                    <tr>
+                        <td>La Mina</td>
+                        <td>No</td>
+                        <td>Hotel Bahía</td>
+                        <td>No</td>
+                        <td>Acceso en auto</td>
+                    </tr>
+                    <tr>
+                        <td>El Silencio</td>
+                        <td>El Surfista Grill</td>
+                        <td>No</td>
+                        <td>Surf</td>
+                        <td>Acceso en carretera</td>
+                    </tr>
+                    <tr>
+                        <td>Playa Blanca</td>
+                        <td>No</td>
+                        <td>Hotel Playa Blanca</td>
+                        <td>No</td>
+                        <td>Acceso caminando</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         </div>
     </main>
-    <!-- ============================= -->
-    <!--   SCRIPTS (ORDEN CORRECTO)   -->
-    <!-- ============================= -->
 
     <!-- Carga componentes -->
     <script src="js/components.js" type="module"></script>
 
     <!-- Lógica principal -->
     <script src="js/script.js" type="module"></script>
+
+    <script type="module">
+        import { loadDestinations } from "./js/destinationsLoader.js";
+        import { beachTemplate } from "./js/templates.js";
+
+        loadDestinations({
+            containerId: "destinosContainer",
+            category: "playa",
+            template: beachTemplate
+        });
+    </script>
 </body>
 
 </html>

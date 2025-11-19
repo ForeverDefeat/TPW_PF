@@ -3,8 +3,14 @@ python -m http.server 3000
 backend
 node server.js
 
+administrador:
 user: admin@turismo.com
 password: 1234
+usuarios
+user: juan@example.com 
+password: 1234
+user: maria@example.com 
+password: abcd
 
 Ejecutar todas las sentencias SQL: F5
 Ejecutar la sentencia en la posición actual: F9 o Ctrl + Enter
@@ -56,5 +62,57 @@ inicializacion backend
         INSERT INTO users (fullName, email, password, role)
         VALUES ('Admin', 'admin@turismo.com', '1234', 'admin');
 
-        INSERT INTO destinations (name, category, description, imagenURL) VALUES 
-        ('La mina', 'playa', 'las grandes, es perfecta para practicar surf y deportes acuáticos', './assets/Fotoplaya.png' )
+        INSERT INTO users (full_name, email, password, role) VALUES 
+        ('Juan Pérez', 'juan@example.com', '1234', 'user'),
+        ('María Torres', 'maria@example.com', 'abcd', 'user');
+
+
+
+        INSERT INTO destinations (name, category, description, imageUrl) VALUES
+            ('Playa Roja - Natural', 'playa',
+            'Famosa por su arena rojiza y paisajes únicos dentro de la Reserva de Paracas.',
+            'assets/playa1.png'),
+
+            ('La Mina - Familiar', 'playa',
+            'Ideal para nadar y disfrutar en familia con aguas tranquilas y claras.',
+            'assets/playa2.png'),
+
+            ('El Silencio - Aventura', 'playa',
+            'Con olas grandes, es perfecta para practicar surf y deportes acuáticos.',
+            'assets/playa3.png'),
+
+            ('Playa Blanca - Relax', 'playa',
+            'Con arena blanca y un ambiente tranquilo para descansar y relajarse.',
+            'assets/playa4.png');
+
+            ('Montaña Colorada', 'montana',
+                'Formaciones rocosas rojizas que crean un paisaje casi lunar. Senderos de dificultad moderada con miradores panorámicos ideales para fotografía al amanecer y atardecer. Recomendado para caminatas de medio día y observación geológica.',
+                'assets/mountain1.png'),
+
+                ('Montaña Verde', 'montana',
+                'Rodeada de bosques frondosos y praderas, perfecta para senderismo y picnic. Rutas bien señalizadas y zonas de avistamiento de aves; apta para familias y caminantes principiantes. Temporada ideal: primavera y verano.',
+                'assets/mountain2.png'),
+
+                ('Montaña Blanca', 'montana',
+                'Cumbres con nieves persistentes que ofrecen paisajes espectaculares y actividades invernales. Requiere equipo adecuado para frío y senderos más exigentes; popular entre esquiadores y montañistas. Mejores vistas desde los miradores altos al mediodía.',
+                'assets/mountain3.png'),
+
+                ('Montaña Azul', 'montana',
+                'Con lagunas cristalinas en la cima y amplias panorámicas que abarcan valles y cumbres lejanas. Ruta recomendada para excursiones de día completo; ideal para fotografía de paisaje y observación de flora alpina. Llevar agua y calzado resistente.',
+                'assets/mountain4.png');
+
+            ('Museo Histórico', 'cultura',
+                'Exhibiciones sobre la historia local y piezas arqueológicas.',
+                'assets/cultura1.png'),
+
+                ('Festival de Música', 'cultura',
+                'Evento anual con artistas nacionales e internacionales.',
+                'assets/cultura2.png'),
+
+                ('Centro Artesanal', 'cultura',
+                'Productos elaborados por artesanos locales.',
+                'assets/cultura3.png'),
+
+                ('Danza Folklórica', 'cultura',
+                'Presentaciones de bailes típicos con vestimenta tradicional.',
+                'assets/cultura4.png');

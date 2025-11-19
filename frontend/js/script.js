@@ -1,185 +1,202 @@
-/* // ======================
-//       script.js
-// ======================
-
-import { setupAuthUI } from "./auth/authUI.js";
-
-function initApp() {
-    // -------------------------
-    // MENÚ DESPLEGABLE SIDEBAR
-    // -------------------------
-    const menu = document.getElementById("menu");
-    const sidebar = document.getElementById("sidebar");
-    const main = document.getElementById("main");
-
-    if (menu && sidebar) {
-        menu.addEventListener("click", () => {
-            sidebar.classList.toggle("menu-toggle");
-            if (main) main.classList.toggle("menu-toggle");
-        });
-    }
-
-    // -------------------------
-    // AUTENTICACIÓN DEL HEADER
-    // -------------------------
-    const loggedOutView = document.getElementById("loggedOutView");
-    const loggedInView = document.getElementById("loggedInView");
-    const usernameDisplay = document.getElementById("usernameDisplay");
-    const adminAddButton = document.getElementById("adminAddButton");
-    const logoutButton = document.getElementById("logoutButton");
-
-    const loggedIn = localStorage.getItem("loggedIn") === "true";
-    const username = localStorage.getItem("username");
-    const role = localStorage.getItem("userRole");
-
-    // -------------------------
-    // MOSTRAR / OCULTAR VISTAS
-    // -------------------------
-    if (loggedIn) {
-        if (loggedOutView) loggedOutView.classList.add("hidden");
-        if (loggedInView) loggedInView.classList.remove("hidden");
-
-        if (usernameDisplay) {
-            usernameDisplay.textContent = username || "Usuario";
-        }
-
-        if (adminAddButton) {
-            if (role === "admin") {
-                adminAddButton.classList.remove("hidden");
-            } else {
-                adminAddButton.classList.add("hidden");
-            }
-        }
-
-        if (logoutButton) {
-            logoutButton.addEventListener("click", () => {
-                localStorage.clear();
-                window.location.reload();
-            });
-        }
-
-    } else {
-        if (loggedOutView) loggedOutView.classList.remove("hidden");
-        if (loggedInView) loggedInView.classList.add("hidden");
-
-        if (adminAddButton) adminAddButton.classList.add("hidden");
-    }
-}
-
-function initSlider() {
-    const slidesContainer = document.querySelector(".banner .slides");
-    if (!slidesContainer) return;
-
-    const slides = slidesContainer.querySelectorAll("img");
-    const prev = document.querySelector(".banner .prev");
-    const next = document.querySelector(".banner .next");
-
-    let index = 0;
-
-    function updatePos() {
-        slidesContainer.style.transform = `translateX(-${index * 100}%)`;
-    }
-
-    prev?.addEventListener("click", () => {
-        index = (index - 1 + slides.length) % slides.length;
-        updatePos();
-    });
-
-    next?.addEventListener("click", () => {
-        index = (index + 1) % slides.length;
-        updatePos();
-    });
-
-}
-
-// Animaciones de fade-in
-const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) entry.target.classList.add("visible");
-    });
-});
-
-const username = localStorage.getItem("username");
-const role = localStorage.getItem("userRole");
-
-if (username) {
-    document.getElementById("loggedOutView").style.display = "none";
-    document.getElementById("loggedInView").style.display = "flex";
-
-    document.getElementById("usernameDisplay").textContent = username;
-
-    if (role === "admin") {
-        document.getElementById("adminAddButton").style.display = "inline-block";
-    }
-}
-
-
-document.querySelectorAll(".fade-in").forEach(el => observer.observe(el));
-
-// INIT
-document.addEventListener("DOMContentLoaded", () => {
-    initMenu();
-    initSlider();
-    setupAuthUI();  // inicializar autenticación
-});
- */
-
+/*********************************************/
+/*                  IMPORTS                  */
+/*********************************************/
 import { setupAuthUI } from "./auth/authUI.js";
 import { setupLoginModal } from "./auth/loginModal.js";
 import { setupRegisterModal } from "./auth/registerModal.js";
+import { setupAddDestinationModal } from "./auth/addDestinationModal.js";
+import { searchDestinations } from "./api.js";
 
+
+/*********************************************/
+/*                APP GENERAL                */
+/*********************************************/
 function initApp() {
     const menu = document.getElementById("menu");
     const sidebar = document.getElementById("sidebar");
     const main = document.getElementById("main");
 
-    if (menu && sidebar) {
-        menu.addEventListener("click", () => {
-            sidebar.classList.toggle("menu-toggle");
-            if (main) main.classList.toggle("menu-toggle");
+    if (!menu || !sidebar) return;
+
+    menu.addEventListener("click", () => {
+        sidebar.classList.toggle("menu-toggle");
+        main?.classList.toggle("menu-toggle");
+    });
+}
+
+
+/*********************************************/
+/*             SLIDER FADE PREMIUM           */
+/*********************************************/
+function initFadeSlider() {
+    const slides = [...document.querySelectorAll(".fade-slide")];
+    const btnPrev = document.querySelector(".fade-prev");
+    const btnNext = document.querySelector(".fade-next");
+
+    if (!slides.length || !btnPrev || !btnNext) return;
+
+    let index = 0;
+    let autoplayTimer = null;
+
+    const showSlide = (i) => {
+        slides.forEach(s => s.classList.remove("active"));
+        slides[i].classList.add("active");
+    };
+
+    const nextSlide = () => {
+        index = (index + 1) % slides.length;
+        showSlide(index);
+    };
+
+    const prevSlide = () => {
+        index = (index - 1 + slides.length) % slides.length;
+        showSlide(index);
+    };
+
+    const startAutoplay = () => {
+        clearInterval(autoplayTimer);
+        autoplayTimer = setInterval(nextSlide, 5000);
+    };
+
+    btnNext.addEventListener("click", () => {
+        nextSlide();
+        startAutoplay();
+    });
+
+    btnPrev.addEventListener("click", () => {
+        prevSlide();
+        startAutoplay();
+    });
+
+    showSlide(index);
+    startAutoplay();
+}
+
+
+/*********************************************/
+/*         ANIMACIÓN FADE IN SECTIONS        */
+/*********************************************/
+function initFadeInObserver() {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) entry.target.classList.add("visible");
+        });
+    });
+
+    document.querySelectorAll(".fade-in").forEach(el => observer.observe(el));
+}
+
+
+/*********************************************/
+/*         CONFIGURAR SEARCHBAR              */
+/*********************************************/
+function setupSearchBar() {
+    const searchInput = document.getElementById("searchInput");
+    const searchBtn = document.getElementById("searchBtn");
+    const resultsBox = document.getElementById("searchResults");
+
+    if (!searchInput || !searchBtn || !resultsBox) {
+        console.warn("Searchbar aún no está disponible");
+        return;
+    }
+
+    console.log("Searchbar listo.");
+
+    // Buscar al presionar botón
+    searchBtn.addEventListener("click", async () => {
+        const text = searchInput.value.trim();
+        if (!text) return;
+        runSearch(text);
+    });
+
+    // Buscar mientras escribe
+    searchInput.addEventListener("input", () => {
+        const text = searchInput.value.trim();
+        if (!text) {
+            resultsBox.classList.add("hidden");
+            return;
+        }
+        runSearch(text);
+    });
+
+    // Cerrar resultados si clic fuera
+    document.addEventListener("click", (e) => {
+        if (!resultsBox.contains(e.target) && !searchInput.contains(e.target)) {
+            resultsBox.classList.add("hidden");
+        }
+    });
+
+    // Ejecutar búsqueda
+    async function runSearch(text) {
+        const res = await searchDestinations(text);
+
+        if (!res.ok) return;
+        renderResults(res.results);
+    }
+
+    // Renderizar tarjetas
+    function renderResults(list) {
+        resultsBox.innerHTML = "";
+        resultsBox.classList.remove("hidden");
+
+        if (!list.length) {
+            resultsBox.innerHTML = "<p>No se encontraron resultados.</p>";
+            return;
+        }
+
+        list.forEach(item => {
+            const div = document.createElement("div");
+            div.classList.add("result-card");
+
+            div.innerHTML = `
+                <h4>${item.name}</h4>
+                <p>${item.description}</p>
+                <small>Categoría: ${item.category}</small>
+            `;
+
+            div.addEventListener("click", () => {
+                resultsBox.classList.add("hidden");
+
+                if (item.category === "playa") {
+                    window.location.href = "beach.html";
+                }
+                else if (item.category === "montana") {
+                    window.location.href = "mountain.html";
+                }
+                else if (item.category === "cultura") {
+                    window.location.href = "culture.html";
+                }
+            });
+
+            resultsBox.appendChild(div);
         });
     }
 }
 
-function initSlider() {
-    const slidesContainer = document.querySelector(".banner .slides");
-    if (!slidesContainer) return;
 
-    const slides = slidesContainer.querySelectorAll("img");
-    const prev = document.querySelector(".banner .prev");
-    const next = document.querySelector(".banner .next");
+/*********************************************/
+/*     INICIALIZAR TODO DESPUÉS DE CARGAR    */
+/*********************************************/
+document.addEventListener("componentsLoaded", () => {
+    console.log("⚡ Componentes cargados — iniciando UI");
 
-    let index = 0;
+    initApp();
+    initFadeSlider();
+    initFadeInObserver();
 
-    function updatePos() {
-        slidesContainer.style.transform = `translateX(-${index * 100}%)`;
-    }
+    setupLoginModal();
+    setupRegisterModal();
+    setupAddDestinationModal();
+    setupAuthUI();
 
-    prev?.addEventListener("click", () => {
-        index = (index - 1 + slides.length) % slides.length;
-        updatePos();
-    });
-
-    next?.addEventListener("click", () => {
-        index = (index + 1) % slides.length;
-        updatePos();
-    });
-}
-
-// fade-in animations
-const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) entry.target.classList.add("visible");
-    });
+    setupSearchBar();  
 });
 
-document.querySelectorAll(".fade-in").forEach(el => observer.observe(el));
 
-// INIT
-document.addEventListener("DOMContentLoaded", () => {
-    initApp();
-    initSlider();
-    setupAuthUI();
-    setupLoginModal();
-    setupRegisterModal();  
+/*********************************************/
+/*    SCROLL AUTOMÁTICO AL BANNER  */
+/*********************************************/
+window.addEventListener("load", () => {
+    const banner = document.querySelector(".banner");
+    banner?.scrollIntoView({ behavior: "smooth" });
 });

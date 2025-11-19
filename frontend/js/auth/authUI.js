@@ -1,6 +1,8 @@
 export function setupAuthUI() {
     const loggedOutView = document.getElementById("loggedOutView");
+    /* const loggedInView = document.getElementById("loggedInView"); */
     const loggedInView = document.getElementById("loggedInView");
+    if (loggedInView) loggedInView.style.display = "none";
     const usernameDisplay = document.getElementById("usernameDisplay");
     const adminAddButton = document.getElementById("adminAddButton");
     const logoutButton = document.getElementById("logoutButton");

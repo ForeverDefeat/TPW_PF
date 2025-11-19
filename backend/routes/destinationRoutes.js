@@ -1,10 +1,14 @@
 // routes/destinationRoutes.js
 import express from "express";
-import { getDestinations, addDestination } from "../controllers/destinationController.js";
+import { getDestinations, addDestination, getCategoryCounts, searchDestinations } from "../controllers/destinationController.js";
 
 const router = express.Router();
 
-router.get("/destinations", getDestinations);
-router.post("/destinations", addDestination);
+router.get("/", getDestinations);
+router.post("/", addDestination);
+router.get("/counts", getCategoryCounts);
+router.get("/search", searchDestinations);
+
+
 
 export default router;

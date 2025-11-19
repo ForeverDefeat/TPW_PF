@@ -2,7 +2,9 @@
     <div class="left">
         <div class="menu-container">
             <div class="menu" id="menu">
-                <div></div><div></div><div></div>
+                <div></div>
+                <div></div>
+                <div></div>
             </div>
         </div>
 
@@ -12,13 +14,17 @@
         </div>
     </div>
 
-    <div class="search-bar">
-        <input type="text" id="searchInput" placeholder="Buscar destinos...">
-        <button id="searchButton">Buscar</button>
+    <div class="center">
+        <div class="search-bar">
+            <input id="searchInput" type="text" placeholder="Buscar destinos...">
+            <button id="searchBtn">Buscar</button>
+        </div>
+
+        <!-- caja donde se muestran los resultados -->
+        <div id="searchResults" class="search-results hidden"></div>
+
     </div>
 
     <div class="right" id="authArea">
-        <!-- Área de autenticación se carga aquí dinámicamente -->
     </div>
-
 </header>

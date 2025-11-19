@@ -1,0 +1,30 @@
+<div id="destinationModal" class="modal hidden">
+    <div class="modal-content">
+
+        <span class="close" id="closeAddDestination">&times;</span>
+
+        <h2>Añadir Nuevo Destino</h2>
+
+        <form id="addDestinationForm">
+
+            <label for="destName">Nombre del Destino:</label>
+            <input type="text" id="destName" required>
+
+            <label for="destDesc">Descripción Corta:</label>
+            <textarea id="destDesc" required></textarea>
+
+            <label for="destType">Tipo de Destino:</label>
+            <select id="destType">
+                <option value="playa">Playa</option>
+                <option value="montana">Montaña</option>
+                <option value="cultura">Cultura</option>
+            </select>
+
+            <label for="destImg">URL de la Imagen:</label>
+            <input type="text" id="destImg" required>
+
+            <button type="submit" class="btn-add">Guardar Destino</button>
+
+        </form>
+    </div>
+</div>

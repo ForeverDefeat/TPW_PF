@@ -10,9 +10,6 @@
 </head>
 
 <body>
-  <!-- ============================= -->
-  <!--   COMPONENTES DINÁMICOS      -->
-  <!-- ============================= -->
 
   <!-- Aquí se carga header.html -->
   <div id="header-container"></div>
@@ -20,51 +17,37 @@
   <!-- Aquí se carga sidebar.html -->
   <div id="sidebar-container"></div>
 
+  <div id="addDestinationArea"></div>
 
-  <!-- ============================= -->
-  <!--       CONTENIDO PRINCIPAL     -->
-  <!-- ============================= -->
   <main id="main">
     <!-- Banner -->
 
-    <div class="banner">
-      <div class="slides fade-in">
-        <img src="assets/cultureBanner1.jpg" alt="Foto 1">
-        <img src="assets/cultureBanner2.jpg" alt="Foto 2">
-        <img src="assets/cultureBanner3.jpg" alt="Foto 3">
+    <div class="content">
+
+      <div class="banner fade-slider">
+
+        <div class="fade-slide active">
+          <img src="assets/cultureBanner1.jpg" alt="Foto 1">
+        </div>
+
+        <div class="fade-slide">
+          <img src="assets/cultureBanner2.jpg" alt="Foto 2">
+        </div>
+
+        <div class="fade-slide">
+          <img src="assets/cultureBanner3.jpg" alt="Foto 3">
+        </div>
+
+        <button class="fade-prev">&#10094;</button>
+        <button class="fade-next">&#10095;</button>
       </div>
-      <button class="prev">&#10094;</button>
-      <button class="next">&#10095;</button>
 
     </div>
 
     <!-- Atracciones en mosaico -->
     <h3>Cultural Atracciones</h3>
-    <div class="atracciones fade-in">
-      <div class="card searchable-card">
-        <img src="assets/cultura1.png" alt="Atracción 1">
-        <h4>Museo Histórico</h4>
-        <p>Exhibiciones sobre la historia local y piezas arqueológicas.</p>
-      </div>
-
-      <div class="card searchable-card">
-        <img src="assets/cultura2.png" alt="Atracción 2">
-        <h4>Festival de Música</h4>
-        <p>Evento anual con artistas nacionales e internacionales.</p>
-      </div>
-
-      <div class="card searchable-card">
-        <img src="assets/cultura3.png" alt="Atracción 3">
-        <h4>Centro Artesanal</h4>
-        <p>Productos elaborados por artesanos locales.</p>
-      </div>
-
-      <div class="card searchable-card">
-        <img src="assets/cultura4.png" alt="Atracción 4">
-        <h4>Danza Folklórica</h4>
-        <p>Presentaciones de bailes típicos con vestimenta tradicional.</p>
-      </div>
-    </div>
+    <div class="atracciones fade-in" id="destinosContainer"></div>
+    <!-- <div class="destinos fade-in" id="destinosContainer"></div> -->
 
     <!-- Tabla de eventos -->
     <h3>Próximos Eventos</h3>
@@ -111,15 +94,23 @@
     </div>
     </div>
   </main>
-  <!-- ============================= -->
-  <!--   SCRIPTS (ORDEN CORRECTO)   -->
-  <!-- ============================= -->
 
   <!-- Carga componentes -->
   <script src="js/components.js" type="module"></script>
 
   <!-- Lógica principal -->
   <script src="js/script.js" type="module"></script>
+
+  <script type="module">
+    import { loadDestinations } from "./js/destinationsLoader.js";
+    import { cultureTemplate } from "./js/templates.js";
+
+    loadDestinations({
+      containerId: "destinosContainer",
+      category: "cultura",
+      template: cultureTemplate
+    });
+  </script>
 </body>
 
 </html>

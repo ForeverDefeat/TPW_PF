@@ -5,11 +5,17 @@ export function setupLoginModal() {
     const openBtn = document.getElementById("openLogin");
     const closeBtn = document.getElementById("closeLogin");
 
-    if (!modal || !openBtn) return;
+    // Abrir modal
+    openBtn?.addEventListener("click", () => {
+        modal.classList.remove("hidden");
+    });
 
-    openBtn.addEventListener("click", () => modal.classList.remove("hidden"));
-    closeBtn?.addEventListener("click", () => modal.classList.add("hidden"));
+    // Cerrar modal
+    closeBtn?.addEventListener("click", () => {
+        modal.classList.add("hidden");
+    });
 
+    // Login form
     const form = document.getElementById("loginFormModal");
 
     form?.addEventListener("submit", async (e) => {
@@ -21,7 +27,7 @@ export function setupLoginModal() {
         const res = await loginUser(email, password);
 
         if (!res.ok) {
-            alert(res.message);
+            alert("Credenciales incorrectas");
             return;
         }
 

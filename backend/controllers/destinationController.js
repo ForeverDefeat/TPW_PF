@@ -1,5 +1,7 @@
 // controllers/destinationController.js
 import Destination from "../models/Destination.js";
+import { db } from "../config/db.js";
+
 
 export async function getDestinations(req, res) {
     try {
@@ -13,9 +15,9 @@ export async function getDestinations(req, res) {
 
 export async function addDestination(req, res) {
     try {
-        const { title, category, description, image } = req.body;
+        const { name, category, description, imageUrl } = req.body;
 
-        await Destination.create(title, category, description, image);
+        await Destination.create(name, category, description, imageUrl);
 
         res.json({ ok: true, message: "Destino añadido" });
     } catch (err) {
@@ -23,4 +25,42 @@ export async function addDestination(req, res) {
         res.status(500).json({ ok: false, message: "Error del servidor" });
     }
 }
+
+export async function getCategoryCounts(req, res) {
+    try {
+        const [rows] = await db.query(`
+            SELECT category, COUNT(*) AS total
+            FROM destinations
+            GROUP BY category
+        `);
+
+        res.json({
+            ok: true,
+            counts: rows
+        });
+
+    } catch (err) {
+        console.error("Error obteniendo conteos:", err);
+        res.status(500).json({ ok: false, message: "Error del servidor" });
+    }
+}
+
+export const searchDestinations = async (req, res) => {
+    try {
+        const q = req.query.q?.toLowerCase() || "";
+
+        const destinations = await Destination.getAll();
+
+        const filtered = destinations.filter(d =>
+            d.name.toLowerCase().includes(q) ||
+            d.description.toLowerCase().includes(q) ||
+            d.category.toLowerCase().includes(q)
+        );
+
+        res.json({ ok: true, results: filtered });
+
+    } catch (err) {
+        res.status(500).json({ ok: false, error: err.message });
+    }
+};
 
