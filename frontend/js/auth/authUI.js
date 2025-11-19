@@ -1,32 +1,30 @@
-import { authSession } from "./authSession.js";
-import { authService } from "./authService.js";
-
 export function setupAuthUI() {
-
-    const loggedOut = document.getElementById("loggedOutView");
-    const loggedIn = document.getElementById("loggedInView");
+    const loggedOutView = document.getElementById("loggedOutView");
+    const loggedInView = document.getElementById("loggedInView");
     const usernameDisplay = document.getElementById("usernameDisplay");
     const adminAddButton = document.getElementById("adminAddButton");
     const logoutButton = document.getElementById("logoutButton");
 
-    if (!loggedOut || !loggedIn) return; // aún no cargó el header
+    const loggedIn = localStorage.getItem("loggedIn") === "true";
+    const username = localStorage.getItem("username");
+    const role = localStorage.getItem("userRole");
 
-    if (authSession.isLogged()) {
+    if (loggedIn) {
+        loggedOutView.style.display = "none";
+        loggedInView.style.display = "flex";
 
-        loggedOut.style.display = "none";
-        loggedIn.style.display = "flex";
+        usernameDisplay.textContent = username;
 
-        usernameDisplay.textContent = authSession.getUsername();
-
-        if (authSession.getRole() === "admin") {
+        if (role === "admin") {
             adminAddButton.style.display = "inline-block";
         }
-
-        logoutButton.addEventListener("click", () => authService.logout());
-
     } else {
-
-        loggedOut.style.display = "flex";
-        loggedIn.style.display = "none";
+        loggedOutView.style.display = "flex";
+        loggedInView.style.display = "none";
     }
+
+    logoutButton?.addEventListener("click", () => {
+        localStorage.clear();
+        window.location.reload();
+    });
 }

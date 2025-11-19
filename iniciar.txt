@@ -3,6 +3,13 @@ python -m http.server 3000
 backend
 node server.js
 
+user: admin@turismo.com
+password: 1234
+
+Ejecutar todas las sentencias SQL: F5
+Ejecutar la sentencia en la posición actual: F9 o Ctrl + Enter
+Ejecutar sentencias desde el cursor hasta el final: Shift + F9
+
 si no se actualiza los estilos si has cambiado
 ctrl + F5 actualizacion forzosa
 
@@ -23,6 +30,7 @@ inicializacion backend
     npm install express mysql2 cors dotenv  express-validator
     
 4. en mySQL 
+
     inicializar un base de datos:
 
         create database turismo_db
@@ -44,3 +52,9 @@ inicializacion backend
         description TEXT,
         imageUrl VARCHAR(300)
     );
+
+        INSERT INTO users (fullName, email, password, role)
+        VALUES ('Admin', 'admin@turismo.com', '1234', 'admin');
+
+        INSERT INTO destinations (name, category, description, imagenURL) VALUES 
+        ('La mina', 'playa', 'las grandes, es perfecta para practicar surf y deportes acuáticos', './assets/Fotoplaya.png' )
