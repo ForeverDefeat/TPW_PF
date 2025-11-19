@@ -10,48 +10,20 @@
 </head>
 
 <body>
-    <header>
-        <div class="left">
-            <div class="menu-container">
-                <div class="menu" id="menu">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                </div>
-            </div>
-            <div class="brand">
-                <img src="icons/udemy.svg" alt="icono-udemy" class="logo">
-                <span class="name">apex</span>
-            </div>
-        </div>
-        <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="Buscar destinos...">
-            <button id="searchButton">Buscar</button>
-        </div>
-        <div class="right">
-            <div id="loggedOutView">
-                <a href="login.html" class="header-link">Iniciar Sesión</a>
-                <a href="register.html" class="header-link">Registrarse</a>
-            </div>
-            <div id="loggedInView" style="display: none;">
-                <span id="usernameDisplay" class="username"></span>
-                <a href="add-destination.html" id="adminAddButton" class="header-link admin-button" style="display: none;">Añadir Destino</a>
-                <button id="logoutButton" class="header-link logout-button">Cerrar Sesión</button>
-            </div>
-        </div>
-    </header>
+    <!-- ============================= -->
+    <!--   COMPONENTES DINÁMICOS      -->
+    <!-- ============================= -->
 
-    <aside class="sidebar" id="sidebar">
-        <nav>
-            <ul>
-                <li><a href="index.html"><img src="icons/home.svg" alt="Inicio"><span>Pagina de Inicio</span></a></li>
-                <li><a href="beach.html"><img src="icons/playa.png" alt="Playa"><span>Playa</span></a></li>
-                <li><a href="Mountain.html"><img src="icons/mountain.png" alt="Montaña"><span>Montañas</span></a></li>
-                <li><a href="culture.html"><img src="icons/cultura.png" alt="Cultura"><span>Cultura</span></a></li>
-                <li><a href="newsletter.html"><img src="icons/chat.svg" alt="Noticias"><span>Noticias</span></a></li>
-            </ul>
-        </nav>
-    </aside>
+    <!-- Aquí se carga header.html -->
+    <div id="header-container"></div>
+
+    <!-- Aquí se carga sidebar.html -->
+    <div id="sidebar-container"></div>
+
+
+    <!-- ============================= -->
+    <!--       CONTENIDO PRINCIPAL     -->
+    <!-- ============================= -->
 
     <main id="main">
         <div class="auth-container">
@@ -71,7 +43,32 @@
         </div>
     </main>
 
-    <script src="js/script.js"></script>
+    <!-- ============================= -->
+    <!--   SCRIPTS (ORDEN CORRECTO)   -->
+    <!-- ============================= -->
+
+    <!-- Carga componentes -->
+    <script src="js/components.js" type="module"></script>
+
+    <!-- Lógica principal -->
+    <script src="js/script.js" type="module"></script>
+
+    <script type="module">
+        import { loginUser } from "./js/api.js";
+
+        document.getElementById("loginForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById("loginEmail").value;
+            const password = document.getElementById("loginPassword").value;
+
+            const ok = await loginUser(email, password);
+
+            if (ok) {
+                window.location.href = "index.html";
+            }
+        });
+    </script>
 </body>
 
 </html>

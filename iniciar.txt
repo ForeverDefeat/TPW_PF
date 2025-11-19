@@ -1,4 +1,46 @@
+frontend
 python -m http.server 3000
+backend
+node server.js
 
 si no se actualiza los estilos si has cambiado
 ctrl + F5 actualizacion forzosa
+
+inicializacion backend
+
+1. tener carpeta backend
+    TPW_Avance3/
+    | ->   frontend/
+    | ->    backend/
+ 2. abir cmd en esta carpeta o navegar hasta esta:
+        \TPW_Avance3\backend>
+        ejecutar el siguiente comando:
+        npm init -y
+
+        consideraciones: se debe tener instalado node.js
+
+3. instalar las siguientes dependencias mediante cmd
+    npm install express mysql2 cors dotenv  express-validator
+    
+4. en mySQL 
+    inicializar un base de datos:
+
+        create database turismo_db
+
+    tablas:
+
+    CREATE TABLE users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    fullName VARCHAR(100),
+    email VARCHAR(100) UNIQUE,
+    password VARCHAR(100),
+    role ENUM('user','admin') DEFAULT 'user'
+    );
+
+    CREATE TABLE destinations (
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        name VARCHAR(100),
+        category VARCHAR(100),
+        description TEXT,
+        imageUrl VARCHAR(300)
+    );
