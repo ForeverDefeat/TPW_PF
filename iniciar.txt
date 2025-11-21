@@ -12,14 +12,13 @@ password: 1234
 user: maria@example.com 
 password: abcd
 
-Ejecutar todas las sentencias SQL: F5
-Ejecutar la sentencia en la posición actual: F9 o Ctrl + Enter
-Ejecutar sentencias desde el cursor hasta el final: Shift + F9
+prompt:
 
-si no se actualiza los estilos si has cambiado
-ctrl + F5 actualizacion forzosa
+
 
 inicializacion backend
+
+consideraciones: se debe tener instalado node.js y python
 
 1. tener carpeta backend
     TPW_Avance3/
@@ -28,12 +27,7 @@ inicializacion backend
  2. abir cmd en esta carpeta o navegar hasta esta:
         \TPW_Avance3\backend>
         ejecutar el siguiente comando:
-        npm init -y
-
-        consideraciones: se debe tener instalado node.js
-
-3. instalar las siguientes dependencias mediante cmd
-    npm install express mysql2 cors dotenv  express-validator
+        npm install express mysql2 cors dotenv  express-validator
     
 4. en mySQL 
 
@@ -41,30 +35,30 @@ inicializacion backend
 
         create database turismo_db
 
-    tablas:
+    tablas y datos:
 
-    CREATE TABLE users (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    fullName VARCHAR(100),
-    email VARCHAR(100) UNIQUE,
-    password VARCHAR(100),
-    role ENUM('user','admin') DEFAULT 'user'
-    );
-
-    CREATE TABLE destinations (
+        CREATE TABLE users (
         id INT PRIMARY KEY AUTO_INCREMENT,
-        name VARCHAR(100),
-        category VARCHAR(100),
-        description TEXT,
-        imageUrl VARCHAR(300)
-    );
+        fullName VARCHAR(100),
+        email VARCHAR(100) UNIQUE,
+        password VARCHAR(100),
+        role ENUM('user','admin') DEFAULT 'user'
+        );
+
+        CREATE TABLE destinations (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            name VARCHAR(100),
+            category VARCHAR(100),
+            description TEXT,
+            imageUrl VARCHAR(300)
+        );
 
         INSERT INTO users (fullName, email, password, role)
-        VALUES ('Admin', 'admin@turismo.com', '1234', 'admin');
+            VALUES ('Admin', 'admin@turismo.com', '1234', 'admin');
 
         INSERT INTO users (full_name, email, password, role) VALUES 
-        ('Juan Pérez', 'juan@example.com', '1234', 'user'),
-        ('María Torres', 'maria@example.com', 'abcd', 'user');
+            ('Juan Pérez', 'juan@example.com', '1234', 'user'),
+            ('María Torres', 'maria@example.com', 'abcd', 'user');
 
 
 
@@ -116,3 +110,164 @@ inicializacion backend
                 ('Danza Folklórica', 'cultura',
                 'Presentaciones de bailes típicos con vestimenta tradicional.',
                 'assets/cultura4.png');
+
+    incializacio de base de datos 2(experimento):
+
+    create database portalTurismo_db
+    use portalTurismo_db
+    
+    --Tablas y datos:
+        -- =======================================================
+        -- 1. TABLA USERS (usuarios y administradores)
+        -- =======================================================
+        CREATE TABLE users (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            fullName VARCHAR(100) NOT NULL,
+            email VARCHAR(100) UNIQUE NOT NULL,
+            password VARCHAR(255) NOT NULL,
+            role ENUM('user','admin') DEFAULT 'user'
+        );
+
+        -- Insertar admin inicial
+        INSERT INTO users (fullName, email, password, role)
+        VALUES ('Admin', 'admin@turismo.com', '1234', 'admin');
+
+        -- =======================================================
+        -- 2. TABLA CATEGORIES (categorías dinámicas de destinos)
+        -- =======================================================
+        CREATE TABLE categories (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            name VARCHAR(100) UNIQUE NOT NULL,
+            description VARCHAR(300),
+            image_url VARCHAR(300)
+        );
+
+        -- Categorías iniciales
+        INSERT INTO categories (name, description, image_url) VALUES
+        ('Playa', 'Playas, arenas blancas y actividades acuáticas.', 'assets/playa1.png'),
+        ('Montaña', 'Rutas de trekking, miradores y aventura.', 'assets/mountain1.png'),
+        ('Cultura', 'Museos, festivales, artesanía y gastronomía.', 'assets/cultura1.png');
+
+        -- =======================================================
+        -- 3. TABLA DESTINATIONS (destinos principales)
+        -- =======================================================
+        CREATE TABLE destinations (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            category_id INT NOT NULL,
+            name VARCHAR(150) NOT NULL,
+            description TEXT NOT NULL,
+            image_url VARCHAR(300),
+
+            FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
+        );
+
+        -- Ejemplos de destinos
+        INSERT INTO destinations (category_id, name, description, image_url) VALUES
+        (1, 'Playa Roja', 'Famosa por su arena rojiza dentro de Paracas.', 'assets/playa1.png'),
+        (1, 'La Mina', 'Playa familiar de aguas tranquilas.', 'assets/playa2.png'),
+        (2, 'Montaña Colorada', 'Paisaje rojizo con miradores panorámicos.', 'assets/mountain1.png'),
+        (3, 'Museo Histórico', 'Piezas arqueológicas e historia local.', 'assets/cultura1.png');
+
+        -- =======================================================
+        -- 4. TABLA SERVICE_TYPES (tipos de servicios turísticos)
+        -- =======================================================
+        CREATE TABLE service_types (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            name VARCHAR(100) UNIQUE NOT NULL,  
+            icon_url VARCHAR(300)
+        );
+
+        -- Tipos base
+        INSERT INTO service_types (name) VALUES
+        ('Hotel'),
+        ('Restaurante'),
+        ('Tour'),
+        ('Transporte'),
+        ('Actividad'),
+        ('Guía turística');
+
+        -- =======================================================
+        -- 5. TABLA SERVICES (todos los servicios turísticos)
+        -- =======================================================
+        CREATE TABLE services (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            service_type_id INT NOT NULL,
+            name VARCHAR(150) NOT NULL,
+            location VARCHAR(200),
+            description TEXT,
+            price_range VARCHAR(100),
+            image_url VARCHAR(300),
+
+            FOREIGN KEY (service_type_id) REFERENCES service_types(id) ON DELETE CASCADE
+        );
+
+        -- Ejemplos de servicios
+        INSERT INTO services (service_type_id, name, location, description, image_url)
+        VALUES
+        (1, 'Hotel Costa Azul', 'Paracas', 'Hotel frente al mar con piscina.', 'assets/hotel1.png'),
+        (2, 'Restaurante El Pez Dorado', 'Paracas', 'Comida marina fresca.', 'assets/rest1.png'),
+        (3, 'Tour Islas Ballestas', 'Paracas', 'Tour completo en yate.', 'assets/tour1.png');
+
+        -- =======================================================
+        -- 6. TABLA DESTINATION_SERVICES (relación destino-servicio)
+        -- =======================================================
+        CREATE TABLE destination_services (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            destination_id INT NOT NULL,
+            service_id INT NOT NULL,
+            UNIQUE(destination_id, service_id),
+
+            FOREIGN KEY (destination_id) REFERENCES destinations(id) ON DELETE CASCADE,
+            FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE
+        );
+
+        -- Relacionar servicios con destinos
+        INSERT INTO destination_services (destination_id, service_id) VALUES
+        (1, 1),  -- Playa Roja → Hotel Costa Azul
+        (1, 2),  -- Playa Roja → Restaurante Pez Dorado
+        (2, 3);  -- La Mina → Tour Islas Ballestas
+
+        -- =======================================================
+        -- 7. TABLA EVENTS (eventos turísticos)
+        -- =======================================================
+        CREATE TABLE events (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            destination_id INT,
+            title VARCHAR(150) NOT NULL,
+            description TEXT,
+            event_date DATE,
+            location VARCHAR(200),
+
+            FOREIGN KEY (destination_id) REFERENCES destinations(id) ON DELETE SET NULL
+        );
+
+        -- Ejemplos
+        INSERT INTO events (destination_id, title, description, event_date)
+        VALUES
+        (3, 'Festival de Música Andina', 'Artistas regionales e internacionales.', '2025-08-12');
+
+        -- =======================================================
+        -- 8. TABLA FAVORITES (usuarios guardan destinos)
+        -- =======================================================
+        CREATE TABLE favorites (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            user_id INT NOT NULL,
+            destination_id INT NOT NULL,
+            UNIQUE(user_id, destination_id),
+
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+            FOREIGN KEY (destination_id) REFERENCES destinations(id) ON DELETE CASCADE
+        );
+
+        -- =======================================================
+        -- 9. TABLA EVENTS_FOLLOWED (usuarios siguen eventos)
+        -- =======================================================
+        CREATE TABLE events_followed (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            user_id INT NOT NULL,
+            event_id INT NOT NULL,
+            UNIQUE(user_id, event_id),
+
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+            FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE
+        );
