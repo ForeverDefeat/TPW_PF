@@ -1,16 +1,11 @@
-/*********************************************/
-/*                  IMPORTS                  */
-/*********************************************/
 import { setupAuthUI } from "./auth/authUI.js";
 import { setupLoginModal } from "./auth/loginModal.js";
 import { setupRegisterModal } from "./auth/registerModal.js";
 import { setupAddDestinationModal } from "./auth/addDestinationModal.js";
 import { searchDestinations } from "./api.js";
 
-
-/*********************************************/
 /*                APP GENERAL                */
-/*********************************************/
+
 function initApp() {
     const menu = document.getElementById("menu");
     const sidebar = document.getElementById("sidebar");
@@ -24,10 +19,8 @@ function initApp() {
     });
 }
 
-
-/*********************************************/
 /*             SLIDER FADE PREMIUM           */
-/*********************************************/
+
 function initFadeSlider() {
     const slides = [...document.querySelectorAll(".fade-slide")];
     const btnPrev = document.querySelector(".fade-prev");
@@ -72,10 +65,8 @@ function initFadeSlider() {
     startAutoplay();
 }
 
-
-/*********************************************/
 /*         ANIMACIÓN FADE IN SECTIONS        */
-/*********************************************/
+
 function initFadeInObserver() {
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -86,10 +77,8 @@ function initFadeInObserver() {
     document.querySelectorAll(".fade-in").forEach(el => observer.observe(el));
 }
 
-
-/*********************************************/
 /*         CONFIGURAR SEARCHBAR              */
-/*********************************************/
+
 function setupSearchBar() {
     const searchInput = document.getElementById("searchInput");
     const searchBtn = document.getElementById("searchBtn");
@@ -173,10 +162,37 @@ function setupSearchBar() {
     }
 }
 
+function setupDarkMode() {
+    const btn = document.getElementById("toggleDarkMode");
+    if (!btn) return;
 
-/*********************************************/
+    // Cargar modo desde localStorage
+    const savedMode = localStorage.getItem("theme");
+
+    if (savedMode === "dark") {
+        document.documentElement.classList.add("dark-mode");
+        btn.textContent = "☀️";
+    } else {
+        btn.textContent = "🌙";
+    }
+
+    btn.addEventListener("click", () => {
+        const isDark = document.documentElement.classList.toggle("dark-mode");
+
+        btn.textContent = isDark ? "☀️" : "🌙";
+
+        localStorage.setItem("theme", isDark ? "dark" : "light");
+    });
+}
+
+/*    SCROLL AUTOMÁTICO AL BANNER  */
+window.addEventListener("load", () => {
+    const banner = document.querySelector(".banner");
+    banner?.scrollIntoView({ behavior: "smooth" });
+});
+
 /*     INICIALIZAR TODO DESPUÉS DE CARGAR    */
-/*********************************************/
+
 document.addEventListener("componentsLoaded", () => {
     console.log("⚡ Componentes cargados — iniciando UI");
 
@@ -189,14 +205,6 @@ document.addEventListener("componentsLoaded", () => {
     setupAddDestinationModal();
     setupAuthUI();
 
-    setupSearchBar();  
-});
-
-
-/*********************************************/
-/*    SCROLL AUTOMÁTICO AL BANNER  */
-/*********************************************/
-window.addEventListener("load", () => {
-    const banner = document.querySelector(".banner");
-    banner?.scrollIntoView({ behavior: "smooth" });
+    setupSearchBar();
+    setupDarkMode();
 });
