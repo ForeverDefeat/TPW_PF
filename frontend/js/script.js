@@ -4,22 +4,24 @@ import { setupRegisterModal } from "./auth/registerModal.js";
 import { setupAddDestinationModal } from "./auth/addDestinationModal.js";
 import { searchDestinations } from "./api.js";
 
-/*                APP GENERAL                */
+/*========================= APP GENERAL =========================*/
 
 function initApp() {
     const menu = document.getElementById("menu");
     const sidebar = document.getElementById("sidebar");
     const main = document.getElementById("main");
+    const footer = document.querySelector(".app-footer");
 
     if (!menu || !sidebar) return;
 
     menu.addEventListener("click", () => {
         sidebar.classList.toggle("menu-toggle");
         main?.classList.toggle("menu-toggle");
+        footer?.classList.toggle("menu-toggle");
     });
 }
 
-/*             SLIDER FADE PREMIUM           */
+/*========================= SLIDER FADE PREMIUM =========================*/
 
 function initFadeSlider() {
     const slides = [...document.querySelectorAll(".fade-slide")];
@@ -65,7 +67,7 @@ function initFadeSlider() {
     startAutoplay();
 }
 
-/*         ANIMACIÓN FADE IN SECTIONS        */
+/*========================= ANIMACIÓN FADE IN SECTIONS =========================*/
 
 function initFadeInObserver() {
     const observer = new IntersectionObserver((entries) => {
@@ -77,7 +79,7 @@ function initFadeInObserver() {
     document.querySelectorAll(".fade-in").forEach(el => observer.observe(el));
 }
 
-/*         CONFIGURAR SEARCHBAR              */
+/*========================= CONFIGURAR SEARCHBAR =========================*/
 
 function setupSearchBar() {
     const searchInput = document.getElementById("searchInput");
@@ -161,7 +163,7 @@ function setupSearchBar() {
         });
     }
 }
-
+/*========================= MODO OSCURO =========================*/
 function setupDarkMode() {
     const btn = document.getElementById("toggleDarkMode");
     if (!btn) return;
@@ -185,13 +187,13 @@ function setupDarkMode() {
     });
 }
 
-/*    SCROLL AUTOMÁTICO AL BANNER  */
+/*========================= SCROLL AUTOMÁTICO AL BANNER =========================*/
 window.addEventListener("load", () => {
     const banner = document.querySelector(".banner");
     banner?.scrollIntoView({ behavior: "smooth" });
 });
 
-/*     INICIALIZAR TODO DESPUÉS DE CARGAR    */
+/*========================= INICIALIZAR TODO DESPUÉS DE CARGAR =========================*/
 
 document.addEventListener("componentsLoaded", () => {
     console.log("⚡ Componentes cargados — iniciando UI");

@@ -18,6 +18,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     await loadComponent("body", "components/registerModal.html");
     await loadComponent("body", "components/addDestinationModal.html");
 
+    await loadComponent("#footer-container", "components/footer.html");
+
     // Avisar al sistema que YA SE CARGARON los componentes dinámicos
     document.dispatchEvent(new Event("componentsLoaded"));
 });
