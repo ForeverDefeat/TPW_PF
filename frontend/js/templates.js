@@ -1,6 +1,6 @@
 export function beachTemplate(d) {
     return `
-        <div class="card searchable-card">
+        <div class="cat-card searchable-card">
             <img src="${d.image}" alt="${d.title}">
             <h4>${d.name}</h4>
             <p>${d.description}</p>
@@ -10,7 +10,7 @@ export function beachTemplate(d) {
 
 export function mountainTemplate(d) {
     return `
-        <div class="destino-card searchable-card">
+        <div class="cat-card searchable-card">
             <img src="${d.image}" alt="${d.title}">
             <div class="destino-info">
                 <h4>${d.name}</h4>
@@ -22,7 +22,7 @@ export function mountainTemplate(d) {
 
 export function cultureTemplate(d) {
     return `
-        <div class="card searchable-card">
+        <div class="cat-card searchable-card">
             <img src="${d.image}" alt="${d.title}">
             <h4>${d.name}</h4>
             <p>${d.description}</p>
