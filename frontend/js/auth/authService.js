@@ -1,28 +1,32 @@
-import { authSession } from "./authSession.js";
+// frontend/js/auth/authService.js
 
-export const authService = {
+const API_URL = "/api/auth";
 
-    login(email, password) {
+/**
+ * Envía credenciales al backend para iniciar sesión.
+ * @param {string} email
+ * @param {string} password
+ * @returns {Promise<object>}
+ */
+export async function loginUser(email, password) {
+    const res = await fetch(`${API_URL}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+    });
 
-        // cuentas dummy
-        if (email === "admin@turismo.com" && password === "admin123") {
-            authSession.saveSession("Administrador", "admin");
-            return { status: "ok", role: "admin" };
-        }
+    return res.json();
+}
 
-        // Usuario normal
-        if (email.includes("@")) {
-            const username = email.split("@")[0];
-            authSession.saveSession(username, "user");
-            return { status: "ok", role: "user" };
-        }
+/**
+ * Registra un nuevo usuario.
+ */
+export async function registerUser(full_name, email, password) {
+    const res = await fetch(`${API_URL}/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ full_name, email, password })
+    });
 
-        return { status: "error", msg: "Credenciales inválidas" };
-    },
-
-    logout() {
-        authSession.clear();
-        window.location.reload();
-    }
-
-};
+    return res.json();
+}

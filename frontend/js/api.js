@@ -26,16 +26,6 @@ export async function getDestinations() {
     return res.json();
 }
 
-// AÑADIR DESTINO
-export async function addDestination(data) {
-    const res = await fetch(`${API_URL}/destinations`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-    });
-    return res.json();
-}
-
 // OBTENER CONTEOS DE CATEGORÍAS
 export async function getCategoryCounts() {
     const res = await fetch(`${API_URL}/destinations/counts`);

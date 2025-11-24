@@ -1,21 +1,16 @@
-import { loginUser } from "../api.js";
+// frontend/js/auth/loginModal.js
+
+import { loginUser } from "../auth/authService.js";
+import { saveSession } from "../auth/authSession.js";
 
 export function setupLoginModal() {
     const modal = document.getElementById("loginModal");
     const openBtn = document.getElementById("openLogin");
     const closeBtn = document.getElementById("closeLogin");
 
-    // Abrir modal
-    openBtn?.addEventListener("click", () => {
-        modal.classList.remove("hidden");
-    });
+    openBtn?.addEventListener("click", () => modal.classList.remove("hidden"));
+    closeBtn?.addEventListener("click", () => modal.classList.add("hidden"));
 
-    // Cerrar modal
-    closeBtn?.addEventListener("click", () => {
-        modal.classList.add("hidden");
-    });
-
-    // Login form
     const form = document.getElementById("loginFormModal");
 
     form?.addEventListener("submit", async (e) => {
@@ -27,13 +22,11 @@ export function setupLoginModal() {
         const res = await loginUser(email, password);
 
         if (!res.ok) {
-            alert("Credenciales incorrectas");
+            alert(res.message || "Credenciales incorrectas");
             return;
         }
 
-        localStorage.setItem("loggedIn", "true");
-        localStorage.setItem("username", res.user.fullName);
-        localStorage.setItem("userRole", res.user.role);
+        saveSession(res.user);
 
         modal.classList.add("hidden");
         window.location.reload();

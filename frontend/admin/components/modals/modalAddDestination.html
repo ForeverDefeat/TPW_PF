@@ -1,0 +1,41 @@
+<div id="modalAddDestination" class="modal">
+  <div class="modal-content">
+    <span class="close" id="closeAddDestination">&times;</span>
+    <h2>Añadir Destino</h2>
+
+    <form id="formAddDestination" class="admin-form">
+
+      <!-- Nombre -->
+      <label for="destName">Nombre:</label>
+      <input type="text" id="destName" required />
+
+      <!-- Categoría -->
+      <label for="destCategory">Categoría:</label>
+      <select id="destCategory" required></select>
+
+      <!-- Descripción corta -->
+      <label for="destSummary">Resumen:</label>
+      <textarea id="destSummary" rows="2"></textarea>
+
+      <!-- Descripción larga -->
+      <label for="destDescription">Descripción:</label>
+      <textarea id="destDescription" rows="4"></textarea>
+
+      <!-- Imagen principal -->
+      <label for="destImage">Imagen principal:</label>
+      <input type="file" id="destImage" accept="image/*" required />
+
+      <!-- Imagen hero -->
+      <label for="destHeroImage">Imagen hero:</label>
+      <input type="file" id="destHeroImage" accept="image/*" />
+
+      <!-- Destacado -->
+      <label>
+        <input type="checkbox" id="destIsFeatured" />
+        ¿Destacado?
+      </label>
+
+      <button class="admin-btn admin-btn-primary" type="submit">Guardar</button>
+    </form>
+  </div>
+</div>

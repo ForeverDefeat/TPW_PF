@@ -1,0 +1,247 @@
+PROMPT DE RECUPERACIÓN COMPLETO DEL PROYECTO "Portal de Turismo"
+
+(Copiar y pegar en caso el chat se reinicie)
+
+Quiero continuar desarrollando mi proyecto Portal de Turismo, siguiendo exactamente la arquitectura, estilo de código y decisiones técnicas que ya hemos definido.
+Aquí está TODO el contexto necesario para reanudar:
+
+🌎 1. Idea general del proyecto
+
+El Portal de Turismo es una aplicación web enfocada en mostrar destinos turísticos, servicios, hoteles, eventos y experiencias disponibles en diferentes zonas.
+Contará con:
+
+Página pública (home/index).
+
+Categorías dinámicas y administrables.
+
+Detalles de destinos (con servicios cercanos, hoteles, eventos).
+
+Usuarios (roles: admin y user).
+
+Modo oscuro.
+
+Sistema de favoritos.
+
+Seguir eventos.
+
+Panel de administración completo.
+
+Sistema modular altamente escalable.
+
+🧱 2. Arquitectura del proyecto
+
+Tecnologías usadas:
+
+Frontend
+
+HTML + CSS + JS (sin frameworks como React/Vue).
+
+Carga de componentes dinámica (components.js).
+
+Modo oscuro con variables CSS.
+
+Sidebar estilo YouTube (expandible/colapsable).
+
+Responsividad total.
+
+Home con slider, categorías y buscador.
+
+Backend (Node.js + Express + MySQL2)
+
+Patrón Repository + Service + Controller.
+
+Documentación con Swagger/OpenAPI autogenerada.
+
+Validación con express-validator.
+
+Modular y escalable.
+
+Base de datos
+
+MySQL con una estructura relacional ampliada que soporta destinos, servicios, eventos y preferencias del usuario.
+
+🗄 3. Estructura actual del proyecto
+TPW_Avance3/
+│
+├── backend/
+│   ├── config/
+│   │   ├── db.js
+│   │   ├── swagger.js
+│   ├── controllers/
+│   │   ├── authController.js
+│   │   ├── categoryController.js
+│   │   ├── destinationController.js
+│   ├── models/ (solo User.js inicial)
+│   ├── repositories/
+│   │   ├── CategoryRepository.js
+│   │   ├── DestinationRepository.js
+│   ├── services/
+│   │   ├── CategoryService.js
+│   │   ├── DestinationService.js
+│   ├── routes/
+│   │   ├── authRoutes.js
+│   │   ├── categoryRoutes.js
+│   │   ├── destinationRoutes.js
+│   ├── server.js
+│   └── package.json
+│
+└── frontend/
+    ├── components/
+    ├── css/
+    ├── js/
+    ├── assets/
+    ├── icons/
+    ├── index.html
+    ├── beach.html
+    ├── culture.html
+    ├── mountain.html
+
+🗃 4. Base de datos actual
+
+La BD ya está completamente rediseñada y expandida, e incluye:
+
+Tablas:
+
+users (administradores y usuarios)
+
+categories (dinámicas)
+
+destinations (relacionadas a categorías)
+
+service_types (Hotel, Restaurante, Tour…)
+
+services
+
+destination_services (muchos a muchos)
+
+events
+
+favorites
+
+events_followed
+
+La BD inicial ya fue creada y validada.
+
+🔧 5. Funcionalidades ya implementadas
+Frontend
+
+Header responsivo con buscador.
+
+Sidebar estilo YouTube (expandible + hover).
+
+Slider automático tipo premium.
+
+Componentes dinámicos (header, footer, sidebar, auth).
+
+Modo oscuro funcionando (icono toggle).
+
+Estilos globales listos.
+
+Categorías estáticas (por ahora).
+
+Página index con totales, slider, cards.
+
+Backend
+
+API funcional con Node + Express.
+
+Swagger activo en: http://localhost:4000/api-docs
+
+Categorías:
+✔ Repository
+✔ Service
+✔ Controller
+✔ Routes
+✔ Documentación Swagger
+✔ Validaciones
+✔ Modelo final
+
+Destinations:
+✔ Repository
+✔ Service
+✔ Controller
+✔ Routes
+✔ Documentación Swagger
+✔ Validaciones
+
+Todo el backend sigue Repository Pattern + JSDoc + Swagger.
+
+🚧 6. Funcionalidades que FALTAN implementar
+
+Continuaremos en este orden:
+
+🔵 A. CRUD – Service Types
+
+(Bases para los hoteles, restaurantes, tours)
+
+🔵 B. CRUD – Services
+
+(Hoteles, restaurantes, tours, transporte…)
+
+🔵 C. CRUD – Destination Services
+
+(Relaciones “servicios cercanos”)
+
+🔵 D. CRUD – Events
+
+(Eventos por destino)
+
+🔵 E. CRUD – Favorites
+
+(Guardar destino favorito)
+
+🔵 F. CRUD – Events Followed
+
+(Seguir evento – notificaciones)
+
+🔵 G. Users: versión completa
+
+Login seguro (hash + JWT)
+
+Roles admin/user
+
+Control de permisos por rol
+
+Edición de perfil
+
+🔵 H. Panel de administración
+
+Para administrar:
+
+Categorías
+
+Destinos
+
+Servicios
+
+Eventos
+
+🔵 I. Frontend dinámico
+
+Cargar categorías desde la BD
+
+Cargar destinos por categoría
+
+Generar páginas dinámicas
+
+Página detallada por destino
+
+Insertar “servicios cercanos”
+
+Añadir favoritos desde frontend
+
+🧭 7. Solicitud final para restaurar el chat
+
+Quiero continuar exactamente donde lo dejé.
+Debes seguir el patrón:
+
+Repository → Service → Controller → Routes → Swagger → Registro en server.js
+
+Y comentar cada parte con JSDoc.
+
+El siguiente módulo que quiero implementar será el que yo te indique.
+
+✅ FIN DEL PROMPT
+Cuando lo pegue en un chat nuevo, solo debes responder:
+
+“Perfecto, cargué todo el contexto. ¿Qué módulo deseas implementar ahora?”

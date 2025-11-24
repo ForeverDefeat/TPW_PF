@@ -1,32 +1,26 @@
-export function setupAuthUI() {
-    const loggedOutView = document.getElementById("loggedOutView");
-    /* const loggedInView = document.getElementById("loggedInView"); */
-    const loggedInView = document.getElementById("loggedInView");
-    if (loggedInView) loggedInView.style.display = "none";
-    const usernameDisplay = document.getElementById("usernameDisplay");
-    const adminAddButton = document.getElementById("adminAddButton");
-    const logoutButton = document.getElementById("logoutButton");
+// frontend/js/auth/authUI.js
 
-    const loggedIn = localStorage.getItem("loggedIn") === "true";
-    const username = localStorage.getItem("username");
-    const role = localStorage.getItem("userRole");
+import { getSession, clearSession } from "./authSession.js";
+
+export function setupAuthUI() {
+    const { loggedIn, username } = getSession();
+
+    const loggedOutView = document.getElementById("loggedOutView");
+    const loggedInView = document.getElementById("loggedInView");
+    const usernameDisplay = document.getElementById("usernameDisplay");
+    const logoutBtn = document.getElementById("logoutButton");
 
     if (loggedIn) {
         loggedOutView.style.display = "none";
         loggedInView.style.display = "flex";
-
-        usernameDisplay.textContent = username;
-
-        if (role === "admin") {
-            adminAddButton.style.display = "inline-block";
-        }
+        usernameDisplay.textContent = username || "Usuario";
     } else {
         loggedOutView.style.display = "flex";
         loggedInView.style.display = "none";
     }
 
-    logoutButton?.addEventListener("click", () => {
-        localStorage.clear();
+    logoutBtn?.addEventListener("click", () => {
+        clearSession();
         window.location.reload();
     });
 }

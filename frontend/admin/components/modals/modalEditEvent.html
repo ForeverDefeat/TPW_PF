@@ -1,0 +1,33 @@
+<div id="modalEditEvent" class="modal">
+  <div class="modal-content">
+    <span class="close" id="closeEditEvent">&times;</span>
+    <h2>Editar Evento</h2>
+
+    <form id="formEditEvent" class="admin-form">
+
+      <input type="hidden" id="editEventId" />
+
+      <label for="editEventDestinationId">Destino:</label>
+      <select id="editEventDestinationId" required></select>
+
+      <label for="editEventTitle">Título:</label>
+      <input type="text" id="editEventTitle" required />
+
+      <label for="editEventDescription">Descripción:</label>
+      <textarea id="editEventDescription"></textarea>
+
+      <label for="editEventDate">Fecha del evento:</label>
+      <input type="date" id="editEventDate" required />
+
+      <label for="editEventLocation">Ubicación:</label>
+      <input type="text" id="editEventLocation" />
+
+      <label for="editEventImage">Imagen nueva (opcional):</label>
+      <input type="file" id="editEventImage" accept="image/*" />
+
+      <button type="submit" class="admin-btn admin-btn-primary">
+        Guardar Cambios
+      </button>
+    </form>
+  </div>
+</div>

@@ -1,66 +1,139 @@
-// controllers/destinationController.js
-import Destination from "../models/Destination.js";
-import { db } from "../config/db.js";
+/**
+ * @file controllers/destinationController.js
+ * @description Controlador para la entidad Destination.
+ * @module controllers/destinationController
+ */
 
+import { DestinationService } from "../services/DestinationService.js";
 
-export async function getDestinations(req, res) {
-    try {
-        const data = await Destination.getAll();
-        res.json(data);
-    } catch (err) {
-        console.error("Error obteniendo destinos:", err);
-        res.status(500).json({ ok: false, message: "Error del servidor" });
+export class DestinationController {
+
+    /**
+     * Obtener todos los destinos.
+     * @route GET /api/destinations
+     */
+    static async getAll(req, res) {
+        try {
+            const destinations = await DestinationService.getAllDestinations();
+            res.json({ ok: true, data: destinations });
+
+        } catch (error) {
+            console.error("❌ Error en getAll:", error);
+            res.status(500).json({ ok: false, message: "Error interno del servidor" });
+        }
+    }
+
+    /**
+     * Obtener destino por ID.
+     * @route GET /api/destinations/{id}
+     */
+    static async getById(req, res) {
+        try {
+            const { id } = req.params;
+            const destination = await DestinationService.getDestinationById(id);
+
+            if (!destination) {
+                return res.status(404).json({
+                    ok: false,
+                    message: "Destino no encontrado"
+                });
+            }
+
+            res.json({ ok: true, data: destination });
+
+        } catch (error) {
+            console.error("❌ Error en getById:", error);
+            res.status(500).json({ ok: false, message: "Error interno del servidor" });
+        }
+    }
+
+    /**
+     * Crear un nuevo destino.
+     * @route POST /api/destinations
+     */
+    static async create(req, res) {
+        try {
+            const newId = await DestinationService.createDestination(req.body);
+
+            res.status(201).json({
+                ok: true,
+                message: "Destino creado correctamente",
+                id: newId
+            });
+
+        } catch (error) {
+            console.error("❌ Error en create:", error);
+
+            res.status(error.status || 500).json({
+                ok: false,
+                message: error.message,
+                details: error.details || null
+            });
+        }
+    }
+
+    /**
+     * Actualizar destino por ID.
+     * @route PUT /api/destinations/{id}
+     */
+    static async update(req, res) {
+        try {
+            const { id } = req.params;
+
+            const updated = await DestinationService.updateDestination(id, req.body);
+
+            if (!updated) {
+                return res.status(404).json({
+                    ok: false,
+                    message: "Destino no encontrado"
+                });
+            }
+
+            res.json({
+                ok: true,
+                message: "Destino actualizado correctamente"
+            });
+
+        } catch (error) {
+            console.error("❌ Error en update:", error);
+
+            res.status(error.status || 500).json({
+                ok: false,
+                message: error.message,
+                details: error.details || null
+            });
+        }
+    }
+
+    /**
+     * Eliminar un destino por ID.
+     * @route DELETE /api/destinations/{id}
+     */
+    static async delete(req, res) {
+        try {
+            const { id } = req.params;
+
+            const deleted = await DestinationService.deleteDestination(id);
+
+            if (!deleted) {
+                return res.status(404).json({
+                    ok: false,
+                    message: "Destino no encontrado"
+                });
+            }
+
+            res.json({
+                ok: true,
+                message: "Destino eliminado correctamente"
+            });
+
+        } catch (error) {
+            console.error("❌ Error al eliminar destino:", error);
+
+            res.status(error.status || 500).json({
+                ok: false,
+                message: error.message
+            });
+        }
     }
 }
-
-export async function addDestination(req, res) {
-    try {
-        const { name, category, description, imageUrl } = req.body;
-
-        await Destination.create(name, category, description, imageUrl);
-
-        res.json({ ok: true, message: "Destino añadido" });
-    } catch (err) {
-        console.error("Error agregando destino:", err);
-        res.status(500).json({ ok: false, message: "Error del servidor" });
-    }
-}
-
-export async function getCategoryCounts(req, res) {
-    try {
-        const [rows] = await db.query(`
-            SELECT category, COUNT(*) AS total
-            FROM destinations
-            GROUP BY category
-        `);
-
-        res.json({
-            ok: true,
-            counts: rows
-        });
-
-    } catch (err) {
-        console.error("Error obteniendo conteos:", err);
-        res.status(500).json({ ok: false, message: "Error del servidor" });
-    }
-}
-
-export const searchDestinations = async (req, res) => {
-    try {
-        const q = req.query.q?.toLowerCase() || "";
-
-        const destinations = await Destination.getAll();
-
-        const filtered = destinations.filter(d =>
-            d.name.toLowerCase().includes(q) ||
-            d.description.toLowerCase().includes(q) ||
-            d.category.toLowerCase().includes(q)
-        );
-
-        res.json({ ok: true, results: filtered });
-
-    } catch (err) {
-        res.status(500).json({ ok: false, error: err.message });
-    }
-};
-

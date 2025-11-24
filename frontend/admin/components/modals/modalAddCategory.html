@@ -1,0 +1,41 @@
+<div id="modalAddCategory" class="modal">
+  <div class="modal-content">
+    <span class="close" id="closeAddCategory">&times;</span>
+    <h2>Añadir Categoría</h2>
+
+    <form id="formAddCategory" class="admin-form">
+      <!-- Nombre -->
+      <label for="addCatName">Nombre de la categoría:</label>
+      <input
+        type="text"
+        id="addCatName"
+        name="name"
+        required
+        placeholder="Ej. Playa, Montaña, Cultura"
+      />
+
+      <!-- Descripción -->
+      <label for="addCatDesc">Descripción:</label>
+      <textarea
+        id="addCatDesc"
+        name="description"
+        rows="3"
+        placeholder="Breve descripción de la categoría"
+      ></textarea>
+
+      <!-- Imagen -->
+      <label for="addCatImage">Imagen (opcional):</label>
+      <input
+        type="file"
+        id="addCatImage"
+        name="image"
+        accept="image/*"
+      />
+
+      <!-- Botón enviar -->
+      <button type="submit" class="admin-btn admin-btn-primary">
+        Guardar Categoría
+      </button>
+    </form>
+  </div>
+</div>

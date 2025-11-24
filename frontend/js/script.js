@@ -1,7 +1,6 @@
 import { setupAuthUI } from "./auth/authUI.js";
 import { setupLoginModal } from "./auth/loginModal.js";
 import { setupRegisterModal } from "./auth/registerModal.js";
-import { setupAddDestinationModal } from "./auth/addDestinationModal.js";
 import { searchDestinations } from "./api.js";
 
 /*========================= APP GENERAL =========================*/
@@ -204,7 +203,6 @@ document.addEventListener("componentsLoaded", () => {
 
     setupLoginModal();
     setupRegisterModal();
-    setupAddDestinationModal();
     setupAuthUI();
 
     setupSearchBar();

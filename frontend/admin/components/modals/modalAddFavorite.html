@@ -1,0 +1,23 @@
+<div id="modalAddFavorite" class="modal">
+  <div class="modal-content">
+    <span class="close" id="closeAddFavorite">&times;</span>
+    <h2>Añadir Destino Favorito</h2>
+
+    <form id="formAddFavorite" class="admin-form">
+
+      <!-- Usuario (solo lectura, viene del filtro) -->
+      <label>Usuario:</label>
+      <p id="favoriteUserLabel" style="font-weight: 600; margin-bottom: 0.5rem;"></p>
+
+      <!-- Destino a marcar como favorito -->
+      <label for="favoriteDestinationId">Destino:</label>
+      <select id="favoriteDestinationId" required>
+        <!-- opciones dinámicas desde favoritesPage.js -->
+      </select>
+
+      <button type="submit" class="admin-btn admin-btn-primary" style="margin-top: 1rem;">
+        Guardar Favorito
+      </button>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,53 @@
+<div class="admin-dashboard">
+
+    <!-- Título del panel -->
+    <h2 class="admin-dashboard-title">Dashboard General</h2>
+
+    <!-- Tarjetas de estadísticas -->
+    <div class="admin-dashboard-cards">
+
+        <div class="admin-card">
+            <h3># Categorías</h3>
+            <p id="statCategories" class="admin-stat-number">0</p>
+        </div>
+
+        <div class="admin-card">
+            <h3># Destinos</h3>
+            <p id="statDestinations" class="admin-stat-number">0</p>
+        </div>
+
+        <div class="admin-card">
+            <h3># Servicios</h3>
+            <p id="statServices" class="admin-stat-number">0</p>
+        </div>
+
+        <div class="admin-card">
+            <h3># Eventos</h3>
+            <p id="statEvents" class="admin-stat-number">0</p>
+        </div>
+
+        <div class="admin-card">
+            <h3># Usuarios</h3>
+            <p id="statUsers" class="admin-stat-number">0</p>
+        </div>
+
+    </div>
+
+    <!-- Sección Gráficos -->
+    <div class="admin-dashboard-charts">
+
+        <!-- Gráfico 1: Destinos por Categoría -->
+        <div class="admin-card admin-chart">
+            <h3>Destinos por Categoría</h3>
+            <canvas id="chartDestinationsPerCategory"></canvas>
+        </div>
+
+        <!-- Gráfico 2: Actividad Reciente (ejemplo) -->
+        <div class="admin-card admin-chart">
+            <h3>Actividad Reciente</h3>
+            <canvas id="chartRecentActivity"></canvas>
+        </div>
+
+    </div>
+
+</div>

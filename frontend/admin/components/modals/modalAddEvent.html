@@ -1,0 +1,31 @@
+<div id="modalAddEvent" class="modal">
+  <div class="modal-content">
+    <span class="close" id="closeAddEvent">&times;</span>
+    <h2>Añadir Evento</h2>
+
+    <form id="formAddEvent" class="admin-form">
+
+      <label for="eventDestinationId">Destino:</label>
+      <select id="eventDestinationId" required></select>
+
+      <label for="eventTitle">Título:</label>
+      <input type="text" id="eventTitle" required />
+
+      <label for="eventDescription">Descripción:</label>
+      <textarea id="eventDescription"></textarea>
+
+      <label for="eventDate">Fecha del evento:</label>
+      <input type="date" id="eventDate" required />
+
+      <label for="eventLocation">Ubicación:</label>
+      <input type="text" id="eventLocation" />
+
+      <label for="eventImage">Imagen:</label>
+      <input type="file" id="eventImage" accept="image/*" />
+
+      <button type="submit" class="admin-btn admin-btn-primary">
+        Guardar Evento
+      </button>
+    </form>
+  </div>
+</div>

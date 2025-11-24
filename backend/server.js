@@ -1,24 +1,109 @@
+/**
+ * @file server.js
+ * @description Servidor principal de la API y Frontend del Portal de Turismo.
+ *              Compatible con Express 5, SPA para el panel Admin y rutas API REST.
+ */
+
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
+
+// ===============================
+// Importar rutas del backend
+// ===============================
+import categoryRoutes from "./routes/categoryRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
+import destinationRoutes from "./routes/destinationRoutes.js";
+import serviceRoutes from "./routes/serviceRoutes.js";
+import serviceTypeRoutes from "./routes/serviceTypeRoutes.js";
+import destinationServiceRoutes from "./routes/destinationServiceRoutes.js";
+import eventRoutes from "./routes/eventRoutes.js";
+import favoriteRoutes from "./routes/favoriteRoutes.js";
+import eventsFollowedRoutes from "./routes/eventsFollowedRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+import uploadRoutes from "./routes/uploadRoutes.js";
+import dashboardRoutes from "./routes/dashboardRoutes.js";
+
+// Swagger
+import { swaggerDocs } from "./config/swagger.js";
+
+// ===============================
+// Inicialización
+// ===============================
 dotenv.config();
+const app = express();
 
-const app = express();   
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-// Middlewares
+// Ruta del frontend completo
+const FRONTEND_PATH = path.join(__dirname, "../frontend");
+
+// ===============================
+// Middleware global
+// ===============================
 app.use(cors());
 app.use(express.json());
 
-// Rutas
-import authRoutes from "./routes/authRoutes.js";
-import destinationRoutes from "./routes/destinationRoutes.js";
+// ===============================
+//  SERVIR FRONTEND ESTÁTICO
+// ===============================
 
+// Sitio público
+app.use(express.static(FRONTEND_PATH));
+
+// Panel Admin
+app.use("/admin", express.static(path.join(FRONTEND_PATH, "admin")));
+
+// Carpeta de imágenes subidas
+app.use("/uploads", express.static("uploads"));
+
+// ===============================
+// Rutas API
+// ===============================
+app.use("/api/categories", categoryRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/destinations", destinationRoutes);
+app.use("/api/services", serviceRoutes);
+app.use("/api/service-types", serviceTypeRoutes);
+app.use("/api/destination-services", destinationServiceRoutes);
+app.use("/api/events", eventRoutes);
+app.use("/api/favorites", favoriteRoutes);
+app.use("/api/events-followed", eventsFollowedRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/dashboard", dashboardRoutes);
+
+// Ruta para subir imágenes
+app.use("/api/upload", uploadRoutes);
+
+// ===============================
+// SPA del Panel Admin
+// (Fix para Express 5: usar /admin/(*) )
+// ===============================
+app.get(/^\/admin\/?.*/, (req, res) => {
+    res.sendFile(path.join(FRONTEND_PATH, "admin/index.html"));
+});
+
+// ===============================
+// SPA del sitio público (Fallback)
+// ===============================
+app.get(/^\/(?!api|uploads|admin).*/, (req, res) => {
+    res.sendFile(path.join(FRONTEND_PATH, "index.html"));
+});
 
 
-// Servidor
-const PORT = process.env.PORT || 4000;
+// ===============================
+// Swagger Documentation
+// ===============================
+swaggerDocs(app);
+
+// ===============================
+// Iniciar servidor
+// ===============================
+const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
-    console.log(`Backend corriendo en http://localhost:${PORT}`);
+    console.log(`Servidor iniciado en puerto ${PORT}`);
 });

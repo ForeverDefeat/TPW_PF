@@ -1,0 +1,31 @@
+<div id="modalEditUser" class="modal">
+  <div class="modal-content">
+    <span class="close" id="closeEditUser">&times;</span>
+    <h2>Editar Usuario</h2>
+
+    <form id="formEditUser" class="admin-form">
+
+      <input type="hidden" id="editUserId" />
+
+      <label for="editUserName">Nombre completo:</label>
+      <input type="text" id="editUserName" required />
+
+      <label for="editUserEmail">Correo electrónico:</label>
+      <input type="email" id="editUserEmail" required />
+
+      <label for="editUserRole">Rol:</label>
+      <select id="editUserRole">
+        <option value="user">Usuario</option>
+        <option value="admin">Administrador</option>
+      </select>
+
+      <small style="color: var(--color-text-muted);">
+        La contraseña no puede modificarse desde este panel.
+      </small>
+
+      <button type="submit" class="admin-btn admin-btn-primary">
+        Guardar cambios
+      </button>
+    </form>
+  </div>
+</div>

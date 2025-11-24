@@ -1,20 +1,31 @@
-// models/User.js
-import { db } from "../config/db.js";
+/**
+ * @file models/User.js
+ * @description Modelo de dominio para la entidad User.
+ * @module models/User
+ */
 
-export default class User {
+/**
+ * @typedef {Object} User
+ * @property {number} id - ID del usuario
+ * @property {string} fullName - Nombre completo
+ * @property {string} email - Correo electrónico único
+ * @property {string} password - Contraseña (texto plano para pruebas)
+ * @property {"user"|"admin"} role - Rol del usuario
+ */
 
-    static async findByEmailAndPassword(email, password) {
-        const [rows] = await db.query(
-            "SELECT * FROM users WHERE email = ? AND password = ? LIMIT 1",
-            [email, password]
-        );
-        return rows[0];
-    }
-
-    static async create(fullName, email, password) {
-        await db.query(
-            "INSERT INTO users (fullName, email, password, role) VALUES (?, ?, ?, ?)",
-            [fullName, email, password, "user"]
-        );
-    }
+export class User {
+  /**
+   * Crea una instancia de User a partir de una fila de BD.
+   * @param {User} row
+   */
+  static fromRow(row) {
+    if (!row) return null;
+    return {
+      id: row.id,
+      fullName: row.fullName,
+      email: row.email,
+      password: row.password,
+      role: row.role,
+    };
+  }
 }

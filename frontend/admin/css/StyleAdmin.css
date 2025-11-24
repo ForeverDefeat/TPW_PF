@@ -1,0 +1,323 @@
+:root {
+    --admin-sidebar-width: 260px;
+    --admin-header-height: 4rem;
+}
+
+/* =========================== RESET ADMIN AREA =========================== */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--color-bg);
+    color: var(--color-text-primary);
+    font-family: var(--font-family-base);
+}
+
+/* =========================== ADMIN HEADER =========================== */
+.admin-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: var(--admin-header-height);
+    width: 100%;
+    background: var(--header-bg);
+    border-bottom: 1px solid var(--header-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+    z-index: 2000;
+}
+
+.admin-header .admin-title {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+.admin-header .admin-title img {
+    width: 28px;
+    height: 28px;
+}
+
+.admin-header .admin-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.admin-header button {
+    background: var(--btn-ghost-bg);
+    border: 1px solid var(--color-border);
+    padding: 0.45rem 0.9rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    transition: 0.2s ease;
+}
+
+.admin-header button:hover {
+    background: var(--btn-ghost-bg-hover);
+}
+
+/* =========================== ADMIN SIDEBAR =========================== */
+.admin-sidebar {
+    position: fixed;
+    top: var(--admin-header-height);
+    left: 0;
+    width: var(--admin-sidebar-width);
+    height: calc(100% - var(--admin-header-height));
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--color-border);
+    padding: 1.2rem 1rem;
+    overflow-y: auto;
+    z-index: 1900;
+    transition: background 0.3s ease;
+}
+
+.admin-sidebar nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.admin-sidebar nav li {
+    margin-bottom: 0.5rem;
+}
+
+.admin-sidebar nav a {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.75rem 1rem;
+    text-decoration: none;
+    color: var(--color-text-secondary);
+    border-radius: 8px;
+    transition: background 0.2s ease, color 0.2s ease;
+    font-weight: 500;
+}
+
+.admin-sidebar nav a img {
+    width: 22px;
+    height: 22px;
+}
+
+.admin-sidebar nav a:hover {
+    background: var(--sidebar-bg-hover);
+    color: var(--color-text-primary);
+}
+
+.admin-sidebar nav a.active {
+    background: var(--sidebar-bg-active);
+    color: var(--color-text-primary);
+    font-weight: 600;
+}
+
+/* =========================== MAIN CONTENT =========================== */
+#adminMain {
+    margin-left: var(--admin-sidebar-width);
+    padding: 2rem;
+    padding-top: calc(var(--admin-header-height) + 1.5rem);
+    min-height: 100vh;
+    background: var(--color-bg);
+    color: var(--color-text-primary);
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* =========================== DASHBOARD CARDS =========================== */
+
+.admin-dashboard {
+    padding: 20px;
+}
+
+.admin-dashboard-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.admin-dashboard-cards {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin: 20px;
+}
+
+.admin-card {
+    width: 180px;
+    min-height: 110px;
+    background: var(--color-surface);
+    padding: 1.2rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-soft);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+    transition: 0.25s ease;
+}
+
+.admin-card h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.admin-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+}
+
+.admin-stat-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.admin-dashboard-charts {
+    display: flex;
+    flex-wrap: wrap;
+    /* se acomoda si no entra */
+    gap: 20px;
+}
+
+.admin-chart {
+    flex: 1 1 calc(50% - 20px);
+    min-width: 320px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.08);
+}
+
+.admin-chart canvas {
+    width: 100% !important;
+    height: 300px !important;
+    display: block;
+}
+
+canvas {
+    image-rendering: crisp-edges;
+}
+
+/* =========================== TABLE STYLES =========================== */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-table th,
+.admin-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.admin-table th {
+    text-align: left;
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+}
+
+.admin-table tr:hover td {
+    background: var(--color-surface-alt);
+}
+
+/* =========================== BUTTONS ADMIN =========================== */
+.admin-btn {
+    padding: 0.45rem 0.9rem;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s ease;
+    color: #fff;
+}
+
+.admin-btn-primary {
+    background: var(--color-accent);
+}
+
+.admin-btn-primary:hover {
+    background: var(--btn-primary-bg-hover);
+}
+
+.admin-btn-danger {
+    background: var(--color-danger);
+}
+
+.admin-btn-danger:hover {
+    background: #b91c1c;
+}
+
+/* =========================== FORMS =========================== */
+.admin-form label {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-weight: 600;
+}
+
+.admin-form input,
+.admin-form select,
+.admin-form textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 6px;
+    border: 1px solid var(--color-border);
+    background: var(--search-bg);
+    color: var(--color-text-primary);
+    margin-bottom: 1rem;
+}
+
+.admin-form input:focus,
+.admin-form select:focus,
+.admin-form textarea:focus {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 1px var(--color-accent-soft);
+    outline: none;
+}
+
+/* =========================== RESPONSIVE ADMIN =========================== */
+@media (max-width: 900px) {
+    :root {
+        --admin-sidebar-width: 200px;
+    }
+
+    #adminMain {
+        margin-left: var(--admin-sidebar-width);
+    }
+}
+
+@media (max-width: 600px) {
+    .admin-sidebar {
+        position: fixed;
+        top: var(--admin-header-height);
+        left: 0;
+        height: calc(100% - var(--admin-header-height));
+        width: var(--admin-sidebar-width);
+        background: var(--sidebar-bg);
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 3000;
+    }
+
+    .admin-sidebar.open {
+        transform: translateX(0);
+    }
+
+    #adminMain {
+        margin-left: 0 !important;
+    }
+}

@@ -1,0 +1,42 @@
+<div class="admin-page">
+  
+  <div class="admin-page-header">
+    <div>
+      <h2>Favoritos</h2>
+      <p class="admin-subtitle">
+        Gestiona los destinos marcados como favoritos por cada usuario.
+      </p>
+    </div>
+
+    <div class="admin-page-actions">
+      <!-- Selector de usuario -->
+      <select id="favoritesUserFilter" class="admin-select">
+        <option value="">Selecciona un usuario...</option>
+        <!-- opciones dinámicas desde favoritesPage.js -->
+      </select>
+
+      <button id="btnAddFavorite" class="admin-btn admin-btn-primary" disabled>
+        + Añadir Favorito
+      </button>
+    </div>
+  </div>
+
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Destino</th>
+          <th>Ubicación</th>
+          <th>Imagen</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="favoritesTableBody">
+        <!-- filas dinámicas -->
+      </tbody>
+    </table>
+
+  <!-- Contenedor para modales -->
+  <div id="favoriteModalContainer"></div>
+
+</div>

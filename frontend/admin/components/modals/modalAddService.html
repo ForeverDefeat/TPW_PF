@@ -1,0 +1,60 @@
+<div id="modalAddService" class="modal">
+  <div class="modal-content">
+    <span class="close" id="closeAddService">&times;</span>
+    <h2>Añadir Servicio</h2>
+
+    <form id="formAddService" class="admin-form">
+
+      <!-- Tipo de servicio -->
+      <label for="serviceTypeId">Tipo de servicio:</label>
+      <select id="serviceTypeId" required>
+        <!-- options dinámicas desde servicesPage.js -->
+      </select>
+
+      <!-- Nombre -->
+      <label for="serviceName">Nombre del servicio:</label>
+      <input
+        type="text"
+        id="serviceName"
+        required
+        placeholder="Ej: Hotel Costa Azul"
+      />
+
+      <!-- Ubicación -->
+      <label for="serviceLocation">Ubicación:</label>
+      <input
+        type="text"
+        id="serviceLocation"
+        placeholder="Ej: Paracas"
+      />
+
+      <!-- Descripción -->
+      <label for="serviceDescription">Descripción:</label>
+      <textarea
+        id="serviceDescription"
+        rows="3"
+        placeholder="Describe brevemente el servicio"
+      ></textarea>
+
+      <!-- Rango de precio -->
+      <label for="servicePriceRange">Rango de precio (referencial):</label>
+      <input
+        type="text"
+        id="servicePriceRange"
+        placeholder="Ej: S/ 80 - S/ 150"
+      />
+
+      <!-- Imagen -->
+      <label for="serviceImage">Imagen (opcional):</label>
+      <input
+        type="file"
+        id="serviceImage"
+        accept="image/*"
+      />
+
+      <button type="submit" class="admin-btn admin-btn-primary">
+        Guardar Servicio
+      </button>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,61 @@
+<div id="modalEditService" class="modal">
+  <div class="modal-content">
+    <span class="close" id="closeEditService">&times;</span>
+    <h2>Editar Servicio</h2>
+
+    <form id="formEditService" class="admin-form">
+
+      <input type="hidden" id="editServiceId" />
+
+      <!-- Tipo de servicio -->
+      <label for="editServiceTypeId">Tipo de servicio:</label>
+      <select id="editServiceTypeId" required>
+        <!-- options dinámicas -->
+      </select>
+
+      <!-- Nombre -->
+      <label for="editServiceName">Nombre del servicio:</label>
+      <input
+        type="text"
+        id="editServiceName"
+        required
+      />
+
+      <!-- Ubicación -->
+      <label for="editServiceLocation">Ubicación:</label>
+      <input
+        type="text"
+        id="editServiceLocation"
+      />
+
+      <!-- Descripción -->
+      <label for="editServiceDescription">Descripción:</label>
+      <textarea
+        id="editServiceDescription"
+        rows="3"
+      ></textarea>
+
+      <!-- Rango de precio -->
+      <label for="editServicePriceRange">Rango de precio:</label>
+      <input
+        type="text"
+        id="editServicePriceRange"
+      />
+
+      <!-- Imagen -->
+      <label for="editServiceImage">Nueva imagen (opcional):</label>
+      <input
+        type="file"
+        id="editServiceImage"
+        accept="image/*"
+      />
+      <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-top: 2px;">
+        Si no seleccionas una imagen nueva, se conservará la actual.
+      </p>
+
+      <button type="submit" class="admin-btn admin-btn-primary">
+        Guardar cambios
+      </button>
+    </form>
+  </div>
+</div>
