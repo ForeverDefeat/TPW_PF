@@ -1,0 +1,28 @@
+<div class="admin-modal-overlay">
+    <div class="admin-modal">
+
+        <!-- Botón X -->
+        <button id="closeAddBanner" class="admin-modal-close">✖</button>
+
+        <h2 class="admin-modal-title">Agregar Banner</h2>
+
+        <form id="formAddBanner" class="admin-form">
+
+            <label for="bannerTitle">Título opcional</label>
+            <input id="bannerTitle" type="text" placeholder="Título del banner (opcional)" />
+
+            <label for="bannerOrder">Orden</label>
+            <input id="bannerOrder" type="number" value="0" />
+
+            <label for="bannerImage">Imagen</label>
+            <input id="bannerImage" type="file" accept="image/*" required />
+
+            <div class="admin-modal-actions">
+                <button class="admin-btn admin-btn-primary" type="submit">Guardar</button>
+                <button type="button" id="cancelAddBanner" class="admin-btn admin-btn-danger">Cancelar</button>
+            </div>
+
+        </form>
+
+    </div>
+</div>

@@ -25,7 +25,7 @@ import eventsFollowedRoutes from "./routes/eventsFollowedRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
-
+import bannerRoutes from "./routes/bannerRoutes.js";
 // Swagger
 import { swaggerDocs } from "./config/swagger.js";
 
@@ -74,7 +74,7 @@ app.use("/api/favorites", favoriteRoutes);
 app.use("/api/events-followed", eventsFollowedRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/dashboard", dashboardRoutes);
-
+app.use("/api/banners", bannerRoutes);
 // Ruta para subir imágenes
 app.use("/api/upload", uploadRoutes);
 

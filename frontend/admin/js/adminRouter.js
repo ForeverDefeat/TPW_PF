@@ -16,6 +16,7 @@ import { initEventsPage } from "./eventsPage.js";
 import { initUsersPage } from "./usersPage.js";
 import { initFavoritesPage } from "./favoritesPage.js";
 import { initEventsFollowedPage } from "./eventsFollowedPage.js";
+import { initBannersPage } from "./bannersPage.js";
 
 /**
  * Lista de rutas válidas.
@@ -24,6 +25,7 @@ import { initEventsFollowedPage } from "./eventsFollowedPage.js";
 const validRoutes = [
     "dashboard",
     "categories",
+    "banners",
     "destinations",
     "services",
     "events",
@@ -108,6 +110,10 @@ export async function handleRoute() {
 
         case "events-followed":
             initEventsFollowedPage();
+            break;
+
+        case "banners":
+            initBannersPage();
             break;
 
         case "settings":

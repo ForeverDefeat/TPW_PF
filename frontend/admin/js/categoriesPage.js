@@ -54,19 +54,19 @@ function setupAddCategoryModal() {
         container.innerHTML = await fetch("components/modals/modalAddCategory.html")
             .then(r => r.text());
 
-        // Cerrar
         document.getElementById("closeAddCategory").onclick = () => {
             container.innerHTML = "";
         };
 
-        // SUBMIT
         document.getElementById("formAddCategory").onsubmit = async (e) => {
             e.preventDefault();
 
             const fd = new FormData();
-            fd.append("name", document.getElementById("catName").value);
-            fd.append("description", document.getElementById("catDescription").value);
-            fd.append("image", document.getElementById("catImage").files[0]); // imagen obligatoria
+            fd.append("name", document.getElementById("addCatName").value);
+            fd.append("description", document.getElementById("addCatDesc").value);
+
+            const img = document.getElementById("addCatImage").files[0];
+            if (img) fd.append("image", img);
 
             await apiPostFile("/categories", fd);
 
@@ -75,6 +75,7 @@ function setupAddCategoryModal() {
         };
     };
 }
+
 
 /* ========================================================================
    3. MODAL: EDITAR CATEGORÍA
@@ -93,10 +94,7 @@ function setupEditButtons() {
 
             document.getElementById("editCatId").value = data.id;
             document.getElementById("editCatName").value = data.name;
-            document.getElementById("editCatDescription").value = data.description;
-
-            // Mostrar imagen actual
-            document.getElementById("currentImage").src = data.image_url;
+            document.getElementById("editCatDesc").value = data.description;
 
             document.getElementById("closeEditCategory").onclick = () => {
                 container.innerHTML = "";

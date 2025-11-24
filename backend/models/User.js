@@ -7,7 +7,7 @@
 /**
  * @typedef {Object} User
  * @property {number} id - ID del usuario
- * @property {string} fullName - Nombre completo
+ * @property {string} full_name - Nombre completo
  * @property {string} email - Correo electrónico único
  * @property {string} password - Contraseña (texto plano para pruebas)
  * @property {"user"|"admin"} role - Rol del usuario
@@ -22,7 +22,7 @@ export class User {
     if (!row) return null;
     return {
       id: row.id,
-      fullName: row.fullName,
+      fullName: row.full_name,
       email: row.email,
       password: row.password,
       role: row.role,

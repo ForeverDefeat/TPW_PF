@@ -31,9 +31,10 @@ import { initRouter } from "./adminRouter.js";
  * validateAdminSession();
  */
 function validateAdminSession() {
-    const session = JSON.parse(localStorage.getItem("session") || "null");
+    const loggedIn = localStorage.getItem("loggedIn") === "true";
+    const role = (localStorage.getItem("userRole") || "").toLowerCase();
 
-    if (!session || session.role !== "admin") {
+    if (!loggedIn || role !== "admin") {
         alert("Acceso denegado. Solo administradores pueden ingresar.");
         window.location.href = "../index.html";
     }

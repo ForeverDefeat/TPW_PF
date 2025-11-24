@@ -11,23 +11,15 @@ import { apiGet, apiPost, apiPut, apiDelete } from "./adminApi.js";
    1. RENDER DE USUARIOS
    ============================================================================ */
 
-/**
- * Carga y muestra todos los usuarios en la tabla.
- *
- * @async
- * @function renderUsers
- */
 export async function renderUsers() {
     const tbody = document.getElementById("usersTableBody");
     tbody.innerHTML = `<tr><td colspan="5">Cargando usuarios...</td></tr>`;
 
     try {
         const res = await apiGet("/users");
-
         if (!res.ok) throw new Error("Error backend");
 
         const users = res.data;
-
         tbody.innerHTML = "";
 
         users.forEach(u => {
@@ -83,7 +75,7 @@ function setupAddUserButton() {
             e.preventDefault();
 
             await apiPost("/users", {
-                fullName: document.getElementById("addUserName").value,
+                full_name: document.getElementById("addUserName").value,
                 email: document.getElementById("addUserEmail").value,
                 password: document.getElementById("addUserPassword").value,
                 role: document.getElementById("addUserRole").value
@@ -125,7 +117,7 @@ function setupEditButtons() {
                 e.preventDefault();
 
                 await apiPut(`/users/${id}`, {
-                    fullName: document.getElementById("editUserName").value,
+                    full_name: document.getElementById("editUserName").value,
                     email: document.getElementById("editUserEmail").value,
                     role: document.getElementById("editUserRole").value
                 });
@@ -158,9 +150,6 @@ function setupDeleteButtons() {
    5. INICIALIZACIÓN
    ============================================================================ */
 
-/**
- * Punto de entrada del módulo Users.
- */
 export function initUsersPage() {
     renderUsers();
 }

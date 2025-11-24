@@ -6,50 +6,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Portal de Turismo</title>
     <link rel="icon" href="icons/logo FD.jpg" type="image/jpg" />
-    <!-- Estilos globales + página actual -->
+
+    <!-- Estilos globales y de la página -->
     <link rel="stylesheet" href="css/estiloGlobal.css" />
     <link rel="stylesheet" href="css/estiloIndex.css" />
 </head>
 
 <body>
 
-    <!-- Aquí se carga header.html -->
+    <!-- HEADER -->
     <div id="header-container"></div>
 
-    <!-- Aquí se carga sidebar.html -->
+    <!-- SIDEBAR -->
     <div id="sidebar-container"></div>
 
-    <!-- Área para el modal de añadir destino -->
-    <div id="addDestinationArea"></div>
-
+    <!-- MAIN -->
     <main id="main">
         <div class="content">
-            <!-- Banner -->
-            <div class="banner fade-slider">
-                <div class="fade-slide active">
-                    <img src="assets/inicio1.jpg" alt="Foto 1">
-                </div>
-                <div class="fade-slide">
-                    <img src="assets/inicio2.png" alt="Foto 2">
-                </div>
-                <div class="fade-slide">
-                    <img src="assets/inicio3.jpg" alt="Foto 3">
-                </div>
-                <div class="fade-slide">
-                    <img src="assets/inicio4.png" alt="Foto 4">
-                </div>
-                <div class="fade-slide">
-                    <img src="assets/inicio5.jpg" alt="Foto 5">
-                </div>
-                <div class="fade-slide">
-                    <img src="assets/inicio6.jpg" alt="Foto 6">
-                </div>
 
-                <button class="fade-prev">&#10094;</button>
-                <button class="fade-next">&#10095;</button>
+            <!-- BANNER DINÁMICO -->
+            <div class="banner fade-slider" id="bannerSlider">
+                <!-- Aquí se insertarán banners dinámicos -->
             </div>
 
-            <!-- Totales -->
+            <!-- TOTALES DINÁMICOS -->
             <section class="totals fade-in">
                 <div class="box">
                     <h4>Playas</h4>
@@ -65,36 +45,23 @@
                 </div>
             </section>
 
-            <!-- Categorías -->
+            <!-- CATEGORÍAS DINÁMICAS -->
             <section class="categories fade-in">
-                <h3>Categories</h3>
-
-                <div class="content-3col">
-
-                    <div class="cat-card">
-                        <img src="assets/playa1.png" alt="Playas">
-                        <h4>Playas</h4>
-                        <p>Explora arenas blancas, aguas cristalinas y destinos paradisíacos ideales para relajarte o
-                            practicar deportes acuáticos.</p>
-                    </div>
-
-                    <div class="cat-card">
-                        <img src="assets/mountain2.png" alt="Montañas">
-                        <h4>Montañas</h4>
-                        <p>Senderos, miradores y rutas de aventura entre los paisajes montañosos más impresionantes de
-                            la región.</p>
-                    </div>
-
-                    <div class="cat-card">
-                        <img src="assets/cultura3.png" alt="Cultura">
-                        <h4>Cultura</h4>
-                        <p>Sumérgete en la riqueza histórica, gastronómica y artística que define la esencia local.</p>
-                    </div>
-
+                <h3>Categorías</h3>
+                <div class="content-3col" id="categoriesContainer">
+                    <!-- Aquí se insertan las categorías dinámicamente -->
                 </div>
             </section>
 
-            <!-- Mapa -->
+            <!-- DESTINOS DESTACADOS -->
+            <section class="categories fade-in">
+                <h3>Destinos Destacados</h3>
+                <div class="content-3col" id="destinationsContainer">
+                    <!-- Aquí se insertan destinos dinámicos -->
+                </div>
+            </section>
+
+            <!-- MAPA -->
             <div class="map-section fade-in">
                 <h3>Interactive Map</h3>
                 <p>Aquí se mostrará el mapa con puntos de interés.</p>
@@ -103,38 +70,80 @@
         </div>
     </main>
 
-    <!-- Aquí se carga footer.html -->
+    <!-- FOOTER -->
     <div id="footer-container"></div>
 
-    <!-- Carga componentes -->
+    <!-- COMPONENTES DINÁMICOS -->
     <script src="js/components.js" type="module"></script>
 
-    <!-- Lógica principal -->
+    <!-- LÓGICA PRINCIPAL -->
     <script src="js/script.js" type="module"></script>
 
+    <!-- 🔹 LÓGICA DINÁMICA DE LANDING PAGE -->
     <script type="module">
-        import { getCategoryCounts } from "./js/api.js";
+        import { apiGet } from "./js/api.js";
+        import { loadBanners } from "./js/bannersLoader.js";
 
         document.addEventListener("DOMContentLoaded", async () => {
-            const res = await getCategoryCounts();
 
-            if (!res.ok) return;
+            /* =====================================================
+               1⃣ CARGAR TOTALES POR CATEGORÍA
+            ===================================================== */
+            try {
+                const res = await apiGet("/dashboard/stats");
 
-            const counts = {
-                playa: 0,
-                montana: 0,
-                cultura: 0
-            };
+                document.getElementById("totalPlayas").textContent =
+                    res.destinationsPerCategory.find(c => c.name === "Playa")?.total ?? 0;
 
-            // Convertir resultados SQL a objeto usable
-            res.counts.forEach(c => {
-                counts[c.category] = c.total;
-            });
+                document.getElementById("totalMontanas").textContent =
+                    res.destinationsPerCategory.find(c => c.name === "Montaña")?.total ?? 0;
 
-            // Insertar totales en el HTML
-            document.getElementById("totalPlayas").textContent = counts.playa;
-            document.getElementById("totalMontanas").textContent = counts.montana;
-            document.getElementById("totalCultura").textContent = counts.cultura;
+                document.getElementById("totalCultura").textContent =
+                    res.destinationsPerCategory.find(c => c.name === "Cultura")?.total ?? 0;
+
+            } catch (err) {
+                console.error("Error cargando totales:", err);
+            }
+
+            /* =====================================================
+               2⃣ CARGAR CATEGORÍAS DINÁMICAS
+            ===================================================== */
+            try {
+                const categories = await apiGet("/categories");
+                const container = document.getElementById("categoriesContainer");
+
+                container.innerHTML = categories.map(cat => `
+                    <div class="cat-card">
+                        <img src="${cat.image_url}" alt="${cat.name}">
+                        <h4>${cat.name}</h4>
+                        <p>${cat.description}</p>
+                    </div>
+                `).join("");
+
+            } catch (err) {
+                console.error("Error cargando categorías:", err);
+            }
+
+            /* =====================================================
+               3⃣ CARGAR DESTINOS DESTACADOS
+            ===================================================== */
+            try {
+                const destinations = await apiGet("/destinations");
+                const container = document.getElementById("destinationsContainer");
+
+                container.innerHTML = destinations.slice(0, 3).map(d => `
+                    <div class="cat-card">
+                        <img src="${d.image_url}" alt="${d.name}">
+                        <h4>${d.name}</h4>
+                        <p>${d.description.substring(0, 120)}...</p>
+                    </div>
+                `).join("");
+
+            } catch (err) {
+                console.error("Error cargando destinos:", err);
+            }
+
+            loadBanners();
         });
     </script>
 

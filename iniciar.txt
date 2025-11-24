@@ -283,3 +283,14 @@ consideraciones: se debe tener instalado node.js y python
             FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE
         );
 
+        -- ============================================================
+        -- 10. Tabla Banners
+        -- ============================================================
+        CREATE TABLE banners (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            image_url VARCHAR(255) NOT NULL,
+            title VARCHAR(100) NULL,
+            active TINYINT(1) DEFAULT 1,
+            sort_order INT DEFAULT 0,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );

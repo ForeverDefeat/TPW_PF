@@ -37,7 +37,7 @@ export class UserService {
    *
    * @async
    * @param {Object} data
-   * @param {string} data.fullName
+   * @param {string} data.full_name
    * @param {string} data.email
    * @param {string} data.password
    * @param {"user"|"admin"} data.role

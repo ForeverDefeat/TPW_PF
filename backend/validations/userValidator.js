@@ -15,7 +15,7 @@ import { body, param } from "express-validator";
  */
 export const createUserValidator = [
 
-  body("fullName")
+  body("full_name")
     .notEmpty()
     .withMessage("El campo 'fullName' es obligatorio.")
     .isString()
@@ -51,7 +51,7 @@ export const updateUserValidator = [
     .isInt({ min: 1 })
     .withMessage("El parámetro 'id' debe ser un número entero válido."),
 
-  body("fullName")
+  body("full_name")
     .optional()
     .isString()
     .withMessage("El campo 'fullName' debe ser una cadena de texto."),

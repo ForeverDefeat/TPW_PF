@@ -404,6 +404,28 @@ header *,
     background: #15803d;
 }
 
+.admin-panel-btn {
+    margin-left: 10px;
+    padding: 0.5rem 1rem;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    transition: 0.2s ease;
+}
+
+.admin-panel-btn:hover {
+    background: #1e40af;
+}
+
+.hidden {
+    display: none !important;
+}
+
 /* ========================= SIDEBAR ========================= */
 
 .sidebar {

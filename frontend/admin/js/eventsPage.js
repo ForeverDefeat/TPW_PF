@@ -71,7 +71,7 @@ export async function renderEvents() {
    2. MODAL: AÑADIR EVENTO
    =========================================================================== */
 
-function setupAddEventModal(destinations, services) {
+function setupAddEventModal(destinations) {
     const btn = document.getElementById("btnOpenAddEvent");
     if (!btn) return;
 
@@ -81,12 +81,9 @@ function setupAddEventModal(destinations, services) {
         container.innerHTML = await fetch("components/modals/modalAddEvent.html")
             .then(r => r.text());
 
-        // Llenar selects
-        document.getElementById("eventDestination").innerHTML =
+        // Llenar SELECT destino
+        document.getElementById("eventDestinationId").innerHTML =
             destinations.map(d => `<option value="${d.id}">${d.name}</option>`).join("");
-
-        document.getElementById("eventService").innerHTML =
-            services.map(s => `<option value="${s.id}">${s.name}</option>`).join("");
 
         // Cerrar modal
         document.getElementById("closeAddEvent").onclick = () => {
@@ -101,8 +98,9 @@ function setupAddEventModal(destinations, services) {
 
             fd.append("title", document.getElementById("eventTitle").value);
             fd.append("description", document.getElementById("eventDescription").value);
-            fd.append("destination_id", document.getElementById("eventDestination").value);
-            fd.append("service_id", document.getElementById("eventService").value);
+            fd.append("destination_id", document.getElementById("eventDestinationId").value);
+            fd.append("date", document.getElementById("eventDate").value);
+            fd.append("location", document.getElementById("eventLocation").value);
 
             const img = document.getElementById("eventImage").files[0];
             if (img) fd.append("image", img);
@@ -114,6 +112,7 @@ function setupAddEventModal(destinations, services) {
         };
     };
 }
+
 
 /* ===========================================================================
    3. MODAL EDITAR EVENTO

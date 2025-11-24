@@ -1,0 +1,27 @@
+<div class="admin-modal-overlay">
+    <div class="admin-modal">
+
+        <h2>Editar Banner</h2>
+
+        <form id="formEditBanner" class="admin-form">
+
+            <input type="hidden" id="editBannerId" />
+
+            <label>Título</label>
+            <input id="editBannerTitle" type="text" />
+
+            <label>Orden</label>
+            <input id="editBannerOrder" type="number" />
+
+            <label>Nueva imagen (opcional)</label>
+            <input id="editBannerImage" type="file" accept="image/*" />
+
+            <div class="admin-modal-actions">
+                <button class="admin-btn admin-btn-primary" type="submit">Guardar</button>
+                <button type="button" id="closeEditBanner" class="admin-btn admin-btn-danger">Cancelar</button>
+            </div>
+
+        </form>
+
+    </div>
+</div>

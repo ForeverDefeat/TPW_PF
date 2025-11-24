@@ -34,19 +34,19 @@ export class UserRepository {
    * Crear un nuevo usuario.
    *
    * @param {Object} data
-   * @param {string} data.fullName
+   * @param {string} data.full_name
    * @param {string} data.email
    * @param {string} data.password
    * @param {"admin"|"user"} data.role
    * @returns {Promise<number>} ID insertado
    */
   static async create(data) {
-    const { fullName, email, password, role = "user" } = data;
+    const { full_name, email, password, role = "user" } = data;
 
     const [result] = await db.query(
       `INSERT INTO users (full_name, email, password, role)
        VALUES (?, ?, ?, ?)`,
-      [fullName, email, password, role]
+      [full_name, email, password, role]
     );
 
     return result.insertId;
@@ -89,7 +89,7 @@ export class UserRepository {
    *
    * @param {number} id
    * @param {Object} data
-   * @param {string} [data.fullName]
+   * @param {string} [data.full_name]
    * @param {string} [data.email]
    * @param {string} [data.password]
    * @param {"admin"|"user"} [data.role]
