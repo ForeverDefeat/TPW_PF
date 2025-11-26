@@ -54,19 +54,9 @@ export async function renderServices() {
                 <td>${typeName}</td>
                 <td>${svc.location || "-"}</td>
                 <td>${svc.price_range || "-"}</td>
-                <td>
-                    <button
-                        class="admin-btn small edit-service-btn"
-                        data-id="${svc.id}"
-                    >
-                        Editar
-                    </button>
-                    <button
-                        class="admin-btn small danger delete-service-btn"
-                        data-id="${svc.id}"
-                    >
-                        Eliminar
-                    </button>
+                <td class="actions-cell">
+                    <button class="admin-btn small edit-banner-btn" data-id="${svc.id}">Editar</button>
+                    <button class="admin-btn small delete-btn" data-id="${svc.id}">Eliminar</button>
                 </td>
             `;
 

@@ -19,7 +19,7 @@ export function initBannersPage() {
 ============================================================================ */
 
 async function renderBanners() {
-    const tbody = document.getElementById("bannerTableBody"); 
+    const tbody = document.getElementById("bannerTableBody");
     tbody.innerHTML = `<tr><td colspan="5">Cargando...</td></tr>`;
 
     const res = await apiGet("/banners");
@@ -35,9 +35,9 @@ async function renderBanners() {
             <td><img src="${b.image_url}" class="admin-thumb"></td>
             <td>${b.title ?? "-"}</td>
             <td>${b.sort_order}</td>
-            <td>
-                <button class="admin-btn small edit-banner-btn" data-id="${b.id}">Editar</button>
-                <button class="admin-btn small danger delete-banner-btn" data-id="${b.id}">Eliminar</button>
+            <td class="actions-cell">
+                <button class="admin-btn-small edit-btn" data-id="${b.id}">Editar</button>
+                <button class="admin-btn-small delete-btn" data-id="${b.id}">Eliminar</button>
             </td>
         `;
 
@@ -92,7 +92,7 @@ function setupEditButtons() {
             const id = btn.dataset.id;
 
             const container = document.getElementById("bannerModalContainer");
-            const html = await fetch("../components/modals/modalEditBanner.html").then(r => r.text());
+            const html = await fetch("components/modals/modalEditBanner.html").then(r => r.text());
             container.innerHTML = html;
 
             const res = await apiGet("/banners");

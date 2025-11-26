@@ -1,42 +1,40 @@
-<div id="modalEditDestination" class="modal">
-  <div class="modal-content">
-    <span class="close" id="closeEditDestination">&times;</span>
+<div id="modalEditDestination" class="admin-modal-overlay">
+  <div class="admin-modal">
+
+    <span class="admin-modal-close" id="closeEditDestination">&times;</span>
     <h2>Editar Destino</h2>
 
     <form id="formEditDestination" class="admin-form">
 
       <input type="hidden" id="editDestId" />
 
-      <!-- Nombre -->
       <label for="editDestName">Nombre:</label>
       <input type="text" id="editDestName" required />
 
-      <!-- Categoría -->
       <label for="editDestCategory">Categoría:</label>
       <select id="editDestCategory" required></select>
 
-      <!-- Resumen -->
       <label for="editDestSummary">Resumen:</label>
       <textarea id="editDestSummary" rows="2"></textarea>
 
-      <!-- Descripción -->
       <label for="editDestDescription">Descripción:</label>
       <textarea id="editDestDescription" rows="4"></textarea>
 
-      <!-- Cambiar imagen -->
       <label for="editDestImage">Nueva imagen principal:</label>
       <input type="file" id="editDestImage" accept="image/*" />
 
-      <!-- Cambiar hero -->
       <label for="editDestHeroImage">Nueva imagen hero:</label>
       <input type="file" id="editDestHeroImage" accept="image/*" />
 
-      <label>
+      <label class="inline-check">
         <input type="checkbox" id="editDestIsFeatured" />
         ¿Destacado?
       </label>
 
-      <button class="admin-btn admin-btn-primary" type="submit">Guardar cambios</button>
+      <button class="admin-btn admin-btn-primary" type="submit">
+        Guardar cambios
+      </button>
+
     </form>
   </div>
 </div>

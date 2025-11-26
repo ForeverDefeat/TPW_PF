@@ -20,9 +20,7 @@ export class UserRepository {
    */
   static async findByEmail(email) {
     const [rows] = await db.query(
-      `SELECT id, full_name, email, password, role 
-       FROM users 
-       WHERE email = ?`,
+      `SELECT id, full_name, email, password, role FROM users WHERE email = ?`,
       [email]
     );
 
@@ -59,8 +57,7 @@ export class UserRepository {
    */
   static async getAll() {
     const [rows] = await db.query(
-      `SELECT id, full_name, email, password, role 
-       FROM users`
+      `SELECT id, full_name, email, password, role FROM users`
     );
 
     return rows.map(row => User.fromRow(row));
@@ -74,9 +71,7 @@ export class UserRepository {
    */
   static async getById(id) {
     const [rows] = await db.query(
-      `SELECT id, full_name, email, password, role 
-       FROM users 
-       WHERE id = ?`,
+      `SELECT id, full_name, email, password, role FROM users WHERE id = ?`,
       [id]
     );
 

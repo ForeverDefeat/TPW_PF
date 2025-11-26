@@ -14,18 +14,20 @@
  */
 
 export class User {
-  /**
-   * Crea una instancia de User a partir de una fila de BD.
-   * @param {User} row
-   */
-  static fromRow(row) {
-    if (!row) return null;
-    return {
-      id: row.id,
-      fullName: row.full_name,
-      email: row.email,
-      password: row.password,
-      role: row.role,
-    };
-  }
+    /**
+     * Crea una instancia de User a partir de una fila de BD.
+     * Acepta tanto `full_name` como `fullName`.
+     * @param {User} row
+     */
+    static fromRow(row) {
+        if (!row) return null;
+
+        return {
+            id: row.id,
+            full_name: row.full_name || row.fullName, // <-- FIX PRINCIPAL
+            email: row.email,
+            password: row.password,
+            role: row.role,
+        };
+    }
 }

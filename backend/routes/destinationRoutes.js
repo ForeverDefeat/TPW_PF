@@ -6,6 +6,8 @@
 
 import express from "express";
 import { DestinationController } from "../controllers/destinationController.js";
+import { upload } from "../middlewares/upload.js";
+
 
 const router = express.Router();
 
@@ -67,53 +69,25 @@ router.get("/", DestinationController.getAll);
  */
 router.get("/:id", DestinationController.getById);
 
-
-/**
- * @swagger
- * /api/destinations:
- *   post:
- *     summary: Crea un nuevo destino turístico
- *     tags: [Destinations]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/DestinationInput'
- *     responses:
- *       201:
- *         description: Destino creado exitosamente
- *       400:
- *         description: Datos inválidos
- */
-router.post("/", DestinationController.create);
+router.post(
+    "/",
+    upload.fields([
+        { name: "main_image", maxCount: 1 },
+        { name: "hero_image", maxCount: 1 }
+    ]),
+    DestinationController.create
+);
 
 
-/**
- * @swagger
- * /api/destinations/{id}:
- *   put:
- *     summary: Actualiza un destino existente
- *     tags: [Destinations]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/DestinationUpdate'
- *     responses:
- *       200:
- *         description: Destino actualizado
- *       404:
- *         description: No existe el destino
- */
-router.put("/:id", DestinationController.update);
+
+router.put(
+    "/:id",
+    upload.fields([
+        { name: "main_image", maxCount: 1 },
+        { name: "hero_image", maxCount: 1 }
+    ]),
+    DestinationController.update
+);
 
 
 /**

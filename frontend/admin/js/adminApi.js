@@ -5,7 +5,7 @@
  * @module adminApi
  */
 
-const API_URL = "/api";
+const API_URL = window.location.origin + "/api";
 
 /* ============================================================================
    VALIDACIÓN ESTÁNDAR

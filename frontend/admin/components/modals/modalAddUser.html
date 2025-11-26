@@ -1,12 +1,24 @@
-<div class="admin-modal-overlay">
-  <div class="admin-modal"> <span class="admin-modal-close" id="closeAddUser">&times;</span>
+<div class="admin-modal-overlay" id="modalAddUser">
+  <div class="admin-modal">
+    <span class="admin-modal-close" id="closeAddUser">&times;</span>
     <h2>Añadir Usuario</h2>
-    <form id="formAddUser" class="admin-form"> <label for="addUserName">Nombre completo:</label> <input type="text"
-        id="addUserName" required /> <label for="addUserEmail">Correo electrónico:</label> <input type="email"
-        id="addUserEmail" required /> <label for="addUserPassword">Contraseña:</label> <input type="password"
-        id="addUserPassword" required /> <label for="addUserRole">Rol:</label> <select id="addUserRole">
+    
+    <form id="formAddUser" class="admin-form">
+
+      <label for="addUserName">Nombre completo:</label>
+      <input type="text" id="addUserName" required />
+
+      <label for="addUserEmail">Correo electrónico:</label>
+      <input type="email" id="addUserEmail" required />
+
+      <label for="addUserPassword">Contraseña:</label>
+      <input type="password" id="addUserPassword" required />
+
+      <label for="addUserRole">Rol:</label> <select id="addUserRole">
         <option value="user">Usuario</option>
         <option value="admin">Administrador</option>
-      </select> <button type="submit" class="admin-btn admin-btn-primary"> Crear usuario </button> </form>
+      </select>
+      <button type="submit" class="admin-btn admin-btn-primary"> Crear usuario </button>
+    </form>
   </div>
 </div>

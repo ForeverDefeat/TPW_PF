@@ -1,42 +1,31 @@
-<div id="modalEditCategory" class="modal">
-  <div class="modal-content">
-    <span class="close" id="closeEditCategory">&times;</span>
-    <h2>Editar Categoría</h2>
+<div id="modalEditCategory" class="admin-modal-overlay">
+    <div class="admin-modal">
 
-    <form id="formEditCategory" class="admin-form">
-      <!-- Nombre -->
-      <label for="editCatName">Nombre de la categoría:</label>
-      <input
-        type="text"
-        id="editCatName"
-        name="name"
-        required
-      />
+        <span class="admin-modal-close" id="closeEditCategory">&times;</span>
+        <h2>Editar Categoría</h2>
 
-      <!-- Descripción -->
-      <label for="editCatDesc">Descripción:</label>
-      <textarea
-        id="editCatDesc"
-        name="description"
-        rows="3"
-      ></textarea>
+        <form id="formEditCategory" class="admin-form">
 
-      <!-- Imagen -->
-      <label for="editCatImage">Nueva imagen (opcional):</label>
-      <input
-        type="file"
-        id="editCatImage"
-        name="image"
-        accept="image/*"
-      />
-      <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-top: 4px;">
-        Si no seleccionas una imagen nueva, se conservará la actual.
-      </p>
+            <!-- Campo oculto para ID -->
+            <input type="hidden" id="editCatId">
 
-      <!-- Botón actualizar -->
-      <button type="submit" class="admin-btn admin-btn-primary">
-        Guardar Cambios
-      </button>
-    </form>
-  </div>
+            <label for="editCatName">Nombre de la categoría:</label>
+            <input type="text" id="editCatName" required>
+
+            <label for="editCatDesc">Descripción:</label>
+            <textarea id="editCatDesc" rows="3"></textarea>
+
+            <label for="editCatImage">Nueva imagen (opcional):</label>
+            <input type="file" id="editCatImage" accept="image/*">
+
+            <p style="font-size: .85rem; color: var(--color-text-muted); margin-top: 4px;">
+                Si no seleccionas una imagen nueva, la actual se mantendrá.
+            </p>
+
+            <button type="submit" class="admin-btn admin-btn-primary">
+                Guardar Cambios
+            </button>
+
+        </form>
+    </div>
 </div>

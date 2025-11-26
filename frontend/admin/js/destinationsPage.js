@@ -41,9 +41,9 @@ export async function renderDestinations() {
             <td>${dest.name}</td>
             <td>${categories.find(c => c.id === dest.category_id)?.name || "-"}</td>
             <td>${dest.is_featured ? "⭐" : ""}</td>
-            <td>
-                <button class="admin-btn-small edit-btn" data-id="${dest.id}">Editar</button>
-                <button class="admin-btn-small delete-btn" data-id="${dest.id}">Eliminar</button>
+            <td class="actions-cell">
+                <button class="admin-btn small edit-btn" data-id="${dest.id}">Editar</button>
+                <button class="admin-btn small delete-btn" data-id="${dest.id}">Eliminar</button>
             </td>
         `;
 
@@ -125,7 +125,8 @@ function setupAddDestinationModal(categories) {
  *
  * @param {Array} categories - Lista de categorías
  */
-function setupEditButtons(categories) {
+
+/* function setupEditButtons(categories) {
     document.querySelectorAll(".edit-btn").forEach(btn => {
         btn.onclick = async () => {
             const id = btn.dataset.id;
@@ -137,6 +138,7 @@ function setupEditButtons(categories) {
 
             // Obtener datos actuales
             const data = await apiGet(`/destinations/${id}`);
+
 
             // Rellenar campos base
             document.getElementById("editDestId").value = data.id;
@@ -181,6 +183,67 @@ function setupEditButtons(categories) {
                 if (newHeroImg) fd.append("hero_image", newHeroImg);
 
                 // Enviar actualización
+                await apiPutFile(`/destinations/${id}`, fd);
+
+                container.innerHTML = "";
+                renderDestinations();
+            };
+        };
+    });
+} */
+function setupEditButtons(categories) {
+    document.querySelectorAll(".edit-btn").forEach(btn => {
+        btn.onclick = async () => {
+            const id = btn.dataset.id;
+            const container = document.getElementById("destinationModalContainer");
+
+            container.innerHTML = await fetch("components/modals/modalEditDestination.html")
+                .then(r => r.text());
+
+            // Obtener destino
+            /* const res = await apiGet(`/destinations/${id}`);
+            const data = res.data; */
+
+            const data = await apiGet(`/destinations/${id}`);
+
+            document.getElementById("editDestId").value = data.id;
+            document.getElementById("editDestName").value = data.name;
+            document.getElementById("editDestSummary").value = data.summary || "";
+            document.getElementById("editDestDescription").value = data.description || "";
+            document.getElementById("editDestIsFeatured").checked = data.isFeatured === 1;
+
+            // Llenar categorías
+            const sel = document.getElementById("editDestCategory");
+            sel.innerHTML = categories
+                .map(c => `
+                    <option value="${c.id}" ${c.id === data.category_id ? "selected" : ""}>
+                        ${c.name}
+                    </option>
+                `)
+                .join("");
+
+            // Botón cerrar
+            document.getElementById("closeEditDestination").onclick = () => {
+                container.innerHTML = "";
+            };
+
+            // Submit
+            document.getElementById("formEditDestination").onsubmit = async (e) => {
+                e.preventDefault();
+
+                const fd = new FormData();
+                fd.append("name", document.getElementById("editDestName").value);
+                fd.append("summary", document.getElementById("editDestSummary").value);
+                fd.append("description", document.getElementById("editDestDescription").value);
+                fd.append("category_id", document.getElementById("editDestCategory").value);
+                fd.append("is_featured", document.getElementById("editDestIsFeatured").checked ? 1 : 0);
+
+                const imgMain = document.getElementById("editDestImage").files[0];
+                if (imgMain) fd.append("main_image", imgMain);
+
+                const imgHero = document.getElementById("editDestHeroImage").files[0];
+                if (imgHero) fd.append("hero_image", imgHero);
+
                 await apiPutFile(`/destinations/${id}`, fd);
 
                 container.innerHTML = "";

@@ -159,11 +159,8 @@ async function loadFavoritesForUser(userId) {
                         class="admin-thumb"
                     />
                 </td>
-                <td>
-                    <button
-                        class="admin-btn small danger delete-favorite-btn"
-                        data-id="${fav.id}"
-                    >
+                <td class="actions-cell">
+                    <button class="admin-btn small delete-banner-btn" data-id="${fav.id}">
                         Eliminar
                     </button>
                 </td>

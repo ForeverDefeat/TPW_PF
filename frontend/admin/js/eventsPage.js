@@ -45,13 +45,9 @@ export async function renderEvents() {
                 <td>${evt.title}</td>
                 <td>${destName}</td>
                 <td>${svcName}</td>
-                <td>
-                    <button class="admin-btn-small edit-event-btn" data-id="${evt.id}">
-                        Editar
-                    </button>
-                    <button class="admin-btn-small delete-event-btn" data-id="${evt.id}">
-                        Eliminar
-                    </button>
+                <td class="actions-cell">
+                    <button class="admin-btn small edit-btn" data-id="${evt.id}">Editar</button>
+                    <button class="admin-btn small delete-btn" data-id="${evt.id}">Eliminar</button>
                 </td>
             `;
             tbody.appendChild(tr);

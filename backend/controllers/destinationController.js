@@ -18,7 +18,7 @@ export class DestinationController {
             res.json({ ok: true, data: destinations });
 
         } catch (error) {
-            console.error("❌ Error en getAll:", error);
+            console.error("Error en getAll:", error);
             res.status(500).json({ ok: false, message: "Error interno del servidor" });
         }
     }
@@ -42,7 +42,7 @@ export class DestinationController {
             res.json({ ok: true, data: destination });
 
         } catch (error) {
-            console.error("❌ Error en getById:", error);
+            console.error("Error en getById:", error);
             res.status(500).json({ ok: false, message: "Error interno del servidor" });
         }
     }
@@ -62,7 +62,7 @@ export class DestinationController {
             });
 
         } catch (error) {
-            console.error("❌ Error en create:", error);
+            console.error("Error en create:", error);
 
             res.status(error.status || 500).json({
                 ok: false,
@@ -76,34 +76,91 @@ export class DestinationController {
      * Actualizar destino por ID.
      * @route PUT /api/destinations/{id}
      */
+    /*     static async update(req, res) {
+            try {
+                const { id } = req.params;
+    
+                // Convertir campos enviados por FormData
+                const data = { ...req.body };
+    
+                // Normalizar valores (FormData siempre envía strings)
+                if (data.category_id) data.category_id = Number(data.category_id);
+                if (data.is_featured !== undefined) data.is_featured = Number(data.is_featured);
+    
+                // =======================
+                //  PROCESAR ARCHIVOS
+                // =======================
+                if (req.files?.main_image) {
+                    data.main_image_url = "/uploads/" + req.files.main_image[0].filename;
+                }
+    
+                if (req.files?.hero_image) {
+                    data.hero_image_url = "/uploads/" + req.files.hero_image[0].filename;
+                }
+    
+                // =======================
+                // ENVIAR SOLO CAMPOS VÁLIDOS AL SERVICIO
+                // =======================
+                const payload = {
+                    ...(data.name && { name: data.name }),
+                    ...(data.summary && { summary: data.summary }),
+                    ...(data.description && { description: data.description }),
+                    ...(data.category_id && { category_id: data.category_id }),
+                    ...(data.is_featured !== undefined && { is_featured: data.is_featured }),
+                    ...(data.main_image_url && { main_image_url: data.main_image_url }),
+                    ...(data.hero_image_url && { hero_image_url: data.hero_image_url })
+                };
+    
+                const updated = await DestinationService.updateDestination(id, payload);
+    
+                if (!updated) {
+                    return res.status(404).json({
+                        ok: false,
+                        message: "Destino no encontrado"
+                    });
+                }
+    
+                res.json({ ok: true, message: "Destino actualizado correctamente" });
+    
+            } catch (error) {
+                console.error("Error en update:", error);
+    
+                res.status(error.status || 500).json({
+                    ok: false,
+                    message: error.message
+                });
+            }
+        } */
+
     static async update(req, res) {
         try {
             const { id } = req.params;
 
-            const updated = await DestinationService.updateDestination(id, req.body);
+            const body = {
+                ...req.body,
+                main_image: req.files?.main_image ? req.files.main_image[0].filename : null,
+                hero_image: req.files?.hero_image ? req.files.hero_image[0].filename : null
+            };
+
+
+            const updated = await DestinationService.updateDestination(id, body);
 
             if (!updated) {
-                return res.status(404).json({
-                    ok: false,
-                    message: "Destino no encontrado"
-                });
+                return res.status(404).json({ ok: false, message: "Destino no encontrado" });
             }
 
-            res.json({
-                ok: true,
-                message: "Destino actualizado correctamente"
-            });
+            res.json({ ok: true, message: "Destino actualizado correctamente" });
 
         } catch (error) {
-            console.error("❌ Error en update:", error);
-
+            console.error("Error en update:", error);
             res.status(error.status || 500).json({
                 ok: false,
-                message: error.message,
-                details: error.details || null
+                message: error.message
             });
         }
     }
+
+
 
     /**
      * Eliminar un destino por ID.
@@ -128,7 +185,7 @@ export class DestinationController {
             });
 
         } catch (error) {
-            console.error("❌ Error al eliminar destino:", error);
+            console.error("Error al eliminar destino:", error);
 
             res.status(error.status || 500).json({
                 ok: false,

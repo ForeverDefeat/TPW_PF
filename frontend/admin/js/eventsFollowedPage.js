@@ -41,13 +41,9 @@ export async function renderEventsFollowed() {
                 <td>${user?.email || "-"}</td>
                 <td>${event?.title || "-"}</td>
                 <td>${event?.event_date || "-"}</td>
-                <td>
-                    <button class="admin-btn small edit-follow-btn" data-id="${f.id}">
-                        Editar
-                    </button>
-                    <button class="admin-btn small danger delete-follow-btn" data-id="${f.id}">
-                        Eliminar
-                    </button>
+                <td class="actions-cell">
+                    <button class="admin-btn small edit-banner-btn" data-id="${f.id}">Editar</button>
+                    <button class="admin-btn small delete-banner-btn" data-id="${f.id}">Eliminar</button>
                 </td>
             `;
 
