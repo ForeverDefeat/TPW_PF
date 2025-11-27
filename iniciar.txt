@@ -242,14 +242,18 @@ consideraciones: se debe tener instalado node.js y python
         CREATE TABLE events (
             id INT PRIMARY KEY AUTO_INCREMENT,
             destination_id INT NULL,
+            service_id INT NULL,
             title VARCHAR(150) NOT NULL,
             description TEXT,
             event_date DATE,
             location VARCHAR(200),
+            image_url VARCHAR(255),
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-            FOREIGN KEY (destination_id) REFERENCES destinations(id) ON DELETE SET NULL
+            FOREIGN KEY (destination_id) REFERENCES destinations(id) ON DELETE SET NULL,
+            FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE SET NULL
         );
+
 
         INSERT INTO events (destination_id, title, description, event_date)
         VALUES
@@ -294,3 +298,72 @@ consideraciones: se debe tener instalado node.js y python
             sort_order INT DEFAULT 0,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
+
+
+    cambios bd
+
+    ALTER TABLE services
+        ADD COLUMN price_min INT NULL,
+        ADD COLUMN price_max INT NULL;
+
+        UPDATE services
+        SET price_min = 80, price_max = 100
+        WHERE id = 3;
+
+        UPDATE services
+        SET price_min = 50, price_max = 90
+        WHERE id = 2;
+
+        UPDATE services
+        SET price_min = 120, price_max = 180
+        WHERE id = 1;
+
+        new services
+
+                -- ============================================================
+        -- 5. TABLA SERVICES (servicios turísticos)
+        -- ============================================================
+        CREATE TABLE services (
+                id INT PRIMARY KEY AUTO_INCREMENT,
+                service_type_id INT NOT NULL,
+                name VARCHAR(255) NOT NULL,
+                location VARCHAR(255) NULL,
+                description TEXT NULL,
+                price_min INT NULL,
+                price_max INT NULL,
+
+                image_url VARCHAR(255) NULL,
+
+            FOREIGN KEY (service_type_id) REFERENCES service_types(id) ON DELETE CASCADE
+        );
+
+        ALTER TABLE events
+            ADD COLUMN image_url VARCHAR(255) NULL AFTER location;
+        ALTER TABLE events
+ADD COLUMN service_id INT NULL AFTER destination_id;
+
+
+                -- ============================================================
+        -- 7. TABLA EVENTS
+        -- ============================================================
+        CREATE TABLE events (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            destination_id INT NULL,
+            service_id INT NULL,
+            title VARCHAR(150) NOT NULL,
+            description TEXT,
+            event_date DATE,
+            location VARCHAR(200),
+            image_url VARCHAR(255) NULL AFTER location,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+            FOREIGN KEY (destination_id) REFERENCES destinations(id) ON DELETE SET NULL,
+            FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE SET NULL
+        );
+
+
+INSERT INTO events_followed (user_id, event_id) VALUES
+(1, 1),  -- Admin sigue el evento
+(2, 1),  -- Juan Pérez sigue el evento
+(3, 1),  -- María Torres sigue el evento
+(4, 1);  -- Juan Luis sigue el evento

@@ -8,7 +8,7 @@
 import { apiGet, apiPostFile, apiPutFile, apiDelete } from "./adminApi.js";
 
 /* ========================================================================
-   1. RENDER PRINCIPAL DE LA PÁGINA
+                    RENDER PRINCIPAL DE LA PÁGINA
    ======================================================================== */
 
 /**
@@ -20,46 +20,46 @@ import { apiGet, apiPostFile, apiPutFile, apiDelete } from "./adminApi.js";
  */
 export async function renderDestinations() {
     const tbody = document.getElementById("destinationsTableBody");
-
-    // Mostrar estado inicial mientras carga
     tbody.innerHTML = "<tr><td colspan='6'>Cargando destinos...</td></tr>";
 
-    // 1. Obtener datos desde el backend
+    // Backend devuelve { ok:true, data:[...] } → apiGet te devuelve directamente el array
     const destinations = await apiGet("/destinations");
     const categories = await apiGet("/categories");
 
-    // Limpiar tabla
     tbody.innerHTML = "";
 
-    // 2. Pintar cada fila de la tabla
     destinations.forEach(dest => {
         const row = document.createElement("tr");
 
-        row.innerHTML = `
-    <td>${dest.id}</td>
-    <td><img src="${dest.mainImageUrl}" class="admin-thumb"></td>
-    <td>${dest.name}</td>
-    <td>${categories.find(c => c.id === dest.categoryId)?.name || "-"}</td>
-    <td>${dest.isFeatured ? "⭐" : ""}</td>
-    <td class="actions-cell">
-        <button class="admin-btn small edit-btn" data-id="${dest.id}">Editar</button>
-        <button class="admin-btn small delete-btn" data-id="${dest.id}">Eliminar</button>
-    </td>
-`;
+        // mainImageUrl viene del backend en camelCase
+        const imgSrc = dest.mainImageUrl
+            ? `/uploads/${dest.mainImageUrl}`
+            : "assets/placeholder.png";
 
+        row.innerHTML = `
+            <td>${dest.id}</td>
+            <td><img src="${imgSrc}" class="admin-thumb"></td>
+            <td>${dest.name}</td>
+            <td>${categories.find(c => c.id === dest.categoryId)?.name || "-"}</td>
+            <td>${dest.isFeatured ? "⭐" : ""}</td>
+            <td class="actions-cell">
+                <button class="admin-btn-small edit-btn" data-id="${dest.id}">Editar</button>
+                <button class="admin-btn-small delete-btn" data-id="${dest.id}">Eliminar</button>
+            </td>
+        `;
 
         tbody.appendChild(row);
     });
 
-    // 3. Activar modales y botones
     setupAddDestinationModal(categories);
     setupEditButtons(categories);
     setupDeleteButtons();
 }
 
-/* ============================================================
-   MODAL — AÑADIR DESTINO
-============================================================ */
+
+/* ============================================================  
+                MODAL — AÑADIR DESTINO 
+ ============================================================ */
 function setupAddDestinationModal(categories) {
     document.getElementById("btnOpenAddDestination").onclick = async () => {
         const container = document.getElementById("destinationModalContainer");
@@ -98,7 +98,7 @@ function setupAddDestinationModal(categories) {
 }
 
 /* ============================================================
-   MODAL — EDITAR DESTINO
+                    MODAL — EDITAR DESTINO
 ============================================================ */
 function setupEditButtons(categories) {
     document.querySelectorAll(".edit-btn").forEach(btn => {
@@ -110,18 +110,21 @@ function setupEditButtons(categories) {
             container.innerHTML = await fetch("components/modals/modalEditDestination.html")
                 .then(r => r.text());
 
-            // Obtener datos del destino
-            const res = await apiGet(`/destinations/${id}`);
-            const dest = res.data;
+            // Pequeña espera para asegurar que el DOM del modal se inserta
+            await new Promise(resolve => setTimeout(resolve, 20));
 
-            /* --- Rellenar campos del modal --- */
+            // 🚨 Muy importante: apiGet ya devuelve el objeto data directo
+            const dest = await apiGet(`/destinations/${id}`);
+
+            // --- Rellenar campos base ---
             document.getElementById("editDestId").value = dest.id;
-            document.getElementById("editDestName").value = dest.name;
+            document.getElementById("editDestName").value = dest.name || "";
             document.getElementById("editDestSummary").value = dest.summary || "";
             document.getElementById("editDestDescription").value = dest.description || "";
-            document.getElementById("editDestIsFeatured").checked = dest.isFeatured ? true : false;
+            document.getElementById("editDestIsFeatured").checked =
+                dest.isFeatured === 1 || dest.isFeatured === true;
 
-            // Categorías
+            // --- Llenar categorías ---
             const sel = document.getElementById("editDestCategory");
             sel.innerHTML = categories
                 .map(c => `
@@ -131,12 +134,12 @@ function setupEditButtons(categories) {
                 `)
                 .join("");
 
-            // Cerrar modal
+            // --- Botón cerrar ---
             document.getElementById("closeEditDestination").onclick = () => {
                 container.innerHTML = "";
             };
 
-            /* --- Submit actualización --- */
+            // --- Submit actualización ---
             document.getElementById("formEditDestination").onsubmit = async e => {
                 e.preventDefault();
 
@@ -145,7 +148,10 @@ function setupEditButtons(categories) {
                 fd.append("summary", document.getElementById("editDestSummary").value);
                 fd.append("description", document.getElementById("editDestDescription").value);
                 fd.append("category_id", document.getElementById("editDestCategory").value);
-                fd.append("is_featured", document.getElementById("editDestIsFeatured").checked ? 1 : 0);
+                fd.append(
+                    "is_featured",
+                    document.getElementById("editDestIsFeatured").checked ? 1 : 0
+                );
 
                 const imgMain = document.getElementById("editDestImage").files[0];
                 if (imgMain) fd.append("main_image", imgMain);
@@ -162,8 +168,9 @@ function setupEditButtons(categories) {
     });
 }
 
+
 /* ============================================================
-   ELIMINAR DESTINO
+                        ELIMINAR DESTINO
 ============================================================ */
 function setupDeleteButtons() {
     document.querySelectorAll(".delete-btn").forEach(btn => {
@@ -179,7 +186,7 @@ function setupDeleteButtons() {
 }
 
 /* ============================================================
-   INICIALIZAR PÁGINA
+                        INICIALIZAR PÁGINA
 ============================================================ */
 export async function initDestinationsPage() {
     const resCategories = await apiGet("/categories");

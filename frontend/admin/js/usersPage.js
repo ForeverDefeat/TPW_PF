@@ -82,7 +82,7 @@ function setupAddUserButton() {
    ============================================================================ */
 
 function setupEditButtons() {
-    document.querySelectorAll(".edit-user-btn").forEach(btn => {
+    document.querySelectorAll(".edit-btn").forEach(btn => {
         btn.onclick = async () => {
 
             const id = btn.dataset.id;
@@ -130,7 +130,7 @@ function setupEditButtons() {
    ============================================================================ */
 
 function setupDeleteButtons() {
-    document.querySelectorAll(".delete-user-btn").forEach(btn => {
+    document.querySelectorAll(".delete-btn").forEach(btn => {
         btn.onclick = async () => {
             const id = btn.dataset.id;
 

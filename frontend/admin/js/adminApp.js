@@ -105,6 +105,22 @@ function setupGlobalEvents() {
     });
 }
 
+// ==========================================================
+// Cierre global de modales usando delegación
+// ==========================================================
+document.addEventListener("click", (e) => {
+    // Botón X del modal
+    if (e.target.classList.contains("admin-modal-close")) {
+        e.target.closest(".admin-modal-overlay").remove();
+    }
+
+    // Cerrar si se hace clic fuera del modal (opcional)
+    if (e.target.classList.contains("admin-modal-overlay")) {
+        e.target.remove();
+    }
+});
+
+
 /* INICIALIZACIÓN PRINCIPAL DEL PANEL ADMIN */
 
 /**
@@ -147,5 +163,5 @@ async function initAdminApp() {
    =========================================================================== */
 
 
-   
+
 document.addEventListener("DOMContentLoaded", initAdminApp);

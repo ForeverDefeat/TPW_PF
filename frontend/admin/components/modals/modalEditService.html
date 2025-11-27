@@ -1,6 +1,6 @@
-<div id="modalEditService" class="modal">
-  <div class="modal-content">
-    <span class="close" id="closeEditService">&times;</span>
+<div id="modalEditService" class="admin-modal-overlay">
+  <div class="admin-modal">
+    <span class="admin-modal-close" id="closeEditService">&times;</span>
     <h2>Editar Servicio</h2>
 
     <form id="formEditService" class="admin-form">
@@ -15,40 +15,27 @@
 
       <!-- Nombre -->
       <label for="editServiceName">Nombre del servicio:</label>
-      <input
-        type="text"
-        id="editServiceName"
-        required
-      />
+      <input type="text" id="editServiceName" required />
 
       <!-- Ubicación -->
       <label for="editServiceLocation">Ubicación:</label>
-      <input
-        type="text"
-        id="editServiceLocation"
-      />
+      <input type="text" id="editServiceLocation" />
 
       <!-- Descripción -->
       <label for="editServiceDescription">Descripción:</label>
-      <textarea
-        id="editServiceDescription"
-        rows="3"
-      ></textarea>
+      <textarea id="editServiceDescription" rows="3"></textarea>
 
       <!-- Rango de precio -->
-      <label for="editServicePriceRange">Rango de precio:</label>
-      <input
-        type="text"
-        id="editServicePriceRange"
-      />
+      <label>Precio mínimo:</label>
+      <input type="number" id="editServicePriceMin" placeholder="Ej: 80" min="0">
+
+      <label>Precio máximo:</label>
+      <input type="number" id="editServicePriceMax" placeholder="Ej: 150" min="0">
+
 
       <!-- Imagen -->
       <label for="editServiceImage">Nueva imagen (opcional):</label>
-      <input
-        type="file"
-        id="editServiceImage"
-        accept="image/*"
-      />
+      <input type="file" id="editServiceImage" accept="image/*" />
       <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-top: 2px;">
         Si no seleccionas una imagen nueva, se conservará la actual.
       </p>

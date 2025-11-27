@@ -80,24 +80,25 @@ function setupEditButtons() {
             const id = btn.dataset.id;
             const container = document.getElementById("categoryModalContainer");
 
-            // 🔥 RUTA CORRECTA
-            container.innerHTML = await fetch("./components/modals/modalEditCategory.html")
+            // Cargar el HTML del modal
+            container.innerHTML = await fetch("components/modals/modalEditCategory.html")
                 .then(r => r.text());
 
-            // Cargar datos desde backend
-            const data = await apiGet(`/categories/${id}`);
+            // Obtener la categoría desde el backend
+            const res = await apiGet(`/categories/${id}`);
+            const cat = res.category;
 
-            // Rellenar modal
-            document.getElementById("editCatId").value = data.id;
-            document.getElementById("editCatName").value = data.name;
-            document.getElementById("editCatDesc").value = data.description ?? "";
+            document.getElementById("editCatId").value = cat.id;
+            document.getElementById("editCatName").value = cat.name || "";
+            document.getElementById("editCatDesc").value = cat.description || "";
 
-            // Botón cerrar
+
+            // Botón cerrar modal
             document.getElementById("closeEditCategory").onclick = () => {
                 container.innerHTML = "";
             };
 
-            // Guardar cambios
+            // ✅ Submit actualización
             document.getElementById("formEditCategory").onsubmit = async (e) => {
                 e.preventDefault();
 
@@ -106,7 +107,9 @@ function setupEditButtons() {
                 fd.append("description", document.getElementById("editCatDesc").value);
 
                 const newImg = document.getElementById("editCatImage").files[0];
-                if (newImg) fd.append("image", newImg);
+                if (newImg) {
+                    fd.append("image", newImg);
+                }
 
                 await apiPutFile(`/categories/${id}`, fd);
 
@@ -116,6 +119,7 @@ function setupEditButtons() {
         };
     });
 }
+
 
 
 

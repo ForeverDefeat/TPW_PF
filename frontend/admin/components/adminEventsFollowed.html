@@ -1,29 +1,52 @@
 <div class="admin-page">
 
-  <div class="admin-page-header">
-    <h2>Eventos Seguidos</h2>
-    <button id="btnAddEventFollow" class="admin-btn admin-btn-primary">
-      + Añadir Seguimiento
-    </button>
-  </div>
+    <!-- ENCABEZADO -->
+    <div class="admin-page-header" style="display: flex; align-items: center; justify-content: space-between;">
+        <h2>Eventos Seguidos</h2>
+        <button id="btnAddEventFollow" class="admin-btn admin-btn-primary">+ Añadir Seguimiento</button>
+    </div>
 
+    <!-- FILTROS -->
+    <div style="
+        margin: 1.5rem 0;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        align-items: center;
+    ">
+        <div style="flex: 1; min-width: 240px;">
+            <label for="filterFollowUser" style="font-weight:600; color:var(--color-text-primary);">
+                Filtrar por Usuario
+            </label>
+            <select id="filterFollowUser" class="admin-form-input" style="width:100%;"></select>
+        </div>
+
+        <div style="flex: 1; min-width: 240px;">
+            <label for="filterFollowEvent" style="font-weight:600; color:var(--color-text-primary);">
+                Filtrar por Evento
+            </label>
+            <select id="filterFollowEvent" class="admin-form-input" style="width:100%;"></select>
+        </div>
+    </div>
+
+    <!-- TABLA -->
     <table class="admin-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Usuario</th>
-          <th>Email</th>
-          <th>Evento</th>
-          <th>Fecha evento</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-
-      <tbody id="eventsFollowedTableBody">
-        <!-- Filas dinámicas -->
-      </tbody>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Usuario</th>
+                <th>Email</th>
+                <th>Evento</th>
+                <th>Fecha evento</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="eventsFollowedTableBody">
+            <!-- Filas dinámicas -->
+        </tbody>
     </table>
 
-  <div id="eventsFollowedModalContainer"></div>
+    <!-- CONTENEDOR PARA MODALES -->
+    <div id="eventsFollowedModalContainer"></div>
 
 </div>

@@ -1,27 +1,25 @@
 <div id="modalAddEvent" class="admin-modal-overlay">
   <div class="admin-modal">
     <span class="admin-modal-close" id="closeAddEvent">&times;</span>
-
     <h2>Añadir Evento</h2>
 
     <form id="formAddEvent" class="admin-form">
-
-      <label>Destino:</label>
+      <label for="eventDestinationId">Destino:</label>
       <select id="eventDestinationId" required></select>
 
-      <label>Título:</label>
+      <label for="eventTitle">Título:</label>
       <input type="text" id="eventTitle" required />
 
-      <label>Descripción:</label>
+      <label for="eventDescription">Descripción:</label>
       <textarea id="eventDescription"></textarea>
 
-      <label>Fecha del evento:</label>
+      <label for="eventDate">Fecha del evento:</label>
       <input type="date" id="eventDate" required />
 
-      <label>Ubicación:</label>
+      <label for="eventLocation">Ubicación:</label>
       <input type="text" id="eventLocation" />
 
-      <label>Imagen:</label>
+      <label for="eventImage">Imagen:</label>
       <input type="file" id="eventImage" accept="image/*" />
 
       <button type="submit" class="admin-btn admin-btn-primary">

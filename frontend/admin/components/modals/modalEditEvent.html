@@ -1,10 +1,9 @@
-<div id="modalEditEvent" class="modal">
-  <div class="modal-content">
-    <span class="close" id="closeEditEvent">&times;</span>
+<div id="modalEditEvent" class="admin-modal-overlay">
+  <div class="admin-modal">
+    <span class="admin-modal-close" id="closeEditEvent">&times;</span>
     <h2>Editar Evento</h2>
 
     <form id="formEditEvent" class="admin-form">
-
       <input type="hidden" id="editEventId" />
 
       <label for="editEventDestinationId">Destino:</label>
@@ -21,6 +20,10 @@
 
       <label for="editEventLocation">Ubicación:</label>
       <input type="text" id="editEventLocation" />
+
+      <!-- Preview de la imagen actual (si existe) -->
+      <label>Imagen actual:</label>
+      <img id="currentEventImage" class="admin-thumb" alt="Imagen del evento" />
 
       <label for="editEventImage">Imagen nueva (opcional):</label>
       <input type="file" id="editEventImage" accept="image/*" />

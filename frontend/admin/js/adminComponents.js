@@ -118,7 +118,13 @@ export async function loadAdminPage(pageName) {
     const main = document.getElementById("adminMain");
     if (!main) return;
 
-    const pagePath = `components/admin${capitalize(pageName)}.html`;
+    // Normaliza el nombre: "events-followed" → "EventsFollowed"
+    const normalized = pageName
+        .split("-")
+        .map(part => capitalize(part))
+        .join("");
+
+    const pagePath = `components/admin${normalized}.html`;
 
     const html = await loadHTML(pagePath);
     main.innerHTML = html;

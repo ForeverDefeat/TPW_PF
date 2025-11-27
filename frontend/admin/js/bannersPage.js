@@ -87,7 +87,7 @@ function setupAddBannerButton() {
 ============================================================================ */
 
 function setupEditButtons() {
-    document.querySelectorAll(".edit-banner-btn").forEach(btn => {
+    document.querySelectorAll(".edit-btn").forEach(btn => {
         btn.onclick = async () => {
             const id = btn.dataset.id;
 

@@ -14,44 +14,27 @@
 
       <!-- Nombre -->
       <label for="serviceName">Nombre del servicio:</label>
-      <input
-        type="text"
-        id="serviceName"
-        required
-        placeholder="Ej: Hotel Costa Azul"
-      />
+      <input type="text" id="serviceName" required placeholder="Ej: Hotel Costa Azul" />
 
       <!-- Ubicación -->
       <label for="serviceLocation">Ubicación:</label>
-      <input
-        type="text"
-        id="serviceLocation"
-        placeholder="Ej: Paracas"
-      />
+      <input type="text" id="serviceLocation" placeholder="Ej: Paracas" />
 
       <!-- Descripción -->
       <label for="serviceDescription">Descripción:</label>
-      <textarea
-        id="serviceDescription"
-        rows="3"
-        placeholder="Describe brevemente el servicio"
-      ></textarea>
+      <textarea id="serviceDescription" rows="3" placeholder="Describe brevemente el servicio"></textarea>
 
       <!-- Rango de precio -->
-      <label for="servicePriceRange">Rango de precio (referencial):</label>
-      <input
-        type="text"
-        id="servicePriceRange"
-        placeholder="Ej: S/ 80 - S/ 150"
-      />
+      <label>Precio mínimo:</label>
+      <input type="number" id="servicePriceMin" placeholder="Ej: 80" min="0">
+
+      <label>Precio máximo:</label>
+      <input type="number" id="servicePriceMax" placeholder="Ej: 150" min="0">
+
 
       <!-- Imagen -->
       <label for="serviceImage">Imagen (opcional):</label>
-      <input
-        type="file"
-        id="serviceImage"
-        accept="image/*"
-      />
+      <input type="file" id="serviceImage" accept="image/*" />
 
       <button type="submit" class="admin-btn admin-btn-primary">
         Guardar Servicio
