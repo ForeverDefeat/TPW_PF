@@ -36,16 +36,17 @@ export async function renderDestinations() {
         const row = document.createElement("tr");
 
         row.innerHTML = `
-            <td>${dest.id}</td>
-            <td><img src="${dest.main_image_url}" class="admin-thumb"></td>
-            <td>${dest.name}</td>
-            <td>${categories.find(c => c.id === dest.category_id)?.name || "-"}</td>
-            <td>${dest.is_featured ? "⭐" : ""}</td>
-            <td class="actions-cell">
-                <button class="admin-btn small edit-btn" data-id="${dest.id}">Editar</button>
-                <button class="admin-btn small delete-btn" data-id="${dest.id}">Eliminar</button>
-            </td>
-        `;
+    <td>${dest.id}</td>
+    <td><img src="${dest.mainImageUrl}" class="admin-thumb"></td>
+    <td>${dest.name}</td>
+    <td>${categories.find(c => c.id === dest.categoryId)?.name || "-"}</td>
+    <td>${dest.isFeatured ? "⭐" : ""}</td>
+    <td class="actions-cell">
+        <button class="admin-btn small edit-btn" data-id="${dest.id}">Editar</button>
+        <button class="admin-btn small delete-btn" data-id="${dest.id}">Eliminar</button>
+    </td>
+`;
+
 
         tbody.appendChild(row);
     });
@@ -56,179 +57,87 @@ export async function renderDestinations() {
     setupDeleteButtons();
 }
 
-/* ========================================================================
-   2. MODAL: AÑADIR DESTINO
-   ======================================================================== */
-
-/**
- * Configura el botón “Añadir Destino” y carga el modal
- * junto con la funcionalidad de guardado.
- *
- * @param {Array} categories - Lista de categorías para llenar el <select>
- */
+/* ============================================================
+   MODAL — AÑADIR DESTINO
+============================================================ */
 function setupAddDestinationModal(categories) {
-    const btn = document.getElementById("btnOpenAddDestination");
-
-    btn.onclick = async () => {
+    document.getElementById("btnOpenAddDestination").onclick = async () => {
         const container = document.getElementById("destinationModalContainer");
+        container.innerHTML = await fetch("components/modals/modalAddDestination.html").then(r => r.text());
 
-        // Cargar modal externo
-        container.innerHTML = await fetch("components/modals/modalAddDestination.html")
-            .then(r => r.text());
+        // Cerrar
+        document.getElementById("closeAddDestination").onclick = () => container.innerHTML = "";
 
-        // Llenar las categorías
-        const sel = document.getElementById("destCategory");
-        sel.innerHTML = categories
-            .map(c => `<option value="${c.id}">${c.name}</option>`)
-            .join("");
+        // Llenar categorías
+        const sel = document.getElementById("addDestCategory");
+        sel.innerHTML = categories.map(c => `<option value="${c.id}">${c.name}</option>`).join("");
 
-        // Botón cerrar modal
-        document.getElementById("closeAddDestination").onclick = () => {
-            container.innerHTML = "";
-        };
-
-        // Evento submit
-        document.getElementById("formAddDestination").onsubmit = async (e) => {
+        // Submit
+        document.getElementById("formAddDestination").onsubmit = async e => {
             e.preventDefault();
 
             const fd = new FormData();
+            fd.append("name", document.getElementById("addDestName").value);
+            fd.append("summary", document.getElementById("addDestSummary").value);
+            fd.append("description", document.getElementById("addDestDescription").value);
+            fd.append("category_id", document.getElementById("addDestCategory").value);
+            fd.append("is_featured", document.getElementById("addDestIsFeatured").checked ? 1 : 0);
 
-            // Campos base
-            fd.append("name", document.getElementById("destName").value);
-            fd.append("category_id", document.getElementById("destCategory").value);
-            fd.append("summary", document.getElementById("destSummary").value);
-            fd.append("description", document.getElementById("destDescription").value);
-            fd.append("is_featured", document.getElementById("destIsFeatured").checked ? 1 : 0);
+            const imgMain = document.getElementById("addDestImage").files[0];
+            if (imgMain) fd.append("main_image", imgMain);
 
-            // Archivos
-            fd.append("main_image", document.getElementById("destImage").files[0]);
+            const imgHero = document.getElementById("addDestHeroImage").files[0];
+            if (imgHero) fd.append("hero_image", imgHero);
 
-            const heroImg = document.getElementById("destHeroImage").files[0];
-            if (heroImg) fd.append("hero_image", heroImg);
-
-            // Enviar al backend
             await apiPostFile("/destinations", fd);
 
-            // Cerrar modal
             container.innerHTML = "";
             renderDestinations();
         };
     };
 }
 
-/* ========================================================================
-   3. MODAL: EDITAR DESTINO
-   ======================================================================== */
-
-/**
- * Activa los botones “Editar” para cada destino en la tabla.
- *
- * @param {Array} categories - Lista de categorías
- */
-
-/* function setupEditButtons(categories) {
-    document.querySelectorAll(".edit-btn").forEach(btn => {
-        btn.onclick = async () => {
-            const id = btn.dataset.id;
-            const container = document.getElementById("destinationModalContainer");
-
-            // Cargar modal
-            container.innerHTML = await fetch("components/modals/modalEditDestination.html")
-                .then(r => r.text());
-
-            // Obtener datos actuales
-            const data = await apiGet(`/destinations/${id}`);
-
-
-            // Rellenar campos base
-            document.getElementById("editDestId").value = data.id;
-            document.getElementById("editDestName").value = data.name;
-            document.getElementById("editDestSummary").value = data.summary || "";
-            document.getElementById("editDestDescription").value = data.description || "";
-            document.getElementById("editDestIsFeatured").checked = data.is_featured === 1;
-
-            // Llenar categorías
-            const sel = document.getElementById("editDestCategory");
-            sel.innerHTML = categories
-                .map(c => `
-                    <option value="${c.id}" ${c.id === data.category_id ? "selected" : ""}>
-                        ${c.name}
-                    </option>
-                `)
-                .join("");
-
-            // Botón cerrar
-            document.getElementById("closeEditDestination").onclick = () => {
-                container.innerHTML = "";
-            };
-
-            // Guardar cambios
-            document.getElementById("formEditDestination").onsubmit = async (e) => {
-                e.preventDefault();
-
-                const fd = new FormData();
-
-                // Datos principales
-                fd.append("name", document.getElementById("editDestName").value);
-                fd.append("category_id", document.getElementById("editDestCategory").value);
-                fd.append("summary", document.getElementById("editDestSummary").value);
-                fd.append("description", document.getElementById("editDestDescription").value);
-                fd.append("is_featured", document.getElementById("editDestIsFeatured").checked ? 1 : 0);
-
-                // Imágenes nuevas (opcionales)
-                const newMainImg = document.getElementById("editDestImage").files[0];
-                if (newMainImg) fd.append("main_image", newMainImg);
-
-                const newHeroImg = document.getElementById("editDestHeroImage").files[0];
-                if (newHeroImg) fd.append("hero_image", newHeroImg);
-
-                // Enviar actualización
-                await apiPutFile(`/destinations/${id}`, fd);
-
-                container.innerHTML = "";
-                renderDestinations();
-            };
-        };
-    });
-} */
+/* ============================================================
+   MODAL — EDITAR DESTINO
+============================================================ */
 function setupEditButtons(categories) {
     document.querySelectorAll(".edit-btn").forEach(btn => {
         btn.onclick = async () => {
             const id = btn.dataset.id;
             const container = document.getElementById("destinationModalContainer");
 
+            // Cargar HTML del modal
             container.innerHTML = await fetch("components/modals/modalEditDestination.html")
                 .then(r => r.text());
 
-            // Obtener destino
-            /* const res = await apiGet(`/destinations/${id}`);
-            const data = res.data; */
+            // Obtener datos del destino
+            const res = await apiGet(`/destinations/${id}`);
+            const dest = res.data;
 
-            const data = await apiGet(`/destinations/${id}`);
+            /* --- Rellenar campos del modal --- */
+            document.getElementById("editDestId").value = dest.id;
+            document.getElementById("editDestName").value = dest.name;
+            document.getElementById("editDestSummary").value = dest.summary || "";
+            document.getElementById("editDestDescription").value = dest.description || "";
+            document.getElementById("editDestIsFeatured").checked = dest.isFeatured ? true : false;
 
-            document.getElementById("editDestId").value = data.id;
-            document.getElementById("editDestName").value = data.name;
-            document.getElementById("editDestSummary").value = data.summary || "";
-            document.getElementById("editDestDescription").value = data.description || "";
-            document.getElementById("editDestIsFeatured").checked = data.isFeatured === 1;
-
-            // Llenar categorías
+            // Categorías
             const sel = document.getElementById("editDestCategory");
             sel.innerHTML = categories
                 .map(c => `
-                    <option value="${c.id}" ${c.id === data.category_id ? "selected" : ""}>
+                    <option value="${c.id}" ${c.id === dest.categoryId ? "selected" : ""}>
                         ${c.name}
                     </option>
                 `)
                 .join("");
 
-            // Botón cerrar
+            // Cerrar modal
             document.getElementById("closeEditDestination").onclick = () => {
                 container.innerHTML = "";
             };
 
-            // Submit
-            document.getElementById("formEditDestination").onsubmit = async (e) => {
+            /* --- Submit actualización --- */
+            document.getElementById("formEditDestination").onsubmit = async e => {
                 e.preventDefault();
 
                 const fd = new FormData();
@@ -253,32 +162,31 @@ function setupEditButtons(categories) {
     });
 }
 
-/* ========================================================================
-   4. ELIMINAR DESTINO
-   ======================================================================== */
-
-/**
- * Habilita los botones para eliminar un destino.
- *
- * @function setupDeleteButtons
- */
+/* ============================================================
+   ELIMINAR DESTINO
+============================================================ */
 function setupDeleteButtons() {
     document.querySelectorAll(".delete-btn").forEach(btn => {
         btn.onclick = async () => {
             const id = btn.dataset.id;
 
-            if (!confirm("¿Realmente deseas eliminar este destino?")) return;
+            if (!confirm("¿Eliminar este destino?")) return;
 
             await apiDelete(`/destinations/${id}`);
-
             renderDestinations();
         };
     });
 }
 
-/**
- * Inicializa la página de destinos
- */
-export function initDestinationsPage() {
-    renderDestinations();
+/* ============================================================
+   INICIALIZAR PÁGINA
+============================================================ */
+export async function initDestinationsPage() {
+    const resCategories = await apiGet("/categories");
+    const categories = resCategories.data;
+
+    const resDestinations = await apiGet("/destinations");
+    const destinations = resDestinations.data;
+
+    renderDestinations(destinations, categories);
 }

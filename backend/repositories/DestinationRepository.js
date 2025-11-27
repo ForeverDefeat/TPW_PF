@@ -214,11 +214,19 @@ export class DestinationRepository {
    * @param {DestinationUpdate} data
    * @returns {Promise<boolean>} true si se actualizó algún registro.
    */
+  /**
+ * Actualiza un destino existente.
+ * Solo actualiza los campos enviados en data.
+ * @param {number} id
+ * @param {DestinationUpdate} data
+ * @returns {Promise<boolean>}
+ */
   static async update(id, data) {
-    // Construimos dinámicamente el SET dependiendo de los campos que lleguen
+
     const fields = [];
     const values = [];
 
+    // Campos normales
     if (data.categoryId !== undefined) {
       fields.push("category_id = ?");
       values.push(data.categoryId);
@@ -243,29 +251,32 @@ export class DestinationRepository {
       fields.push("description = ?");
       values.push(data.description);
     }
+
+    // 🔥 ACTUALIZACIÓN SEGURA DE IMÁGENES
     if (data.mainImageUrl !== undefined) {
       fields.push("main_image_url = ?");
       values.push(data.mainImageUrl);
     }
+
     if (data.heroImageUrl !== undefined) {
       fields.push("hero_image_url = ?");
       values.push(data.heroImageUrl);
     }
+
     if (data.isFeatured !== undefined) {
       fields.push("is_featured = ?");
       values.push(data.isFeatured ? 1 : 0);
     }
 
     if (fields.length === 0) {
-      // Nada que actualizar
-      return false;
+      return false; // Nada que actualizar
     }
 
     const sql = `
       UPDATE destinations
       SET ${fields.join(", ")}
       WHERE id = ?
-    `;
+  `;
 
     values.push(id);
 

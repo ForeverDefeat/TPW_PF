@@ -27,8 +27,8 @@ export async function renderUsers() {
                 <td>${u.email}</td>
                 <td>${u.role}</td>
                 <td class="actions-cell">
-                    <button class="admin-btn small edit-user-btn" data-id="${u.id}">Editar</button>
-                    <button class="admin-btn small delete-user-btn" data-id="${u.id}">Eliminar</button>
+                    <button class="admin-btn small edit-btn" data-id="${u.id}">Editar</button>
+                    <button class="admin-btn small delete-btn" data-id="${u.id}">Eliminar</button>
                 </td>
             `;
             tbody.appendChild(tr);
