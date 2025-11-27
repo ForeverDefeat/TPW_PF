@@ -1,103 +1,84 @@
 /**
  * @file services/ServiceService.js
- * @description Reglas de negocio para la entidad Service.
- * Valida datos, aplica lógica y coordina interacción entre controller y repository.
+ * @description Reglas de negocio para servicios turísticos.
  */
 
 import { ServiceRepository } from "../repositories/ServiceRepository.js";
-import { db } from "../config/db.js"; // Para validar service_types
-
-/**
- * @typedef {import("../repositories/ServiceRepository.js").Service} Service
- * @typedef {import("../repositories/ServiceRepository.js").ServiceFilters} ServiceFilters
- */
+import { db } from "../config/db.js";
 
 export class ServiceService {
 
-    /**
-     * Obtiene servicios con filtros opcionales.
-     * @param {ServiceFilters} filters
-     * @returns {Promise<Service[]>}
-     */
+    /** Obtener todos los servicios */
     static async getAll(filters = {}) {
         return await ServiceRepository.findAll(filters);
     }
 
-    /**
-     * Obtiene un servicio por su ID.
-     * @param {number} id
-     * @returns {Promise<Service|null>}
-     */
+    /** Obtener un servicio por ID */
     static async getById(id) {
         if (!id) throw new Error("ID es obligatorio");
         return await ServiceRepository.findById(id);
     }
 
-    /**
-     * Crea un nuevo servicio turístico.
-     *
-     * @param {Object} data
-     * @param {number} data.service_type_id
-     * @param {string} data.name
-     * @param {string} [data.location]
-     * @param {string} [data.description]
-     * @param {string} [data.price_range]
-     * @param {string} [data.image_url]
-     * @returns {Promise<number>} ID insertado
-     */
+    /** Crear servicio */
     static async create(data) {
         this.validateRequiredFields(data);
+
+        // Validar FK
         await this.validateServiceType(data.service_type_id);
 
-        return await ServiceRepository.create(data);
+        // Normalizar datos
+        const serviceData = {
+            service_type_id: Number(data.service_type_id),
+            name: data.name,
+            location: data.location ?? null,
+            description: data.description ?? null,
+            price_min: data.price_min ? Number(data.price_min) : null,
+            price_max: data.price_max ? Number(data.price_max) : null,
+            image_url: data.image_url ?? null
+        };
+
+        return await ServiceRepository.create(serviceData);
     }
 
-    /**
-     * Actualiza un servicio existente.
-     *
-     * @param {number} id
-     * @param {Object} data
-     * @returns {Promise<boolean>}
-     */
+    /** Actualizar servicio */
     static async update(id, data) {
         if (!id) throw new Error("ID es obligatorio");
 
-        if (data.service_type_id) {
+        // Validar tipo de servicio si viene en la actualización
+        if (data.service_type_id !== undefined) {
             await this.validateServiceType(data.service_type_id);
         }
 
-        return await ServiceRepository.update(id, data);
+        // Armado dinámico (solo actualiza lo que el frontend envía)
+        const updateData = {
+            ...(data.service_type_id !== undefined && { service_type_id: Number(data.service_type_id) }),
+            ...(data.name !== undefined && { name: data.name }),
+            ...(data.location !== undefined && { location: data.location }),
+            ...(data.description !== undefined && { description: data.description }),
+            ...(data.price_min !== undefined && { price_min: Number(data.price_min) }),
+            ...(data.price_max !== undefined && { price_max: Number(data.price_max) }),
+            ...(data.image_url && { image_url: data.image_url })
+
+        };
+
+        return await ServiceRepository.update(id, updateData);
     }
 
-    /**
-     * Elimina un servicio.
-     *
-     * @param {number} id
-     * @returns {Promise<boolean>}
-     */
+    /** Eliminar servicio */
     static async delete(id) {
         if (!id) throw new Error("ID es obligatorio");
         return await ServiceRepository.delete(id);
     }
 
     // =======================================================
-    // 🔍 VALIDACIONES INTERNAS
+    // VALIDACIONES DE NEGOCIO
     // =======================================================
 
-    /**
-     * Valida campos obligatorios.
-     * @private
-     */
     static validateRequiredFields(data) {
         if (!data.name) throw new Error("El nombre del servicio es obligatorio");
         if (!data.service_type_id) throw new Error("service_type_id es obligatorio");
     }
 
-    /**
-     * Valida que el tipo de servicio exista (FK service_types).
-     * @private
-     * @param {number} serviceTypeId
-     */
     static async validateServiceType(serviceTypeId) {
         const [rows] = await db.query(
             "SELECT id FROM service_types WHERE id = ?",

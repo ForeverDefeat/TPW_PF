@@ -1,72 +1,80 @@
-/**
- * @file repositories/EventsFollowedRepository.js
- * @description Acceso directo a la base de datos para la tabla `events_followed`.
- * Aquí se implementan consultas SQL puras sin lógica de negocio adicional.
- */
-
+// repositories/EventsFollowedRepository.js
 import db from "../config/db.js";
 
 export class EventsFollowedRepository {
 
-    /**
-     * Obtener todos los eventos seguidos por un usuario.
-     *
-     * @async
-     * @param {number} userId - ID del usuario.
-     * @returns {Promise<Array>} Lista de eventos que el usuario sigue.
-     */
-    static async getByUser(userId) {
-        const [rows] = await db.execute(
-            `SELECT ef.id, ef.event_id, e.title, e.date, e.location, e.image_url
-             FROM events_followed ef
-             INNER JOIN events e ON e.id = ef.event_id
-             WHERE ef.user_id = ?`,
-            [userId]
-        );
+    // Obtener todos los registros
+    static async getAll() {
+        const [rows] = await db.execute(`
+            SELECT ef.id, ef.user_id, ef.event_id,
+                   u.full_name, u.email,
+                   e.title, e.event_date
+            FROM events_followed ef
+            INNER JOIN users u ON u.id = ef.user_id
+            INNER JOIN events e ON e.id = ef.event_id
+            ORDER BY ef.id DESC
+        `);
         return rows;
     }
 
-    /**
-     * Verificar si un usuario ya sigue un evento.
-     *
-     * @async
-     * @param {number} userId 
-     * @param {number} eventId 
-     * @returns {Promise<boolean>}
-     */
+    // Obtener 1 por ID
+    static async getById(id) {
+        const [rows] = await db.execute(
+            `SELECT * FROM events_followed WHERE id = ?`,
+            [id]
+        );
+        return rows[0] || null;
+    }
+
+    // Obtener por usuario
+    static async getByUser(userId) {
+        const [rows] = await db.execute(`
+            SELECT ef.id, ef.user_id, ef.event_id,
+                   u.full_name, u.email,
+                   e.title, e.event_date
+            FROM events_followed ef
+            INNER JOIN users u ON u.id = ef.user_id
+            INNER JOIN events e ON e.id = ef.event_id
+            WHERE ef.user_id = ?
+            ORDER BY ef.id DESC
+        `, [userId]);
+        return rows;
+    }
+
+    // Obtener por evento
+    static async getByEvent(eventId) {
+        const [rows] = await db.execute(`
+            SELECT ef.id, ef.user_id, ef.event_id,
+                   u.full_name, u.email,
+                   e.title, e.event_date
+            FROM events_followed ef
+            INNER JOIN users u ON u.id = ef.user_id
+            INNER JOIN events e ON e.id = ef.event_id
+            WHERE ef.event_id = ?
+            ORDER BY ef.id DESC
+        `, [eventId]);
+        return rows;
+    }
+
+    // Verificar duplicado
     static async exists(userId, eventId) {
         const [rows] = await db.execute(
-            `SELECT id FROM events_followed 
-             WHERE user_id = ? AND event_id = ?`,
+            `SELECT id FROM events_followed WHERE user_id = ? AND event_id = ?`,
             [userId, eventId]
         );
         return rows.length > 0;
     }
 
-    /**
-     * Registrar que un usuario sigue un evento.
-     *
-     * @async
-     * @param {number} userId 
-     * @param {number} eventId 
-     * @returns {Promise<number>} ID de la relación creada.
-     */
+    // Crear registro
     static async create(userId, eventId) {
         const [result] = await db.execute(
-            `INSERT INTO events_followed (user_id, event_id)
-             VALUES (?, ?)`,
+            `INSERT INTO events_followed (user_id, event_id) VALUES (?, ?)`,
             [userId, eventId]
         );
         return result.insertId;
     }
 
-    /**
-     * Eliminar la relación de "evento seguido".
-     *
-     * @async
-     * @param {number} id - ID del registro events_followed.
-     * @returns {Promise<boolean>}
-     */
+    // Eliminar registro
     static async delete(id) {
         const [result] = await db.execute(
             `DELETE FROM events_followed WHERE id = ?`,

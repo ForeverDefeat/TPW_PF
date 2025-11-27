@@ -1,57 +1,18 @@
 /**
  * @file routes/serviceRoutes.js
- * @description Rutas de la API para la entidad Services.
- * Maneja hoteles, restaurantes, tours, transporte y más.
+ * @description Rutas de la API para servicios turísticos.
  */
 
 import express from "express";
 import { ServiceController } from "../controllers/serviceController.js";
+import { upload } from "../middlewares/upload.js";
 
 const router = express.Router();
 
-/**
- * @swagger
- * /api/services:
- *   get:
- *     summary: Listar servicios turísticos
- *     tags: [Services]
- */
 router.get("/", ServiceController.getAll);
-
-/**
- * @swagger
- * /api/services/{id}:
- *   get:
- *     summary: Obtener un servicio por ID
- *     tags: [Services]
- */
 router.get("/:id", ServiceController.getById);
-
-/**
- * @swagger
- * /api/services:
- *   post:
- *     summary: Crear un nuevo servicio
- *     tags: [Services]
- */
-router.post("/", ServiceController.create);
-
-/**
- * @swagger
- * /api/services/{id}:
- *   put:
- *     summary: Actualizar un servicio turístico
- *     tags: [Services]
- */
-router.put("/:id", ServiceController.update);
-
-/**
- * @swagger
- * /api/services/{id}:
- *   delete:
- *     summary: Eliminar un servicio turístico
- *     tags: [Services]
- */
+router.post("/", upload.fields([{ name: "image", maxCount: 1 }]), ServiceController.create);
+router.put("/:id", upload.fields([{ name: "image", maxCount: 1 }]), ServiceController.update);
 router.delete("/:id", ServiceController.delete);
 
 export default router;

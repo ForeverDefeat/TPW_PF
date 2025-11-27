@@ -1,18 +1,8 @@
-/**
- * @file validations/eventValidator.js
- * @description Conjunto de validaciones para el módulo de eventos turísticos.
- * Estas validaciones aseguran que los datos enviados desde el cliente
- * cumplan con los formatos correctos antes de pasar al controlador.
- */
-
 import { body } from "express-validator";
 
-/**
- * Validación para la creación de un evento.
- *
- * @constant
- * @type {Array}
- */
+/* ======================================
+   VALIDACIÓN PARA CREAR EVENTO
+====================================== */
 export const createEventValidator = [
     body("destination_id")
         .isInt({ min: 1 })
@@ -22,9 +12,9 @@ export const createEventValidator = [
         .notEmpty()
         .withMessage("El campo 'title' es obligatorio"),
 
-    body("date")
+    body("event_date")
         .isISO8601()
-        .withMessage("El campo 'date' debe tener un formato válido YYYY-MM-DD"),
+        .withMessage("El campo 'event_date' debe ser YYYY-MM-DD"),
 
     body("description")
         .optional()
@@ -36,29 +26,28 @@ export const createEventValidator = [
         .isString()
         .withMessage("El campo 'location' debe ser una cadena de texto"),
 
-    body("image_url")
-        .optional()
-        .isURL()
-        .withMessage("El campo 'image_url' debe ser una URL válida"),
+    // ❌ Eliminado image_url
 ];
 
-/**
- * Validación para actualizar un evento.
- *
- * @constant
- * @type {Array}
- */
+/* ======================================
+   VALIDACIÓN PARA EDITAR EVENTO
+====================================== */
 export const updateEventValidator = [
-    body("date")
+    body("destination_id")
         .optional()
-        .isISO8601()
-        .withMessage("El campo 'date' debe tener un formato válido YYYY-MM-DD"),
+        .isInt({ min: 1 })
+        .withMessage("destination_id debe ser un número válido"),
 
     body("title")
         .optional()
         .isString()
         .withMessage("El campo 'title' debe ser una cadena de texto"),
 
+    body("event_date")
+        .optional()
+        .isISO8601()
+        .withMessage("El campo 'event_date' debe tener un formato válido YYYY-MM-DD"),
+
     body("description")
         .optional()
         .isString()
@@ -69,8 +58,5 @@ export const updateEventValidator = [
         .isString()
         .withMessage("El campo 'location' debe ser una cadena de texto"),
 
-    body("image_url")
-        .optional()
-        .isURL()
-        .withMessage("El campo 'image_url' debe ser una URL válida"),
+    // ❌ Eliminado image_url (porque tu envío es archivo)
 ];

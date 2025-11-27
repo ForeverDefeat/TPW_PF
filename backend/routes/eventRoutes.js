@@ -1,47 +1,31 @@
-/**
- * @file routes/eventRoutes.js
- * @description Rutas para la gestión de eventos turísticos.
- * Aquí solo se definen los endpoints y se enlazan con los métodos del EventController.
- * La documentación Swagger se maneja en el controlador para mayor claridad.
- */
-
 import express from "express";
 import { EventController } from "../controllers/EventController.js";
-import {
-    createEventValidator,
-    updateEventValidator
-} from "../validations/eventValidator.js";
+import { createEventValidator, updateEventValidator } from "../validations/eventValidator.js";
+import { upload } from "../middlewares/upload.js";
 
 const router = express.Router();
 
-/**
- * GET /api/events
- * Obtener todos los eventos con filtros opcionales
- */
+// GET
 router.get("/", EventController.getAll);
-
-/**
- * GET /api/events/:id
- * Obtener un evento por ID
- */
 router.get("/:id", EventController.getById);
 
-/**
- * POST /api/events
- * Crear un evento turístico
- */
-router.post("/", createEventValidator, EventController.create);
+// POST (con imagen)
+router.post(
+    "/",
+    upload.fields([{ name: "image", maxCount: 1 }]),
+    createEventValidator,
+    EventController.create
+);
 
-/**
- * PUT /api/events/:id
- * Actualizar un evento turístico
- */
-router.put("/:id", updateEventValidator, EventController.update);
+// PUT (con imagen) ← ESTA ES LA PARTE QUE FALTABA
+router.put(
+    "/:id",
+    upload.fields([{ name: "image", maxCount: 1 }]),
+    updateEventValidator,
+    EventController.update
+);
 
-/**
- * DELETE /api/events/:id
- * Eliminar un evento turístico
- */
+// DELETE
 router.delete("/:id", EventController.delete);
 
 export default router;

@@ -1,186 +1,137 @@
 /**
  * @file controllers/serviceController.js
  * @description Controlador para los servicios turísticos.
- * Recibe solicitudes HTTP y delega la lógica al ServiceService.
  */
 
 import { ServiceService } from "../services/ServiceService.js";
 
-/**
- * @swagger
- * tags:
- *   name: Services
- *   description: Gestión de servicios turísticos (hoteles, restaurantes, tours, etc.)
- */
-
 export class ServiceController {
 
-    /**
-     * @swagger
-     * /api/services:
-     *   get:
-     *     summary: Obtener lista de servicios
-     *     tags: [Services]
-     *     parameters:
-     *       - in: query
-     *         name: type
-     *         schema:
-     *           type: integer
-     *         description: Filtrar por tipo de servicio (FK service_types)
-     *       - in: query
-     *         name: destination_id
-     *         schema:
-     *           type: integer
-     *       - in: query
-     *         name: q
-     *         schema:
-     *           type: string
-     *         description: Buscar por nombre o descripción
-     *     responses:
-     *       200:
-     *         description: Lista filtrada de servicios
-     */
+    /** Obtener todos los servicios */
     static async getAll(req, res) {
         try {
             const filters = req.query;
             const data = await ServiceService.getAll(filters);
             return res.json({ ok: true, data });
         } catch (error) {
-            res.status(500).json({
-                ok: false,
-                error: error.message
-            });
+            console.error("Error en getAll:", error);
+            return res.status(500).json({ ok: false, error: error.message });
         }
     }
 
-    /**
-     * @swagger
-     * /api/services/{id}:
-     *   get:
-     *     summary: Obtener un servicio específico
-     *     tags: [Services]
-     *     parameters:
-     *       - in: path
-     *         name: id
-     *         required: true
-     *         schema:
-     *           type: integer
-     *     responses:
-     *       200:
-     *         description: Servicio encontrado
-     *       404:
-     *         description: Servicio no encontrado
-     */
+    /** Obtener servicio por ID */
     static async getById(req, res) {
         try {
             const id = parseInt(req.params.id);
             const service = await ServiceService.getById(id);
 
             if (!service) {
-                return res.status(404).json({ ok: false, message: "Servicio no encontrado" });
+                return res.status(404).json({
+                    ok: false,
+                    message: "Servicio no encontrado"
+                });
             }
 
             return res.json({ ok: true, data: service });
         } catch (error) {
-            res.status(500).json({ ok: false, error: error.message });
+            console.error("Error en getById:", error);
+            return res.status(500).json({ ok: false, error: error.message });
         }
     }
 
-    /**
-     * @swagger
-     * /api/services:
-     *   post:
-     *     summary: Crear un servicio turístico
-     *     tags: [Services]
-     *     requestBody:
-     *       required: true
-     *       content:
-     *         application/json:
-     *           schema:
-     *             $ref: '#/components/schemas/ServiceInput'
-     *     responses:
-     *       201:
-     *         description: Servicio creado correctamente
-     */
+    /** Crear servicio */
     static async create(req, res) {
         try {
-            const id = await ServiceService.create(req.body);
+            const imageFile = req.files?.image?.[0] ?? null;
 
-            res.status(201).json({
+            const body = {
+                ...req.body,
+                service_type_id: Number(req.body.service_type_id),
+                price_min: req.body.price_min ? Number(req.body.price_min) : null,
+                price_max: req.body.price_max ? Number(req.body.price_max) : null,
+                image_url: imageFile ? imageFile.filename : null
+            };
+
+            const id = await ServiceService.create(body);
+
+            return res.status(201).json({
                 ok: true,
                 message: "Servicio creado correctamente",
                 id
             });
+
         } catch (error) {
-            res.status(400).json({ ok: false, error: error.message });
+            console.error("Error en create:", error);
+            return res.status(400).json({ ok: false, error: error.message });
         }
     }
 
-    /**
-     * @swagger
-     * /api/services/{id}:
-     *   put:
-     *     summary: Actualizar un servicio turístico
-     *     tags: [Services]
-     *     parameters:
-     *       - in: path
-     *         name: id
-     *         required: true
-     *         schema:
-     *           type: integer
-     *     requestBody:
-     *       required: true
-     *       content:
-     *         application/json:
-     *           schema:
-     *             $ref: '#/components/schemas/ServiceUpdate'
-     *     responses:
-     *       200:
-     *         description: Servicio actualizado
-     */
+    /** Actualizar servicio */
     static async update(req, res) {
         try {
             const id = parseInt(req.params.id);
-            const updated = await ServiceService.update(id, req.body);
+
+            // 📌 Si subes imagen nueva, estará en req.files.image[0]
+            const imageFile = req.files?.image?.[0];
+
+            const body = {
+                ...req.body,
+                service_type_id: req.body.service_type_id
+                    ? Number(req.body.service_type_id)
+                    : undefined,
+                price_min: req.body.price_min
+                    ? Number(req.body.price_min)
+                    : undefined,
+                price_max: req.body.price_max
+                    ? Number(req.body.price_max)
+                    : undefined,
+                image_url: imageFile ? imageFile.filename : undefined  // ✅ CORREGIDO
+            };
+
+            const updated = await ServiceService.update(id, body);
 
             if (!updated) {
-                return res.status(404).json({ ok: false, message: "Servicio no encontrado" });
+                return res.status(404).json({
+                    ok: false,
+                    message: "Servicio no encontrado"
+                });
             }
 
-            res.json({ ok: true, message: "Servicio actualizado correctamente" });
+            return res.json({
+                ok: true,
+                message: "Servicio actualizado correctamente"
+            });
+
         } catch (error) {
-            res.status(400).json({ ok: false, error: error.message });
+            console.error("Error en update:", error);
+            return res.status(400).json({ ok: false, error: error.message });
         }
     }
 
-    /**
-     * @swagger
-     * /api/services/{id}:
-     *   delete:
-     *     summary: Eliminar un servicio turístico
-     *     tags: [Services]
-     *     parameters:
-     *       - in: path
-     *         name: id
-     *         required: true
-     *         schema:
-     *           type: integer
-     *     responses:
-     *       200:
-     *         description: Servicio eliminado
-     */
+
+
+
+    /** Eliminar servicio */
     static async delete(req, res) {
         try {
             const id = parseInt(req.params.id);
             const deleted = await ServiceService.delete(id);
 
             if (!deleted) {
-                return res.status(404).json({ ok: false, message: "Servicio no encontrado" });
+                return res.status(404).json({
+                    ok: false,
+                    message: "Servicio no encontrado"
+                });
             }
 
-            res.json({ ok: true, message: "Servicio eliminado correctamente" });
+            return res.json({
+                ok: true,
+                message: "Servicio eliminado correctamente"
+            });
+
         } catch (error) {
-            res.status(500).json({ ok: false, error: error.message });
+            console.error("Error en delete:", error);
+            return res.status(500).json({ ok: false, error: error.message });
         }
     }
 }
