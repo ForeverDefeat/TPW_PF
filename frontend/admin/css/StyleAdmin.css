@@ -594,6 +594,107 @@ body {
     background: var(--btn-primary-bg-hover);
 }
 
+/* ===========================================================
+   ESTILOS DE FILTROS Y BUSCADORES (ADMIN)
+   =========================================================== */
+
+/* Contenedor de acciones: filtros alineados */
+.admin-page-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.2rem;
+}
+
+/* ===== SELECTs Y BUSCADORES (estilo unificado) ===== */
+.admin-select,
+.admin-filter-input {
+    appearance: none;
+    padding: 0.65rem 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--search-border);
+    background: var(--search-bg);
+    color: var(--color-text-primary);
+    font-size: 0.92rem;
+    min-width: 200px;
+    transition: 0.22s ease;
+}
+
+/* Placeholder consistentes */
+.admin-filter-input::placeholder {
+    color: var(--color-text-muted);
+}
+
+/* Hover */
+.admin-select:hover,
+.admin-filter-input:hover {
+    background: var(--color-surface-alt);
+}
+
+/* Focus */
+.admin-select:focus,
+.admin-filter-input:focus {
+    border-color: var(--search-border-focus);
+    box-shadow: 0 0 0 2px var(--color-accent-soft);
+    outline: none;
+    background: var(--color-surface);
+}
+
+/* Estilo especial para inputs de búsqueda */
+#favoritesSearch,
+#eventsFollowedSearch {
+    padding-left: 1rem;
+    width: 260px;
+}
+
+/* Modo oscuro */
+:root.dark-mode .admin-select,
+:root.dark-mode .admin-filter-input {
+    background: var(--search-bg);
+    border-color: var(--search-border);
+    color: var(--color-text-primary);
+}
+
+:root.dark-mode .admin-select:hover,
+:root.dark-mode .admin-filter-input:hover {
+    background: #1e1e1e;
+}
+
+/* ===============================================
+   Select custom (flecha estilo moderno)
+   =============================================== */
+.admin-select {
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%234b5563' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 0.8rem center;
+    background-size: 16px;
+    padding-right: 2.4rem;
+}
+
+:root.dark-mode .admin-select {
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%23cccccc' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+}
+
+/* ===============================================
+   Botón acción junto a filtros
+   =============================================== */
+#btnAddFavorite,
+#btnAddEventFollowed {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.55rem 1.2rem;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: 0.22s ease;
+}
+
+#btnAddFavorite:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
 
 
 /* ===========================================================

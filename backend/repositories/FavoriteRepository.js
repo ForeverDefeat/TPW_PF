@@ -7,22 +7,24 @@ import db from "../config/db.js";
 
 export class FavoriteRepository {
 
-    /**
-     * Obtener favoritos de un usuario.
-     * @async
-     * @param {number} userId - ID del usuario.
-     * @returns {Promise<Array>} Lista de destinos favoritos.
-     */
     static async getByUser(userId) {
         const [rows] = await db.execute(
-            `SELECT f.id, f.destination_id, d.name, d.image_url, d.location
-             FROM favorites f
-             INNER JOIN destinations d ON d.id = f.destination_id
-             WHERE f.user_id = ?`,
+            `SELECT 
+            f.id,
+            f.destination_id,
+            d.name,
+            d.summary,
+            d.main_image_url,
+            d.description,
+            d.location_id
+         FROM favorites f
+         INNER JOIN destinations d ON d.id = f.destination_id
+         WHERE f.user_id = ?`,
             [userId]
         );
         return rows;
     }
+
 
     /**
      * Verificar si un favorito ya existe.

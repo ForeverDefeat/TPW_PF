@@ -367,3 +367,26 @@ INSERT INTO events_followed (user_id, event_id) VALUES
 (2, 1),  -- Juan Pérez sigue el evento
 (3, 1),  -- María Torres sigue el evento
 (4, 1);  -- Juan Luis sigue el evento
+
+-- ===========================================
+-- RELLENO DE TABLA: favorites
+-- Estructura: (id, user_id, destination_id)
+-- ===========================================
+
+INSERT INTO favorites (user_id, destination_id) VALUES
+-- Usuario 1: Admin
+(1, 1),  -- Playa Red
+(1, 4),  -- Museo Histórico
+
+-- Usuario 2: Juan Pérez
+(2, 2),  -- La Mina
+(2, 3),  -- Montaña Colorada
+
+-- Usuario 3: María Torres
+(3, 1),  -- Playa Red
+(3, 5),  -- Stonehenge
+
+-- Usuario 4: Juan Luis
+(4, 3),  -- Montaña Colorada
+(4, 4),  -- Museo Histórico
+(4, 5);  -- Stonehenge

@@ -1,279 +1,243 @@
-/**
- * @file favoritesPage.js
- * @description Controlador del módulo "Favoritos" en el panel admin.
- *              Permite listar y gestionar los destinos favoritos
- *              de cada usuario (relación users ↔ destinations).
- * @module favoritesPage
- */
-
 import { apiGet, apiPost, apiDelete } from "./adminApi.js";
 
-/**
- * Cache local de usuarios y destinos para reutilizar
- * en selects y para mostrar nombres.
- *
- * @type {Array}
- */
-let usersCache = [];
-
-/**
- * Cache local de destinos.
- *
- * @type {Array}
- */
-let destinationsCache = [];
-
-/**
- * ID del usuario actualmente seleccionado en el filtro.
- *
- * @type {number|null}
- */
-let currentUserId = null;
+export function initFavoritesPage() {
+    initFavorites();
+}
 
 /* ============================================================================
-   1. RENDER PRINCIPAL
-   ============================================================================ */
+   VARIABLES GLOBALES EN MEMORIA (Cache)
+============================================================================ */
+let USERS = [];
+let DESTINATIONS = [];
+let FAVORITES_CACHE = {}; // { userId: [favorites] }
+let DEBOUNCE_TIMER = null;
 
-/**
- * Punto de entrada del módulo Favorites.
- * Carga usuarios y destinos, configura el filtro y
- * muestra la tabla de favoritos cuando haya un usuario seleccionado.
- *
- * @async
- * @function initFavoritesPage
- */
-export async function initFavoritesPage() {
+/* ============================================================================
+   1. INICIALIZAR PÁGINA
+============================================================================ */
+async function initFavorites() {
+    const tbody = document.getElementById("favoritesTableBody");
+    tbody.innerHTML = `<tr><td colspan="5">Cargando...</td></tr>`;
+
     try {
-        const usersRes = await apiGet("/users");
-        const destsRes = await apiGet("/destinations");
+        // Cargar datos iniciales
+        USERS = await apiGet("/users");
+        DESTINATIONS = await apiGet("/destinations");
 
-        usersCache = usersRes.data || [];
-        destinationsCache = destsRes.data || [];
-
-        setupUserFilter();
+        fillUserFilter();
+        fillDestinationFilter();
+        setupSearchInput();
         setupAddFavoriteButton();
 
+        tbody.innerHTML = ""; // limpiar tabla
+
     } catch (err) {
-        console.error("Error inicializando Favorites:", err);
-        const tbody = document.getElementById("favoritesTableBody");
-        if (tbody) {
-            tbody.innerHTML = `<tr><td colspan="5">Error al cargar datos iniciales.</td></tr>`;
-        }
+        console.error("Error inicializando favoritos:", err);
+        tbody.innerHTML = `<tr><td colspan="5">Error al cargar datos.</td></tr>`;
     }
 }
 
 /* ============================================================================
-   2. FILTRO DE USUARIO
-   ============================================================================ */
-
-/**
- * Rellena el <select> de usuarios y configura el evento change
- * para cargar los favoritos del usuario elegido.
- *
- * @function setupUserFilter
- */
-function setupUserFilter() {
+   2. LLENAR FILTRO DE USUARIOS
+============================================================================ */
+function fillUserFilter() {
     const select = document.getElementById("favoritesUserFilter");
-    if (!select) return;
 
-    // Rellenar opciones de usuarios
-    usersCache.forEach(u => {
-        const opt = document.createElement("option");
-        opt.value = u.id;
-        opt.textContent = `${u.full_name} (${u.email})`;
-        select.appendChild(opt);
-    });
+    select.innerHTML = `
+        <option value="">Selecciona un usuario...</option>
+        ${USERS.map(u => `
+            <option value="${u.id}">${u.full_name} (${u.email})</option>
+        `).join("")}
+    `;
 
-    // Cambio de usuario seleccionado
-    select.addEventListener("change", async (e) => {
-        const value = e.target.value;
-
-        const btnAdd = document.getElementById("btnAddFavorite");
-        if (btnAdd) {
-            btnAdd.disabled = !value;
-        }
-
-        if (!value) {
-            currentUserId = null;
-            clearFavoritesTable();
-            return;
-        }
-
-        currentUserId = parseInt(value, 10);
-        await loadFavoritesForUser(currentUserId);
-    });
-}
-
-/**
- * Limpia el cuerpo de la tabla de favoritos.
- *
- * @function clearFavoritesTable
- */
-function clearFavoritesTable() {
-    const tbody = document.getElementById("favoritesTableBody");
-    if (!tbody) return;
-    tbody.innerHTML = `<tr><td colspan="5">Selecciona un usuario para ver sus favoritos.</td></tr>`;
+    select.onchange = handleFilters;
 }
 
 /* ============================================================================
-   3. CARGAR FAVORITOS DE UN USUARIO
-   ============================================================================ */
+   3. LLENAR FILTRO DE DESTINOS
+============================================================================ */
+function fillDestinationFilter() {
+    const select = document.getElementById("favoritesDestinationFilter");
 
-/**
- * Obtiene y muestra en la tabla los favoritos de un usuario específico.
- *
- * @async
- * @param {number} userId - ID del usuario.
- * @function loadFavoritesForUser
- */
-async function loadFavoritesForUser(userId) {
+    select.innerHTML = `
+        <option value="">-- Filtrar por destino --</option>
+        ${DESTINATIONS.map(d =>
+            `<option value="${d.id}">${d.name}</option>`
+        ).join("")}
+    `;
+
+    select.onchange = handleFilters;
+}
+
+/* ============================================================================
+   4. CAJA DE BÚSQUEDA CON DEBOUNCE
+============================================================================ */
+function setupSearchInput() {
+    const input = document.getElementById("favoritesSearch");
+
+    input.onkeyup = () => {
+        clearTimeout(DEBOUNCE_TIMER);
+        DEBOUNCE_TIMER = setTimeout(handleFilters, 300); // evita lag
+    };
+}
+
+/* ============================================================================
+   5. APLICAR TODOS LOS FILTROS
+============================================================================ */
+async function handleFilters() {
+    const userId = document.getElementById("favoritesUserFilter").value;
+    const destId = document.getElementById("favoritesDestinationFilter").value;
+    const search = document.getElementById("favoritesSearch").value.toLowerCase();
+
     const tbody = document.getElementById("favoritesTableBody");
-    if (!tbody) return;
+    tbody.innerHTML = `<tr><td colspan="5">Cargando...</td></tr>`;
 
-    tbody.innerHTML = `<tr><td colspan="5">Cargando favoritos...</td></tr>`;
+    let result = [];
 
-    try {
-        // GET /favorites?user_id=...
-        const res = await apiGet(`/favorites?user_id=${userId}`);
-
-        const favorites = res.data || [];
-
-        if (!favorites.length) {
-            tbody.innerHTML = `<tr><td colspan="5">Este usuario no tiene destinos favoritos.</td></tr>`;
-            return;
+    /* === 1. Filtro por USUARIO (rápido con cache) === */
+    if (userId) {
+        if (!FAVORITES_CACHE[userId]) {
+            const favRes = await apiGet(`/favorites/user/${userId}`);
+            FAVORITES_CACHE[userId] = Array.isArray(favRes) ? favRes : favRes.data;
         }
 
-        tbody.innerHTML = "";
-
-        favorites.forEach(fav => {
-            const tr = document.createElement("tr");
-
-            tr.innerHTML = `
-                <td>${fav.id}</td>
-                <td>${fav.name}</td>
-                <td>${fav.location || "-"}</td>
-                <td>
-                    <img
-                        src="${fav.image_url || "../assets/placeholder.png"}"
-                        alt="${fav.name}"
-                        class="admin-thumb"
-                    />
-                </td>
-                <td class="actions-cell">
-                    <button class="admin-btn small delete-banner-btn" data-id="${fav.id}">
-                        Eliminar
-                    </button>
-                </td>
-            `;
-
-            tbody.appendChild(tr);
-        });
-
-        setupDeleteButtons();
-
-    } catch (err) {
-        console.error("Error cargando favoritos:", err);
-        tbody.innerHTML = `<tr><td colspan="5">Error al cargar favoritos.</td></tr>`;
+        result = FAVORITES_CACHE[userId].map(fav => ({
+            ...fav,
+            user_name: USERS.find(u => u.id == userId)?.full_name,
+            user_email: USERS.find(u => u.id == userId)?.email
+        }));
     }
+
+    /* === 2. Filtro SOLO destino (recorrer usuarios y filtrar) === */
+    else if (destId) {
+        result = [];
+
+        for (const user of USERS) {
+            if (!FAVORITES_CACHE[user.id]) {
+                const resp = await apiGet(`/favorites/user/${user.id}`);
+                FAVORITES_CACHE[user.id] = Array.isArray(resp) ? resp : resp.data;
+            }
+
+            FAVORITES_CACHE[user.id].forEach(f => {
+                if (f.destination_id == destId) {
+                    result.push({
+                        ...f,
+                        user_name: user.full_name,
+                        user_email: user.email
+                    });
+                }
+            });
+        }
+    }
+
+    /* === 3. Filtro conjunto: usuario + destino === */
+    if (userId && destId) {
+        result = result.filter(f => f.destination_id == destId);
+    }
+
+    /* === 4. BÚSQUEDA POR TEXTO === */
+    if (search) {
+        const s = search.toLowerCase();
+        result = result.filter(f =>
+            f.name.toLowerCase().includes(s) ||
+            (f.location || "").toLowerCase().includes(s) ||
+            (f.user_name || "").toLowerCase().includes(s) ||
+            (f.user_email || "").toLowerCase().includes(s)
+        );
+    }
+
+    renderFavorites(result);
 }
 
 /* ============================================================================
-   4. AÑADIR FAVORITO
-   ============================================================================ */
+   6. RENDER TABLA DE RESULTADOS
+============================================================================ */
+function renderFavorites(list) {
+    const tbody = document.getElementById("favoritesTableBody");
+    tbody.innerHTML = "";
 
-/**
- * Configura el botón "Añadir Favorito" para abrir el modal
- * y gestionar el formulario de creación.
- *
- * @function setupAddFavoriteButton
- */
+    if (!list || list.length === 0) {
+        tbody.innerHTML = `
+            <tr><td colspan="5" style="text-align:center; padding:1rem;">
+                No se encontraron favoritos.
+            </td></tr>
+        `;
+        return;
+    }
+
+    list.forEach(f => {
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+            <td>${f.id}</td>
+            <td>${f.name}</td>
+            <td>${f.location || "-"}</td>
+            <td><img src="/uploads/${f.main_image_url}" class="admin-thumb"/></td>
+            <td class="actions-cell">
+                <button class="admin-btn small delete-btn" data-id="${f.id}">Eliminar</button>
+            </td>
+        `;
+
+        tbody.appendChild(tr);
+    });
+
+    setupDeleteButtons();
+}
+
+/* ============================================================================
+   7. BOTÓN: AÑADIR FAVORITO
+============================================================================ */
 function setupAddFavoriteButton() {
     const btn = document.getElementById("btnAddFavorite");
-    if (!btn) return;
+    const modalContainer = document.getElementById("favoriteModalContainer");
 
-    btn.addEventListener("click", async () => {
-        if (!currentUserId) return;
+    btn.onclick = async () => {
+        const userId = document.getElementById("favoritesUserFilter").value;
 
-        const container = document.getElementById("favoriteModalContainer");
-        if (!container) return;
+        if (!userId) return alert("Selecciona un usuario primero.");
 
-        const html = await fetch("components/modals/modalAddFavorite.html")
-            .then(r => r.text());
+        const html = await fetch("components/modals/modalAddFavorite.html").then(r => r.text());
+        modalContainer.innerHTML = html;
 
-        container.innerHTML = html;
+        const user = USERS.find(u => u.id == userId);
+        document.getElementById("favoriteUserLabel").innerText =
+            `${user.full_name} (${user.email})`;
 
-        // Mostrar nombre del usuario
-        const user = usersCache.find(u => u.id === currentUserId);
-        const labelUser = document.getElementById("favoriteUserLabel");
-        if (user && labelUser) {
-            labelUser.textContent = `${user.full_name} (${user.email})`;
-        }
+        document.getElementById("favoriteDestinationId").innerHTML =
+            DESTINATIONS.map(d => `<option value="${d.id}">${d.name}</option>`).join("");
 
-        // Rellenar destinos
-        const selectDest = document.getElementById("favoriteDestinationId");
-        if (selectDest) {
-            selectDest.innerHTML = destinationsCache
-                .map(d => `<option value="${d.id}">${d.name}</option>`)
-                .join("");
-        }
+        document.getElementById("closeAddFavorite").onclick = () => {
+            modalContainer.innerHTML = "";
+        };
 
-        // Cerrar modal
-        const closeBtn = document.getElementById("closeAddFavorite");
-        if (closeBtn) {
-            closeBtn.onclick = () => {
-                container.innerHTML = "";
-            };
-        }
+        document.getElementById("formAddFavorite").onsubmit = async e => {
+            e.preventDefault();
 
-        // Submit formulario
-        const form = document.getElementById("formAddFavorite");
-        if (form) {
-            form.onsubmit = async (e) => {
-                e.preventDefault();
+            await apiPost("/favorites", {
+                user_id: parseInt(userId),
+                destination_id: parseInt(document.getElementById("favoriteDestinationId").value)
+            });
 
-                const destId = parseInt(
-                    document.getElementById("favoriteDestinationId").value,
-                    10
-                );
-
-                await apiPost("/favorites", {
-                    user_id: currentUserId,
-                    destination_id: destId
-                });
-
-                container.innerHTML = "";
-                await loadFavoritesForUser(currentUserId);
-            };
-        }
-    });
+            modalContainer.innerHTML = "";
+            FAVORITES_CACHE = {}; // limpiar cache
+            handleFilters();
+        };
+    };
 }
 
 /* ============================================================================
-   5. ELIMINAR FAVORITO
-   ============================================================================ */
-
-/**
- * Configura los botones "Eliminar" de cada fila de la tabla
- * para borrar un favorito.
- *
- * @function setupDeleteButtons
- */
+   8. ELIMINAR FAVORITO
+============================================================================ */
 function setupDeleteButtons() {
-    const buttons = document.querySelectorAll(".delete-favorite-btn");
+    document.querySelectorAll(".delete-btn").forEach(btn => {
+        btn.onclick = async () => {
+            if (!confirm("¿Eliminar este favorito?")) return;
 
-    buttons.forEach(btn => {
-        btn.addEventListener("click", async () => {
             const id = btn.dataset.id;
-            if (!id) return;
-
-            const confirmDelete = confirm("¿Quitar este destino de favoritos?");
-            if (!confirmDelete) return;
-
             await apiDelete(`/favorites/${id}`);
 
-            if (currentUserId) {
-                await loadFavoritesForUser(currentUserId);
-            }
-        });
+            FAVORITES_CACHE = {}; // reset cache
+            handleFilters();
+        };
     });
 }
