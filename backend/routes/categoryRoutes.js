@@ -40,6 +40,13 @@ router.get("/", CategoryController.getAll);
 router.get("/:id", CategoryController.getById);
 
 /**
+ * RUTA NUEVA 
+ * Obtener categoría por slug
+ * GET /api/categories/slug/:slug
+ */
+router.get("/slug/:slug", CategoryController.getBySlug);
+
+/**
  * @openapi
  * /api/categories:
  *   post:

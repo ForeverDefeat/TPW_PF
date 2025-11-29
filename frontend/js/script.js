@@ -3,8 +3,9 @@ import { setupLoginModal } from "./auth/loginModal.js";
 import { setupRegisterModal } from "./auth/registerModal.js";
 import { searchDestinations } from "./api.js";
 
-/*========================= APP GENERAL =========================*/
-
+/* =============================================================
+   NAV + SIDEBAR
+============================================================= */
 function initApp() {
     const menu = document.getElementById("menu");
     const sidebar = document.getElementById("sidebar");
@@ -20,8 +21,9 @@ function initApp() {
     });
 }
 
-/*========================= SLIDER FADE PREMIUM =========================*/
-
+/* =============================================================
+   SLIDER
+============================================================= */
 function initFadeSlider() {
     const slides = [...document.querySelectorAll(".fade-slide")];
     const btnPrev = document.querySelector(".fade-prev");
@@ -30,46 +32,37 @@ function initFadeSlider() {
     if (!slides.length || !btnPrev || !btnNext) return;
 
     let index = 0;
-    let autoplayTimer = null;
+    let autoplay = setInterval(next, 5000);
 
-    const showSlide = (i) => {
+    function show(i) {
         slides.forEach(s => s.classList.remove("active"));
         slides[i].classList.add("active");
-    };
-
-    const nextSlide = () => {
+    }
+    function next() {
         index = (index + 1) % slides.length;
-        showSlide(index);
-    };
-
-    const prevSlide = () => {
+        show(index);
+    }
+    function prev() {
         index = (index - 1 + slides.length) % slides.length;
-        showSlide(index);
-    };
+        show(index);
+    }
 
-    const startAutoplay = () => {
-        clearInterval(autoplayTimer);
-        autoplayTimer = setInterval(nextSlide, 5000);
-    };
+    btnNext.onclick = () => { next(); reset(); };
+    btnPrev.onclick = () => { prev(); reset(); };
 
-    btnNext.addEventListener("click", () => {
-        nextSlide();
-        startAutoplay();
-    });
+    function reset() {
+        clearInterval(autoplay);
+        autoplay = setInterval(next, 5000);
+    }
 
-    btnPrev.addEventListener("click", () => {
-        prevSlide();
-        startAutoplay();
-    });
-
-    showSlide(index);
-    startAutoplay();
+    show(index);
 }
 
-/*========================= ANIMACIÓN FADE IN SECTIONS =========================*/
-
+/* =============================================================
+   FADE-IN ANIMATIONS
+============================================================= */
 function initFadeInObserver() {
-    const observer = new IntersectionObserver((entries) => {
+    const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
             if (entry.isIntersecting) entry.target.classList.add("visible");
         });
@@ -78,54 +71,27 @@ function initFadeInObserver() {
     document.querySelectorAll(".fade-in").forEach(el => observer.observe(el));
 }
 
-/*========================= CONFIGURAR SEARCHBAR =========================*/
-
+/* =============================================================
+   SEARCHBAR
+============================================================= */
 function setupSearchBar() {
-    const searchInput = document.getElementById("searchInput");
-    const searchBtn = document.getElementById("searchBtn");
+    const input = document.getElementById("searchInput");
+    const btn = document.getElementById("searchBtn");
     const resultsBox = document.getElementById("searchResults");
 
-    if (!searchInput || !searchBtn || !resultsBox) {
-        console.warn("Searchbar aún no está disponible");
-        return;
-    }
+    if (!input || !btn || !resultsBox) return;
 
-    console.log("Searchbar listo.");
-
-    // Buscar al presionar botón
-    searchBtn.addEventListener("click", async () => {
-        const text = searchInput.value.trim();
+    const executeSearch = async () => {
+        const text = input.value.trim();
         if (!text) return;
-        runSearch(text);
-    });
 
-    // Buscar mientras escribe
-    searchInput.addEventListener("input", () => {
-        const text = searchInput.value.trim();
-        if (!text) {
-            resultsBox.classList.add("hidden");
-            return;
-        }
-        runSearch(text);
-    });
-
-    // Cerrar resultados si clic fuera
-    document.addEventListener("click", (e) => {
-        if (!resultsBox.contains(e.target) && !searchInput.contains(e.target)) {
-            resultsBox.classList.add("hidden");
-        }
-    });
-
-    // Ejecutar búsqueda
-    async function runSearch(text) {
         const res = await searchDestinations(text);
-
         if (!res.ok) return;
-        renderResults(res.results);
-    }
 
-    // Renderizar tarjetas
-    function renderResults(list) {
+        render(res.results);
+    };
+
+    const render = (list) => {
         resultsBox.innerHTML = "";
         resultsBox.classList.remove("hidden");
 
@@ -141,62 +107,59 @@ function setupSearchBar() {
             div.innerHTML = `
                 <h4>${item.name}</h4>
                 <p>${item.description}</p>
-                <small>Categoría: ${item.category}</small>
+                <small>${item.category_name}</small>
             `;
 
-            div.addEventListener("click", () => {
-                resultsBox.classList.add("hidden");
-
-                if (item.category === "playa") {
-                    window.location.href = "beach.html";
-                }
-                else if (item.category === "montana") {
-                    window.location.href = "mountain.html";
-                }
-                else if (item.category === "cultura") {
-                    window.location.href = "culture.html";
-                }
-            });
+            div.onclick = () => {
+                window.location.href = `destination.html?slug=${item.slug}`;
+            };
 
             resultsBox.appendChild(div);
         });
-    }
+    };
+
+    btn.onclick = executeSearch;
+    input.oninput = executeSearch;
+
+    document.addEventListener("click", e => {
+        if (!resultsBox.contains(e.target) && !input.contains(e.target)) {
+            resultsBox.classList.add("hidden");
+        }
+    });
 }
-/*========================= MODO OSCURO =========================*/
+
+/* =============================================================
+   DARK MODE
+============================================================= */
 function setupDarkMode() {
     const btn = document.getElementById("toggleDarkMode");
     if (!btn) return;
 
-    // Cargar modo desde localStorage
-    const savedMode = localStorage.getItem("theme");
-
-    if (savedMode === "dark") {
+    const saved = localStorage.getItem("theme");
+    if (saved === "dark") {
         document.documentElement.classList.add("dark-mode");
         btn.textContent = "☀️";
-    } else {
-        btn.textContent = "🌙";
     }
 
     btn.addEventListener("click", () => {
         const isDark = document.documentElement.classList.toggle("dark-mode");
-
         btn.textContent = isDark ? "☀️" : "🌙";
-
         localStorage.setItem("theme", isDark ? "dark" : "light");
     });
 }
-
-/*========================= SCROLL AUTOMÁTICO AL BANNER =========================*/
-window.addEventListener("load", () => {
-    const banner = document.querySelector(".banner");
-    banner?.scrollIntoView({ behavior: "smooth" });
-});
-
-/*========================= INICIALIZAR TODO DESPUÉS DE CARGAR =========================*/
-
+/* =============================================================
+   INICIALIZACIÓN
+============================================================= */
 document.addEventListener("componentsLoaded", () => {
-    console.log("⚡ Componentes cargados — iniciando UI");
+    const header = document.querySelector("header");
+    const main = document.querySelector("main");
 
+    if (header && main) {
+        const h = header.offsetHeight;
+        main.style.marginTop = (h + 20) + "px";
+        console.log("✔ Ajuste dinámico del main:", h);
+    }
+    
     initApp();
     initFadeSlider();
     initFadeInObserver();

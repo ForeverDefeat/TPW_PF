@@ -109,4 +109,13 @@ export class CategoryRepository {
 
         return result.affectedRows > 0;
     }
+
+    static async getBySlug(slug) {
+        const [rows] = await db.query(
+            "SELECT * FROM categories WHERE slug = ? LIMIT 1",
+            [slug]
+        );
+        return rows[0];
+    }
+
 }

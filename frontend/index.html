@@ -5,9 +5,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Portal de Turismo</title>
-    <link rel="icon" href="icons/logo FD.jpg" type="image/jpg" />
 
-    <!-- Estilos globales y de la página -->
+    <link rel="icon" href="icons/logo FD.jpg" type="image/jpg" />
     <link rel="stylesheet" href="css/estiloGlobal.css" />
     <link rel="stylesheet" href="css/estiloIndex.css" />
 </head>
@@ -20,52 +19,30 @@
     <!-- SIDEBAR -->
     <div id="sidebar-container"></div>
 
-    <!-- MAIN -->
+    <!-- MAIN DINÁMICO -->
     <main id="main">
         <div class="content">
 
-            <!-- BANNER DINÁMICO -->
-            <div class="banner fade-slider" id="bannerSlider">
-                <!-- Aquí se insertarán banners dinámicos -->
-            </div>
+            <!-- BANNERS -->
+            <div id="bannerSlider" class="banner fade-slider"></div>
 
-            <!-- TOTALES DINÁMICOS -->
-            <section class="totals fade-in">
-                <div class="box">
-                    <h4>Playas</h4>
-                    <p>Total: <span id="totalPlayas">0</span></p>
-                </div>
-                <div class="box">
-                    <h4>Montañas</h4>
-                    <p>Total: <span id="totalMontanas">0</span></p>
-                </div>
-                <div class="box">
-                    <h4>Cultura</h4>
-                    <p>Total: <span id="totalCultura">0</span></p>
-                </div>
-            </section>
+            <!-- TOTALES -->
+            <section id="totalsSection" class="totals fade-in"></section>
 
-            <!-- CATEGORÍAS DINÁMICAS -->
+            <!-- CATEGORÍAS -->
             <section class="categories fade-in">
                 <h3>Categorías</h3>
-                <div class="content-3col" id="categoriesContainer">
-                    <!-- Aquí se insertan las categorías dinámicamente -->
-                </div>
+                <div id="categoriesContainer" class="content-3col"></div>
             </section>
 
             <!-- DESTINOS DESTACADOS -->
             <section class="categories fade-in">
                 <h3>Destinos Destacados</h3>
-                <div class="content-3col" id="destinationsContainer">
-                    <!-- Aquí se insertan destinos dinámicos -->
-                </div>
+                <div id="destinationsContainer" class="content-3col"></div>
             </section>
 
             <!-- MAPA -->
-            <div class="map-section fade-in">
-                <h3>Interactive Map</h3>
-                <p>Aquí se mostrará el mapa con puntos de interés.</p>
-            </div>
+            <section id="mapContainer" class="map-section fade-in"></section>
 
         </div>
     </main>
@@ -73,79 +50,14 @@
     <!-- FOOTER -->
     <div id="footer-container"></div>
 
-    <!-- COMPONENTES DINÁMICOS -->
-    <script src="js/components.js" type="module"></script>
+    <script type="module" src="js/components.js"></script>
 
-    <!-- LÓGICA PRINCIPAL -->
-    <script src="js/script.js" type="module"></script>
-
-    <!-- 🔹 LÓGICA DINÁMICA DE LANDING PAGE -->
-    <script type="module">
-        import { apiGet } from "./js/api.js";
-        import { loadBanners } from "./js/bannersLoader.js";
-
-        document.addEventListener("DOMContentLoaded", async () => {
-
-            /* =====================================================
-               1⃣ CARGAR TOTALES POR CATEGORÍA
-            ===================================================== */
-            try {
-                const res = await apiGet("/dashboard/stats");
-
-                document.getElementById("totalPlayas").textContent =
-                    res.destinationsPerCategory.find(c => c.name === "Playa")?.total ?? 0;
-
-                document.getElementById("totalMontanas").textContent =
-                    res.destinationsPerCategory.find(c => c.name === "Montaña")?.total ?? 0;
-
-                document.getElementById("totalCultura").textContent =
-                    res.destinationsPerCategory.find(c => c.name === "Cultura")?.total ?? 0;
-
-            } catch (err) {
-                console.error("Error cargando totales:", err);
-            }
-
-            /* =====================================================
-               2⃣ CARGAR CATEGORÍAS DINÁMICAS
-            ===================================================== */
-            try {
-                const categories = await apiGet("/categories");
-                const container = document.getElementById("categoriesContainer");
-
-                container.innerHTML = categories.map(cat => `
-                    <div class="cat-card">
-                        <img src="${cat.image_url}" alt="${cat.name}">
-                        <h4>${cat.name}</h4>
-                        <p>${cat.description}</p>
-                    </div>
-                `).join("");
-
-            } catch (err) {
-                console.error("Error cargando categorías:", err);
-            }
-
-            /* =====================================================
-               3⃣ CARGAR DESTINOS DESTACADOS
-            ===================================================== */
-            try {
-                const destinations = await apiGet("/destinations");
-                const container = document.getElementById("destinationsContainer");
-
-                container.innerHTML = destinations.slice(0, 3).map(d => `
-                    <div class="cat-card">
-                        <img src="${d.image_url}" alt="${d.name}">
-                        <h4>${d.name}</h4>
-                        <p>${d.description.substring(0, 120)}...</p>
-                    </div>
-                `).join("");
-
-            } catch (err) {
-                console.error("Error cargando destinos:", err);
-            }
-
-            loadBanners();
-        });
-    </script>
+    <script type="module" src="js/ui/totals.js"></script>
+    <script type="module" src="js/ui/categories.js"></script>
+    <script type="module" src="js/ui/destinations.js"></script>
+    <script type="module" src="js/ui/banners.js"></script>
+    <script type="module" src="js/ui/map.js"></script>
+    <script type="module" src="js/initAnimations.js"></script>
 
 </body>
 

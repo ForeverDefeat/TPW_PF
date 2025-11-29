@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Categorías | Turismo</title>
+
+    <link rel="stylesheet" href="css/estiloGlobal.css" />
+</head>
+
+<body>
+
+    <!-- COMPONENTES DINÁMICOS -->
+    <div id="header-container"></div>
+    <div id="sidebar-container"></div>
+
+    <main id="main">
+        <div class="content fade-in">
+            <h2 class="page-title">Explorar Categorías</h2>
+
+            <section class="grid-cards" id="categoriesList">
+                <!-- Cargado por JS -->
+            </section>
+        </div>
+    </main>
+
+    <div id="footer-container"></div>
+
+    <!-- Components -->
+    <script type="module" src="js/components.js"></script>
+
+    <!-- Page logic -->
+    <script type="module" src="js/categoriesPage.js"></script>
+    <script type="module" src="js/initAnimations.js"></script>
+
+</body>
+</html>

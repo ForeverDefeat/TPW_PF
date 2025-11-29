@@ -1,39 +1,95 @@
+// frontend/js/api.js
+
 export const API_URL = "http://localhost:4000/api";
 
-// LOGIN
-export async function loginUser(email, password) {
-    const res = await fetch(`${API_URL}/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password })
-    });
+/* ============================================================
+   MÉTODO BASE PARA TODAS LAS PETICIONES
+============================================================ */
+async function request(endpoint, method = "GET", body = null) {
+    const options = {
+        method,
+        headers: {}
+    };
+
+    // JSON body
+    if (body && !(body instanceof FormData)) {
+        options.headers["Content-Type"] = "application/json";
+        options.body = JSON.stringify(body);
+    }
+
+    // FormData (multipart)
+    if (body instanceof FormData) {
+        options.body = body; // NO poner headers
+    }
+
+    const res = await fetch(API_URL + endpoint, options);
+
+    if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText || "Error en API");
+    }
+
     return res.json();
 }
 
-// REGISTER
-export async function registerUser(data) {
-    const res = await fetch(`${API_URL}/auth/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-    });
-    return res.json();
+/* ============================================================
+   EXPORTS GENERALES
+============================================================ */
+export const apiGet = (url) => request(url, "GET");
+export const apiPost = (url, body) => request(url, "POST", body);
+export const apiPut = (url, body) => request(url, "PUT", body);
+export const apiDelete = (url) => request(url, "DELETE");
+
+/* ============================================================
+   AUTENTICACIÓN
+============================================================ */
+export function loginUser(email, password) {
+    return apiPost("/auth/login", { email, password });
 }
 
-// OBTENER DESTINOS
-export async function getDestinations() {
-    const res = await fetch(`${API_URL}/destinations`);
-    return res.json();
+export function registerUser(full_name, email, password) {
+    return apiPost("/auth/register", { full_name, email, password });
 }
 
-// OBTENER CONTEOS DE CATEGORÍAS
-export async function getCategoryCounts() {
-    const res = await fetch(`${API_URL}/destinations/counts`);
-    return res.json();
+/* ============================================================
+   FRONTEND PÚBLICO
+============================================================ */
+export function searchDestinations(q) {
+    return apiGet(`/destinations/search?q=${encodeURIComponent(q)}`);
 }
 
-// BUSCAR DESTINOS
-export async function searchDestinations(query) {
-    const res = await fetch(`${API_URL}/destinations/search?q=${encodeURIComponent(query)}`);
-    return res.json();
+export function getDestinations() {
+    return apiGet("/destinations");
+}
+
+export function getCategoryCounts() {
+    return apiGet("/destinations/counts");
+}
+
+export function getCategories() {
+    return apiGet("/categories");
+}
+
+export function getCategoryBySlug(slug) {
+    return apiGet(`/categories/slug/${slug}`);
+}
+
+export function getDestinationsByCategory(id) {
+    return apiGet(`/destinations/category/${id}`);
+}
+
+export function getDestinationBySlug(slug) {
+    return apiGet(`/destinations/slug/${slug}`);
+}
+
+export function getServicesByDestination(id) {
+    return apiGet(`/services/destination/${id}`);
+}
+
+export function getEventsByDestination(id) {
+    return apiGet(`/events/destination/${id}`);
+}
+
+export function getDashboardStats() {
+    return apiGet("/dashboard/stats").then(r => r);
 }

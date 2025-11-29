@@ -1,144 +1,129 @@
 /**
- * @file controllers/destinationController.js
- * @description Controlador para la entidad Destination.
+ * @file controllers/DestinationController.js
  */
 
+import { DestinationRepository } from "../repositories/DestinationRepository.js";
 import { DestinationService } from "../services/DestinationService.js";
+
 
 export class DestinationController {
 
-    /* ============================================================
-       GET ALL
-    ============================================================ */
     static async getAll(req, res) {
         try {
-            const destinations = await DestinationService.getAllDestinations();
-            res.json({ ok: true, data: destinations });
-
-        } catch (error) {
-            console.error("❌ Error en getAll:", error);
-            res.status(500).json({ ok: false, message: "Error interno del servidor" });
+            const rows = await DestinationRepository.getAll();
+            res.json(rows);
+        } catch (err) {
+            console.error("Error getAll:", err);
+            res.status(500).json({ ok: false, message: "Error interno" });
         }
     }
 
-    /* ============================================================
-       GET BY ID
-    ============================================================ */
     static async getById(req, res) {
         try {
-            const { id } = req.params;
-            const destination = await DestinationService.getDestinationById(id);
+            const id = req.params.id;
+            const row = await DestinationRepository.getById(id);
 
-            if (!destination) {
-                return res.status(404).json({
-                    ok: false,
-                    message: "Destino no encontrado"
-                });
+            if (!row) return res.status(404).json({ ok: false, message: "No encontrado" });
+
+            res.json(row);
+
+        } catch (err) {
+            console.error("Error getById:", err);
+            res.status(500).json({ ok: false, message: "Error interno" });
+        }
+    }
+
+    static async getBySlug(req, res) {
+        try {
+            const slug = req.params.slug;
+            const item = await DestinationService.findBySlug(slug);
+
+            if (!item) {
+                return res.status(404).json({ ok: false, message: "No encontrado" });
             }
 
-            res.json({ ok: true, data: destination });
-
-        } catch (error) {
-            console.error("❌ Error en getById:", error);
-            res.status(500).json({ ok: false, message: "Error interno del servidor" });
+            res.json({ ok: true, data: item });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ ok: false, message: "Error obteniendo destino por slug" });
         }
     }
 
-    /* ============================================================
-       CREATE
-    ============================================================ */
+
+    static async getByCategory(req, res) {
+        try {
+            const list = await DestinationService.findByCategory(req.params.id);
+            res.json({ ok: true, data: list });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ ok: false, message: "Error obteniendo destinos por categoría" });
+        }
+    }
+
+
+    static async search(req, res) {
+        try {
+            const results = await DestinationService.search(req.query.q || "");
+            res.json({ ok: true, results });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ ok: false, message: "Error en búsqueda" });
+        }
+    }
+
+
+    /* CRUD ADMIN (create, update, delete) */
     static async create(req, res) {
         try {
-            const body = {
-                ...req.body,
-                main_image: req.files?.main_image ? req.files.main_image[0].filename : null,
-                hero_image: req.files?.hero_image ? req.files.hero_image[0].filename : null
-            };
+            const data = req.body;
 
-            const newId = await DestinationService.createDestination(body);
+            const main = req.files?.main_image?.[0];
+            const hero = req.files?.hero_image?.[0];
 
-            res.status(201).json({
-                ok: true,
-                message: "Destino creado correctamente",
-                id: newId
+            const created = await DestinationRepository.create({
+                ...data,
+                main_image_url: main ? main.filename : null,
+                hero_image_url: hero ? hero.filename : null
             });
 
-        } catch (error) {
-            console.error("❌ Error en create:", error);
+            res.json({ ok: true, destination: created });
 
-            res.status(error.status || 500).json({
-                ok: false,
-                message: error.message,
-                details: error.details || null
-            });
+        } catch (err) {
+            console.error("Error create:", err);
+            res.status(500).json({ ok: false, message: "Error interno" });
         }
     }
 
-    /* ============================================================
-       UPDATE — 🔥 VERSIÓN FINAL
-    ============================================================ */
     static async update(req, res) {
         try {
             const { id } = req.params;
+            const data = req.body;
 
-            // Solo pasamos los filenames, NUNCA los objetos Multer
-            const body = {
-                ...req.body,
-                main_image: req.files?.main_image ? req.files.main_image[0].filename : undefined,
-                hero_image: req.files?.hero_image ? req.files.hero_image[0].filename : undefined
-            };
+            const main = req.files?.main_image?.[0];
+            const hero = req.files?.hero_image?.[0];
 
-            const updated = await DestinationService.updateDestination(id, body);
-
-            if (!updated) {
-                return res.status(404).json({
-                    ok: false,
-                    message: "Destino no encontrado"
-                });
-            }
-
-            res.json({
-                ok: true,
-                message: "Destino actualizado correctamente"
+            const updated = await DestinationRepository.update(id, {
+                ...data,
+                main_image_url: main ? main.filename : data.main_image_url,
+                hero_image_url: hero ? hero.filename : data.hero_image_url
             });
 
-        } catch (error) {
-            console.error("❌ Error en update:", error);
+            res.json({ ok: true, destination: updated });
 
-            res.status(error.status || 500).json({
-                ok: false,
-                message: error.message
-            });
+        } catch (err) {
+            console.error("Error update:", err);
+            res.status(500).json({ ok: false, message: "Error interno" });
         }
     }
 
-    /* ============================================================
-       DELETE
-    ============================================================ */
     static async delete(req, res) {
         try {
             const { id } = req.params;
-            const deleted = await DestinationService.deleteDestination(id);
-
-            if (!deleted) {
-                return res.status(404).json({
-                    ok: false,
-                    message: "Destino no encontrado"
-                });
-            }
-
-            res.json({
-                ok: true,
-                message: "Destino eliminado correctamente"
-            });
-
-        } catch (error) {
-            console.error("❌ Error al eliminar destino:", error);
-
-            res.status(error.status || 500).json({
-                ok: false,
-                message: error.message
-            });
+            await DestinationRepository.delete(id);
+            res.json({ ok: true });
+        } catch (err) {
+            console.error("Error delete:", err);
+            res.status(500).json({ ok: false, message: "Error interno" });
         }
     }
 }

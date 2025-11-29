@@ -135,4 +135,24 @@ export class CategoryController {
             res.status(500).json({ ok: false, message: err.message });
         }
     }
+
+    // controllers/CategoryController.js
+
+    static async getBySlug(req, res) {
+        try {
+            const { slug } = req.params;
+            const category = await CategoryRepository.getBySlug(slug);
+
+            if (!category) {
+                return res.status(404).json({ ok: false, message: "Categoría no encontrada" });
+            }
+
+            res.json(category);
+
+        } catch (err) {
+            console.error("Error getBySlug:", err);
+            res.status(500).json({ ok: false, message: "Error interno" });
+        }
+    }
+
 }

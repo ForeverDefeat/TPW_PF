@@ -106,7 +106,15 @@ main {
     background: var(--color-bg);
     color: var(--color-text-primary);
     font-family: var(--font-family-base);
+    margin-top: calc( var(--header-height) + 120px );
 }
+
+/* 🔥 Asegurar que el contenido principal nunca quede oculto */
+main .content {
+    position: relative;
+    z-index: 1;
+}
+
 
 /* Animación general */
 .fade-in {
@@ -617,7 +625,7 @@ main.menu-toggle {
 }
 
 /* ========================= SLIDER ========================= */
-.banner.fade-slider {
+/* .banner.fade-slider {
     position: relative;
     overflow: hidden;
     width: calc(100% - 1rem);
@@ -634,6 +642,42 @@ main.menu-toggle {
     inset: 0;
     opacity: 0;
     transition: opacity 1.2s ease-in-out;
+}
+
+.fade-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.fade-slide.active {
+    opacity: 1;
+}
+ */
+
+/* ========================= SLIDER ========================= */
+.banner.fade-slider {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto 2.5rem;
+
+    /* 🔥 Reducción de altura (antes 400px) */
+    height: 260px;
+
+    /* 🔥 Quitar fondo negro */
+    background-color: transparent;
+
+    border-radius: 12px;
+    box-shadow: var(--shadow-soft);
+}
+
+.fade-slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
 }
 
 .fade-slide img {
@@ -879,7 +923,8 @@ main.menu-toggle {
         max-width: none;
         width: 100%;
     }
-        .app-footer {
+
+    .app-footer {
         margin-left: 0 !important;
     }
 }

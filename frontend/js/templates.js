@@ -1,31 +1,30 @@
-export function beachTemplate(d) {
+// frontend/js/templates.js
+
+export function destinationCardTemplate(d) {
     return `
-        <div class="cat-card searchable-card">
-            <img src="${d.image}" alt="${d.title}">
+        <div class="cat-card hover-card" onclick="location.href='destination.html?slug=${d.slug}'">
+            <img src="/uploads/${d.main_image_url}" alt="${d.name}">
             <h4>${d.name}</h4>
-            <p>${d.description}</p>
+            <p>${d.summary ?? d.description.substring(0, 80)}...</p>
         </div>
     `;
 }
 
-export function mountainTemplate(d) {
+export function serviceCardTemplate(s) {
     return `
-        <div class="cat-card searchable-card">
-            <img src="${d.image}" alt="${d.title}">
-            <div class="destino-info">
-                <h4>${d.name}</h4>
-                <p>${d.description}</p>
-            </div>
+        <div class="cat-card">
+            <h4>${s.name}</h4>
+            <p>${s.description}</p>
         </div>
     `;
 }
 
-export function cultureTemplate(d) {
+export function eventCardTemplate(e) {
     return `
-        <div class="cat-card searchable-card">
-            <img src="${d.image}" alt="${d.title}">
-            <h4>${d.name}</h4>
-            <p>${d.description}</p>
+        <div class="cat-card">
+            <h4>${e.name}</h4>
+            <p>Fecha: ${new Date(e.event_date).toLocaleDateString()}</p>
+            <p>${e.description.substring(0, 100)}...</p>
         </div>
     `;
 }
