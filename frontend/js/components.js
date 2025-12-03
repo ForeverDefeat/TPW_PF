@@ -3,6 +3,7 @@
 import { setupAuthUI } from "./auth/authUI.js";
 import { setupLoginModal } from "./auth/loginModal.js";
 import { setupRegisterModal } from "./auth/registerModal.js";
+import { setupDarkMode } from "./script.js";
 
 /* ============================================================
    CARGA DE COMPONENTES
@@ -24,6 +25,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.log("🚀 Iniciando carga de componentes...");
 
     await loadComponent("#header-container", "components/header.html");
+    setupDarkMode();
+    
     await loadComponent("#authArea", "components/auth.html");
     await loadComponent("#sidebar-container", "components/sidebar.html");
     await loadComponent("#footer-container", "components/footer.html");

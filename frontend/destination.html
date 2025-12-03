@@ -1,40 +1,74 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Destino | Turismo</title>
 
+    <link rel="icon" href="icons/logo FD.jpg" type="image/jpg" />
+
+    <link rel="stylesheet" href="css/estiloDestinos.css">
     <link rel="stylesheet" href="css/estiloGlobal.css">
 </head>
 
 <body>
 
-<div id="header-container"></div>
-<div id="sidebar-container"></div>
+    <div id="header-container"></div>
+    <div id="sidebar-container"></div>
 
-<main id="main">
-    <div class="content fade-in">
+    <main id="main">
+        <div class="destination-container fade-in">
 
-        <div id="destinationHero" class="destination-hero"></div>
+            <!-- HERO -->
+            <section id="destinationHero" class="destination-hero">
+                <div class="hero-overlay">
+                    <h1 id="destinationName" class="hero-title"></h1>
+                    <p id="destinationSummary" class="hero-summary"></p>
+                </div>
+            </section>
 
-        <h2 id="destinationName"></h2>
-        <p id="destinationDescription"></p>
+            <!-- INFO PRINCIPAL -->
+            <section class="destination-info">
+                <h2>Descripción</h2>
+                <p id="destinationDescription"></p>
+            </section>
 
-        <h3>Servicios Cercanos</h3>
-        <div id="servicesList" class="grid-cards"></div>
+            <!-- GALERÍA DE IMÁGENES -->
+            <section class="destination-gallery">
+                <h2>Galería</h2>
+                <div id="galleryImages" class="gallery-grid"></div>
+            </section>
 
-        <h3>Eventos</h3>
-        <div id="eventsList" class="grid-cards"></div>
+            <!-- SERVICIOS CERCANOS -->
+            <section class="destination-services">
+                <h2>Servicios Cercanos</h2>
+                <div id="servicesList" class="pro-grid"></div>
+            </section>
 
-    </div>
-</main>
+            <!-- EVENTOS -->
+            <section class="destination-events">
+                <h2>Eventos</h2>
+                <div id="eventsList" class="pro-grid"></div>
+            </section>
 
-<div id="footer-container"></div>
+            <!-- MAPA -->
+            <section class="destination-map">
+                <h2>Ubicación</h2>
+                <div id="map" class="map-box"></div>
+            </section>
 
-<script type="module" src="js/components.js"></script>
-<script type="module" src="js/destinationPage.js"></script>
-<script type="module" src="js/initAnimations.js"></script>
+        </div>
+    </main>
+
+
+    <div id="footer-container"></div>
+
+    <script type="module" src="js/components.js"></script>
+
+    <script type="module" src="js/destinationPage.js"></script>
+    <script type="module" src="js/initAnimations.js"></script>
 
 </body>
+
 </html>

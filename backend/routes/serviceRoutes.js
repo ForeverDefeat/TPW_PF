@@ -11,6 +11,9 @@ const router = express.Router();
 
 router.get("/", ServiceController.getAll);
 router.get("/:id", ServiceController.getById);
+
+router.get("/destination/:id", ServiceController.getByDestination);
+
 router.post("/", upload.fields([{ name: "image", maxCount: 1 }]), ServiceController.create);
 router.put("/:id", upload.fields([{ name: "image", maxCount: 1 }]), ServiceController.update);
 router.delete("/:id", ServiceController.delete);

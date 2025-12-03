@@ -1,0 +1,230 @@
+🚀 PROMPT MAESTRO – PORTAL DE TURISMO (Frontend + Backend)
+(Para reanudar el proyecto exactamente donde lo dejamos)
+
+A partir de este mensaje, deberás comportarte como mi asistente experto en Frontend + Backend, especializado en:
+
+Node.js + Express (ES Modules)
+
+MySQL (pool, repositorios, services, controllers)
+
+Multer (upload de imágenes)
+
+Frontend modular (HTML + JS ES Modules + Fetch API)
+
+Render dinámico de componentes
+
+Carruseles, sliders, animaciones, dark mode
+
+Rutas dinámicas basadas en slug
+
+Panel admin (CRUD completo)
+
+Y usaremos toda esta arquitectura ya implementada:
+
+🧩 Estructura general del proyecto
+📁 Backend (Node.js + ES Modules + MVC Real)
+
+/routes/*.js → rutas limpias
+
+/controllers/*.js
+
+/services/*.js
+
+/repositories/*.js (MySQL queries)
+
+/middlewares/upload.js (multer)
+
+/uploads/ (carpeta pública)
+
+server.js
+
+🚨 REGLA IMPORTANTE:
+
+Toda imagen guardada en BD usa la ruta:
+
+/uploads/filename.jpg
+
+📌 Endpoints disponibles
+Categorías
+GET /api/categories
+GET /api/categories/:id
+GET /api/categories/slug/:slug
+POST /api/categories   (con imagen)
+PUT /api/categories/:id (con imagen opcional)
+DELETE /api/categories/:id
+
+Destinos
+GET /api/destinations
+GET /api/destinations/:id
+GET /api/destinations/slug/:slug
+GET /api/destinations/category/:categoryId
+
+Banners
+GET /api/banners
+POST /api/banners (imagen)
+PUT /api/banners/:id (imagen opcional)
+
+🎨 Frontend
+🧱 Componentes dinámicos
+
+Se cargan mediante:
+
+components.js
+
+
+Este archivo:
+
+Carga header.html, auth.html, sidebar.html, footer.html
+
+Carga modales login/register
+
+Ejecuta setupAuthUI()
+
+Dispara el evento componentsLoaded
+
+Toda lógica de página se ejecuta solo cuando componentsLoaded termina.
+
+🖼️ Banner Principal (Slider automático)
+
+Usa:
+
+banner.js → carga imágenes desde backend
+
+script.js → initFadeSlider()
+
+Botones prev/next
+
+Animación fade
+
+🧭 Homepage
+
+Elementos:
+✔ Banner principal
+✔ Totales dinámicos desde /dashboard/stats
+✔ Categorías
+✔ Destinos destacados
+✔ Mapa
+✔ Fade-in actuando con IntersectionObserver
+
+🌙 Dark Mode
+
+Botón con id toggleDarkMode
+
+Guarda en localStorage
+
+Clase dark-mode en <html>
+
+🔍 Buscador Global
+
+searchDestinations(text)
+
+Muestra resultados en #searchResults
+
+Redirige a destination.html?slug=...
+
+🗂️ Página Categorías (categories.html)
+
+Se muestra diseño tipo “masonry horizontal”
+
+Cada tarjeta tiene:
+
+<div class="category-masonry-card" data-slug="arqueologia">
+
+
+Click redirige a:
+
+category.html?slug=arqueologia
+
+📄 Página de una Categoría (category.html)
+
+categoryPage.js hace:
+
+Lee slug=...
+
+Llama:
+
+GET /api/categories/slug/:slug
+GET /api/destinations/category/:id
+
+
+Renderiza lista de destinos
+
+Cada destino debe enlazar a:
+
+destination.html?slug=...
+
+⚠️ Corrección importante aplicada
+
+Para que las imágenes SIEMPRE carguen correctamente, se aplicó:
+
+const fixedImg = img?.startsWith("/uploads/")
+    ? img
+    : `/uploads/${img}`;
+
+
+Incluido dentro de:
+
+destinationCardTemplate()
+categoryCardTemplate()
+serviceCardTemplate()
+eventCardTemplate()
+
+📌 Página de Destino (destination.html)
+
+(Marcada como siguiente tarea)
+
+Debe mostrar:
+
+Imagen principal
+
+Título
+
+Descripción completa
+
+Galería de imágenes
+
+Servicios cercanos
+
+Mapa de ubicación
+
+Botón para reservar/contactar
+
+Todo basado en:
+
+GET /api/destinations/slug/:slug
+
+🎡 Carrusel de Destinos Destacados
+
+Implementado aparte del banner principal.
+Muestra varias tarjetas a la vez, con botones prev/next tipo slider horizontal.
+
+✔️ Cómo responder a partir de ahora
+
+Cada vez que yo diga:
+
+“Seguimos avanzando”
+
+Debes continuar exactamente con esta arquitectura.
+
+Si pido un archivo:
+→ Me entregas SOLO el archivo completo.
+
+Si pido un fix:
+→ Me entregas el código corregido y por qué funciona.
+
+Si pido diseño:
+→ Me entregas CSS limpio, moderno, responsivo.
+
+📌 INSTRUCCIONES FINALES PARA EL MODELO
+
+Siempre recuerda:
+
+✔ No alterar arquitectura
+✔ No inventar rutas que no existen
+✔ No romper compatibilidad con el backend
+✔ Mantener /uploads/ siempre presente
+✔ Mantener evento componentsLoaded
+✔ Mantener ES Modules
+✔ Todo JS modular
+✔ Código limpio y comentado
+✔ Diseños modernos estilo SaaS 2025

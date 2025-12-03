@@ -3,9 +3,7 @@ import { setupLoginModal } from "./auth/loginModal.js";
 import { setupRegisterModal } from "./auth/registerModal.js";
 import { searchDestinations } from "./api.js";
 
-/* =============================================================
-   NAV + SIDEBAR
-============================================================= */
+// NAV + SIDEBAR
 function initApp() {
     const menu = document.getElementById("menu");
     const sidebar = document.getElementById("sidebar");
@@ -21,10 +19,8 @@ function initApp() {
     });
 }
 
-/* =============================================================
-   SLIDER
-============================================================= */
-function initFadeSlider() {
+// SLIDER
+export function initFadeSlider() {
     const slides = [...document.querySelectorAll(".fade-slide")];
     const btnPrev = document.querySelector(".fade-prev");
     const btnNext = document.querySelector(".fade-next");
@@ -58,10 +54,8 @@ function initFadeSlider() {
     show(index);
 }
 
-/* =============================================================
-   FADE-IN ANIMATIONS
-============================================================= */
-function initFadeInObserver() {
+// FADE-IN ANIMATIONS
+export function initFadeInObserver() {
     const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
             if (entry.isIntersecting) entry.target.classList.add("visible");
@@ -71,9 +65,7 @@ function initFadeInObserver() {
     document.querySelectorAll(".fade-in").forEach(el => observer.observe(el));
 }
 
-/* =============================================================
-   SEARCHBAR
-============================================================= */
+// SEARCHBAR
 function setupSearchBar() {
     const input = document.getElementById("searchInput");
     const btn = document.getElementById("searchBtn");
@@ -128,10 +120,8 @@ function setupSearchBar() {
     });
 }
 
-/* =============================================================
-   DARK MODE
-============================================================= */
-function setupDarkMode() {
+// DARK MODE
+export function setupDarkMode() {
     const btn = document.getElementById("toggleDarkMode");
     if (!btn) return;
 
@@ -147,9 +137,8 @@ function setupDarkMode() {
         localStorage.setItem("theme", isDark ? "dark" : "light");
     });
 }
-/* =============================================================
-   INICIALIZACIÓN
-============================================================= */
+
+// INICIALIZACIÓN
 document.addEventListener("componentsLoaded", () => {
     const header = document.querySelector("header");
     const main = document.querySelector("main");
@@ -169,5 +158,4 @@ document.addEventListener("componentsLoaded", () => {
     setupAuthUI();
 
     setupSearchBar();
-    setupDarkMode();
 });

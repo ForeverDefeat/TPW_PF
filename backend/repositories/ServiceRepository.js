@@ -174,4 +174,17 @@ export class ServiceRepository {
         );
         return result.affectedRows > 0;
     }
+
+    static async findByDestination(destination_id) {
+        const [rows] = await db.query(
+            `SELECT s.*
+         FROM services s
+         INNER JOIN destination_services ds ON ds.service_id = s.id
+         WHERE ds.destination_id = ?`,
+            [destination_id]
+        );
+
+        return rows;
+    }
+
 }

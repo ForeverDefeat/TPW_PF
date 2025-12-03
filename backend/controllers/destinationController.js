@@ -94,7 +94,7 @@ export class DestinationController {
         }
     }
 
-    static async update(req, res) {
+    /* static async update(req, res) {
         try {
             const { id } = req.params;
             const data = req.body;
@@ -114,7 +114,43 @@ export class DestinationController {
             console.error("Error update:", err);
             res.status(500).json({ ok: false, message: "Error interno" });
         }
+    } */
+
+    static async update(req, res) {
+    try {
+        const id = Number(req.params.id);
+
+        if (isNaN(id))
+            return res.status(400).json({ ok: false, message: "ID inválido" });
+
+        const { name, description, summary, category_id } = req.body;
+
+        // Leer archivos SOLO si existen
+        const main_image_url = req.files?.main_image
+            ? `/uploads/${req.files.main_image[0].filename}`
+            : undefined;
+
+        const hero_image_url = req.files?.hero_image
+            ? `/uploads/${req.files.hero_image[0].filename}`
+            : undefined;
+
+        const updated = await DestinationService.update(id, {
+            name,
+            description,
+            summary,
+            category_id: category_id ? Number(category_id) : null,
+            main_image_url,
+            hero_image_url
+        });
+
+        res.json({ ok: true, message: "Destino actualizado", destination: updated });
+
+    } catch (err) {
+        console.error("❌ ERROR ACTUALIZANDO DESTINO:", err);
+        res.status(500).json({ ok: false, message: err.message });
     }
+}
+
 
     static async delete(req, res) {
         try {

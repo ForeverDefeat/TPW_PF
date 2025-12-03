@@ -89,4 +89,9 @@ export class ServiceService {
             throw new Error(`El service_type_id ${serviceTypeId} no existe`);
         }
     }
+
+    static async getByDestination(destination_id) {
+        return await ServiceRepository.findByDestination(destination_id);
+    }
+
 }

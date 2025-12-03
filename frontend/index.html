@@ -21,6 +21,7 @@
 
     <!-- MAIN DINÁMICO -->
     <main id="main">
+        <!-- <h1>Portal De turismo</h1> -->
         <div class="content">
 
             <!-- BANNERS -->
@@ -35,11 +36,20 @@
                 <div id="categoriesContainer" class="content-3col"></div>
             </section>
 
-            <!-- DESTINOS DESTACADOS -->
-            <section class="categories fade-in">
+            <section class="destinos-carousel-section fade-in">
                 <h3>Destinos Destacados</h3>
-                <div id="destinationsContainer" class="content-3col"></div>
+
+                <div class="carousel-container">
+                    <button class="carousel-nav prev">❮</button>
+
+                    <div class="carousel" id="destinationsCarousel"></div>
+
+                    <button class="carousel-nav next">❯</button>
+                </div>
+
+                <div class="carousel-dots" id="carouselDots"></div>
             </section>
+
 
             <!-- MAPA -->
             <section id="mapContainer" class="map-section fade-in"></section>
@@ -50,8 +60,13 @@
     <!-- FOOTER -->
     <div id="footer-container"></div>
 
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
     <script type="module" src="js/components.js"></script>
 
+    <script type="module" src="js/ui/destinationsCarousel.js"></script>
     <script type="module" src="js/ui/totals.js"></script>
     <script type="module" src="js/ui/categories.js"></script>
     <script type="module" src="js/ui/destinations.js"></script>

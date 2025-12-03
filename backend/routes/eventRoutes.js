@@ -9,6 +9,9 @@ const router = express.Router();
 router.get("/", EventController.getAll);
 router.get("/:id", EventController.getById);
 
+router.get("/destination/:id", EventController.getByDestinationId);
+
+
 // POST (con imagen)
 router.post(
     "/",

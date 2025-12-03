@@ -1,0 +1,116 @@
+/* ====== CONTENEDOR GENERAL ====== */
+.destination-container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 20px 25px;
+}
+
+/* ====== HERO ====== */
+.destination-hero {
+    position: relative;
+    width: 100%;
+    height: 350px;
+    border-radius: 16px;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    margin-bottom: 35px;
+    box-shadow: var(--shadow-soft);
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.7));
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 25px;
+}
+
+.hero-title {
+    color: #fff;
+    font-size: 2.3rem;
+    margin-bottom: 8px;
+}
+
+.hero-summary {
+    color: #ddd;
+    font-size: 1.1rem;
+}
+
+/* ====== SECCIONES ====== */
+.destination-info,
+.destination-services,
+.destination-events,
+.destination-gallery,
+.destination-map {
+    margin-bottom: 40px;
+}
+
+.destination-info h2,
+.destination-services h2,
+.destination-gallery h2,
+.destination-events h2,
+.destination-map h2 {
+    font-size: 1.7rem;
+    margin-bottom: 12px;
+}
+
+/* ====== GALERÍA ====== */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px;
+}
+
+.gallery-grid img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: var(--shadow-soft);
+    transition: transform .2s;
+}
+
+.gallery-grid img:hover {
+    transform: scale(1.03);
+}
+
+/* ====== GRILLA PRO ====== */
+.pro-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 18px;
+}
+
+/* ====== TARJETA DE SERVICIO Y EVENTO ====== */
+.pro-card {
+    background: var(--card-bg);
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: var(--shadow-soft);
+    transition: transform .2s;
+}
+
+.pro-card:hover {
+    transform: translateY(-2px);
+}
+
+.pro-card h4 {
+    font-size: 1.2rem;
+}
+
+.pro-card p {
+    margin-top: 4px;
+    font-size: 0.95rem;
+}
+
+/* ====== MAPA ====== */
+.map-box {
+    width: 100%;
+    height: 320px;
+    border-radius: 16px;
+    background: #e5e5e5;
+    box-shadow: var(--shadow-soft);
+}

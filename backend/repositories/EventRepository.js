@@ -101,4 +101,13 @@ export class EventRepository {
 
         return result.affectedRows > 0;
     }
+
+    static async getByDestination(destination_id) {
+        const [rows] = await db.query(
+            "SELECT * FROM events WHERE destination_id = ?",
+            [destination_id]
+        );
+        return rows;
+    }
+
 }

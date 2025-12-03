@@ -1,3 +1,4 @@
+// frontend/js/categoriesPage.js
 import { apiGet } from "./api.js";
 
 document.addEventListener("componentsLoaded", loadCategories);
@@ -7,23 +8,31 @@ async function loadCategories() {
     if (!container) return;
 
     try {
+        // Llamar API
         const res = await apiGet("/categories");
-        const categories = res.categories;
+        const categories = res.categories ?? res;
 
-        container.innerHTML = categories.map(cat => `
-            <div class="cat-card hover-card" data-id="${cat.id}">
-                <img src="${cat.image_url}" alt="${cat.name}">
-                <h4>${cat.name}</h4>
-                <p>${cat.description.substring(0, 100)}...</p>
-            </div>
-        `).join("");
+        // Render cards
+        container.innerHTML = categories
+            .map(cat => `
+                <div class="category-masonry-card" data-id="${cat.id}">
+                    <img src="${cat.image_url}" alt="${cat.name}">
+                    <div class="info">
+                        <h4>${cat.name}</h4>
+                        <p>${cat.description.substring(0, 80)}...</p>
+                    </div>
+                </div>
+            `)
+            .join("");
 
-        // Click → navegar por ID porque tu backend NO usa slugs en categorías
-        [...container.querySelectorAll(".cat-card")].forEach(card => {
+
+        // Eventos del click (navegación por ID)
+        [...container.querySelectorAll(".category-masonry-card")].forEach(card => {
             card.addEventListener("click", () => {
-                const id = card.dataset.id;
+                const id = card.dataset.id; // ← usamos ID
                 window.location.href = `category.html?id=${id}`;
             });
+
         });
 
     } catch (err) {

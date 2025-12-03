@@ -32,6 +32,16 @@ async function request(endpoint, method = "GET", body = null) {
     return res.json();
 }
 
+export async function apiExists(url) {
+    try {
+        const res = await fetch(`${API_BASE}${url}`, { method: "HEAD" });
+        return res.ok;
+    } catch {
+        return false;
+    }
+}
+
+
 /* ============================================================
    EXPORTS GENERALES
 ============================================================ */

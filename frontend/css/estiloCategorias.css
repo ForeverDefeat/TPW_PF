@@ -1,0 +1,79 @@
+/* ===========================================================
+   MASONRY GRID (Pinterest Style)
+=========================================================== */
+.masonry-grid {
+    column-count: 3;
+    column-gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+@media (max-width: 1000px) {
+    .masonry-grid {
+        column-count: 2;
+    }
+}
+
+@media (max-width: 600px) {
+    .masonry-grid {
+        column-count: 1;
+    }
+}
+
+/* ===========================================================
+   CATEGORY CARD
+=========================================================== */
+.category-masonry-card {
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 1.5rem;
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--color-surface);
+    box-shadow: 0 4px 14px rgba(0,0,0,.08);
+    cursor: pointer;
+    transition: transform .3s ease, box-shadow .3s ease;
+    break-inside: avoid-column;
+    position: relative;
+}
+
+.category-masonry-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 25px rgba(0,0,0,.15);
+}
+
+/* Imagen */
+.category-masonry-card img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform .4s ease;
+}
+
+.category-masonry-card:hover img {
+    transform: scale(1.05);
+}
+
+/* Texto */
+.category-masonry-card .info {
+    padding: 1rem 1.3rem;
+    text-align: center;
+}
+
+.category-masonry-card h4 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+.category-masonry-card p {
+    margin: .5rem 0 0;
+    font-size: .95rem;
+    color: var(--color-text-secondary);
+}
+
+/* Modo oscuro */
+.dark-mode .category-masonry-card {
+    background: #1d1d1d;
+    box-shadow: 0 4px 15px rgba(255,255,255,.06);
+}

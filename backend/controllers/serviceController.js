@@ -134,4 +134,32 @@ export class ServiceController {
             return res.status(500).json({ ok: false, error: error.message });
         }
     }
+
+    static async getByDestination(req, res) {
+        try {
+            const id = Number(req.params.id);
+
+            if (isNaN(id)) {
+                return res.status(400).json({
+                    ok: false,
+                    message: "ID de destino inválido"
+                });
+            }
+
+            const services = await ServiceService.getByDestination(id);
+
+            res.json({
+                ok: true,
+                services
+            });
+
+        } catch (err) {
+            console.error("Error getByDestination:", err);
+            res.status(500).json({
+                ok: false,
+                message: "Error interno del servidor"
+            });
+        }
+    }
+
 }

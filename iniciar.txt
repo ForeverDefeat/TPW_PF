@@ -12,10 +12,6 @@ password: 1234
 user: maria@example.com 
 password: abcd
 
-prompt:
-
-
-
 inicializacion backend
 
 consideraciones: se debe tener instalado node.js y python
@@ -30,6 +26,11 @@ consideraciones: se debe tener instalado node.js y python
         npm install express mysql2 cors dotenv  express-validator
         npm install swagger-ui-express swagger-jsdoc
         npm install multercd
+
+        o
+
+        npm install express cors dotenv multer mysql2 router uuid
+        npm install -D nodemon
 
 4. en mySQL 
 

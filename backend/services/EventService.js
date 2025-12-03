@@ -41,4 +41,9 @@ export class EventService {
     static async delete(id) {
         return await EventRepository.delete(id);
     }
+
+    static async getByDestination(destination_id) {
+        return await EventRepository.getByDestination(destination_id);
+    }
+
 }

@@ -110,4 +110,9 @@ export class CategoryService {
 
         return await CategoryRepository.delete(id);
     }
+
+    async getBySlug(slug) {
+        return await CategoryRepository.getBySlug(slug);
+    }
+
 }

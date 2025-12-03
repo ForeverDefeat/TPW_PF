@@ -80,9 +80,9 @@ export class DestinationService {
     }
 
     /* ============================================================
-       UPDATE — 🔥 CORREGIDO POR COMPLETO
+       UPDATE — CORREGIDO POR COMPLETO
     ============================================================ */
-    static async updateDestination(id, data) {
+    /* static async updateDestination(id, data) {
 
         // Mapeo seguro de campos
         const mappedData = {
@@ -127,6 +127,57 @@ export class DestinationService {
         }
 
         return await DestinationRepository.update(id, mappedData);
+    } */
+    static async update(id, data) {
+        const {
+            name,
+            summary,
+            description,
+            category_id,
+            main_image_url,
+            hero_image_url
+        } = data;
+
+        // Obtenemos primero el destino existente
+        const [rows] = await db.query(
+            "SELECT * FROM destinations WHERE id = ? LIMIT 1",
+            [id]
+        );
+
+        if (rows.length === 0) throw new Error("Destino no encontrado");
+
+        const existing = rows[0];
+
+        // Si no mandas imagen → conservar la existente
+        const finalMainImage = main_image_url ?? existing.main_image_url;
+        const finalHeroImage = hero_image_url ?? existing.hero_image_url;
+
+        // Actualizar en BD
+        await db.query(
+            `UPDATE destinations 
+             SET name = ?, summary = ?, description = ?, category_id = ?, 
+                 main_image_url = ?, hero_image_url = ?
+             WHERE id = ?`,
+            [
+                name,
+                summary,
+                description,
+                category_id,
+                finalMainImage,
+                finalHeroImage,
+                id
+            ]
+        );
+
+        return {
+            id,
+            name,
+            summary,
+            description,
+            category_id,
+            main_image_url: finalMainImage,
+            hero_image_url: finalHeroImage
+        };
     }
 
     /* ============================================================

@@ -98,4 +98,18 @@ export class EventController {
             return res.status(500).json({ ok: false, error: e.message });
         }
     }
+
+    static async getByDestinationId(req, res) {
+        try {
+            const id = Number(req.params.id);
+            if (isNaN(id)) return res.status(400).json({ ok: false, message: "ID inválido" });
+
+            const events = await EventService.getByDestinationId(id);
+
+            res.json({ ok: true, events });
+
+        } catch (err) {
+            res.status(500).json({ ok: false, message: err.message });
+        }
+    }
 }

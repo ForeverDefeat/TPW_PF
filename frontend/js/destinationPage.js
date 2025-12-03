@@ -1,36 +1,60 @@
-// frontend/js/destinationPage.js
-import { apiGet } from "./api.js";
-import { serviceCardTemplate, eventCardTemplate } from "./templates.js";
+import { apiGet, apiExists } from "./api.js";
+import { galleryImageTemplate, serviceCardTemplate, eventCardTemplate } from "./templates.js";
 
 document.addEventListener("componentsLoaded", loadDestination);
 
 async function loadDestination() {
-    const slug = new URLSearchParams(window.location.search).get("slug");
+    const params = new URLSearchParams(window.location.search);
+    const slug = params.get("slug");
+
     if (!slug) return;
 
-    const hero = document.getElementById("destinationHero");
-    const nameEl = document.getElementById("destinationName");
-    const descEl = document.getElementById("destinationDescription");
-
     try {
+        // 1. Cargar datos del destino
         const res = await apiGet(`/destinations/slug/${slug}`);
-        const d = res.data ?? res;
+        const d = res.data;
 
-        hero.style.backgroundImage = `url('/uploads/${d.hero_image_url}')`;
-        nameEl.textContent = d.name;
-        descEl.textContent = d.description;
+        // HERO
+        document.getElementById("destinationHero").style.backgroundImage =
+            `url('/uploads/${d.hero_image_url}')`;
 
-        const resServices = await apiGet(`/services/destination/${d.id}`);
-        const services = resServices.data ?? resServices;
+        document.getElementById("destinationName").textContent = d.name;
+        document.getElementById("destinationSummary").textContent = d.summary;
+        document.getElementById("destinationDescription").textContent = d.description;
 
-        document.getElementById("servicesList").innerHTML =
-            services.map(serviceCardTemplate).join("");
+        // 2. Galería
+        const gallery = [];
+        if (d.main_image_url) gallery.push(d.main_image_url);
+        if (d.hero_image_url) gallery.push(d.hero_image_url);
 
-        const resEvents = await apiGet(`/events/destination/${d.id}`);
-        const events = resEvents.data ?? resEvents;
+        document.getElementById("galleryImages").innerHTML =
+            gallery.map(galleryImageTemplate).join("");
 
-        document.getElementById("eventsList").innerHTML =
-            events.map(eventCardTemplate).join("");
+        // 3. Servicios cercanos
+        try {
+            const serv = await apiGet(`/services/destination/${d.id}`);
+            document.getElementById("servicesList").innerHTML =
+                serv.services?.length
+                    ? serv.services.map(serviceCardTemplate).join("")
+                    : "<p>No hay servicios cercanos.</p>";
+        } catch {
+            document.getElementById("servicesList").innerHTML =
+                "<p>No hay servicios cercanos.</p>";
+        }
+
+        // 4. Eventos (solo si el endpoint existe)
+        const hasEvents = await apiExists(`/events/destination/${d.id}`);
+
+        if (hasEvents) {
+            const evt = await apiGet(`/events/destination/${d.id}`);
+            document.getElementById("eventsList").innerHTML =
+                evt.events?.length
+                    ? evt.events.map(eventCardTemplate).join("")
+                    : "<p>No hay eventos registrados.</p>";
+        } else {
+            document.getElementById("eventsList").innerHTML =
+                "<p>No hay eventos registrados.</p>";
+        }
 
     } catch (err) {
         console.error("Error cargando destino:", err);

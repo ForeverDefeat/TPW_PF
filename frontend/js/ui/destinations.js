@@ -14,7 +14,7 @@ document.addEventListener("componentsLoaded", async () => {
 
         container.innerHTML = destinations.slice(0, 3).map(d => `
             <div class="cat-card">
-                <img src="${d.main_image_url}" alt="${d.name}">
+                <img src="/uploads/${d.main_image_url}" alt="${d.name}">
                 <h4>${d.name}</h4>
                 <p>${d.description.substring(0, 100)}...</p>
             </div>

@@ -136,9 +136,7 @@ export class CategoryController {
         }
     }
 
-    // controllers/CategoryController.js
-
-    static async getBySlug(req, res) {
+    /* static async getBySlug(req, res) {
         try {
             const { slug } = req.params;
             const category = await CategoryRepository.getBySlug(slug);
@@ -148,6 +146,27 @@ export class CategoryController {
             }
 
             res.json(category);
+
+        } catch (err) {
+            console.error("Error getBySlug:", err);
+            res.status(500).json({ ok: false, message: "Error interno" });
+        }
+    }
+ */
+
+    static async getBySlug(req, res) {
+        try {
+            const { slug } = req.params;
+
+            if (!slug)
+                return res.status(400).json({ ok: false, message: "Slug requerido" });
+
+            const category = await CategoryService.getBySlug(slug);
+
+            if (!category)
+                return res.status(404).json({ ok: false, message: "Categoría no encontrada" });
+
+            res.json({ ok: true, category });
 
         } catch (err) {
             console.error("Error getBySlug:", err);

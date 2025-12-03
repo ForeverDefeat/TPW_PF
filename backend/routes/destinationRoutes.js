@@ -31,7 +31,17 @@ router.get("/:id", DestinationController.getById);
 
 router.post("/", upload.single("image"), DestinationController.create);
 
-router.put("/:id", upload.single("image"), DestinationController.update);
+/* router.put("/:id", upload.single("image"), DestinationController.update); */
+
+router.put(
+  "/:id",
+  upload.fields([
+    { name: "main_image", maxCount: 1 },
+    { name: "hero_image", maxCount: 1 }
+  ]),
+  DestinationController.update
+);
+
 
 router.delete("/:id", DestinationController.delete);
 

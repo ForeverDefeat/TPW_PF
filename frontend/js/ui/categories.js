@@ -1,28 +1,29 @@
-import { getCategories } from "../api.js";
+import { apiGet } from "../api.js";
 
-document.addEventListener("componentsLoaded", async () => {
+document.addEventListener("componentsLoaded", loadCategories);
 
+async function loadCategories() {
     const container = document.getElementById("categoriesContainer");
     if (!container) return;
 
     try {
-        const res = await getCategories();
+        const res = await apiGet("/categories");
 
-        const categories = res.categories ?? res;
+        const categories = res.categories ?? [];
+        if (!Array.isArray(categories)) throw new Error("Formato inválido");
 
-        if (!Array.isArray(categories)) throw new Error("categories no es un array");
-
-        container.innerHTML = categories.map(cat => `
-            <div class="cat-card">
-                <img src="${cat.image_url}" alt="${cat.name}">
-                <h4>${cat.name}</h4>
-                <p>${cat.description}</p>
-            </div>
-        `).join("");
-
-        console.log("✔ Categorías cargadas:", categories);
+        container.innerHTML = categories
+            .map(cat => `
+                <div class="cat-card" data-slug="${cat.slug}">
+                    <img src="${cat.image_url}" alt="${cat.name}">
+                    <h4>${cat.name}</h4>
+                    <p>${cat.description}</p>
+                </div>
+            `)
+            .join("");
 
     } catch (err) {
         console.error("❌ Error cargando categorías:", err);
+        container.innerHTML = "<p>Error cargando categorías.</p>";
     }
-});
+}
