@@ -7,6 +7,8 @@ import { DestinationRepository } from "../repositories/DestinationRepository.js"
 import { CategoryRepository } from "../repositories/CategoryRepository.js";
 import { EventRepository } from "../repositories/EventRepository.js";
 import { ServiceRepository } from "../repositories/ServiceRepository.js";
+import { GalleryService } from "./GalleryService.js";
+
 import { GalleryRepository } from "../repositories/GalleryRepository.js";
 
 import { db } from "../config/db.js";
@@ -168,25 +170,39 @@ export class DestinationService {
 
     // Buscar por slug
     static async findBySlug(slug) {
+        console.log("🔎 Buscando destino por slug:", slug);
+
         const [rows] = await db.query(
             `SELECT * FROM destinations WHERE slug = ? LIMIT 1`,
             [slug]
         );
 
+        console.log("Resultado SQL:", rows);
+
         const destination = rows[0];
-        if (!destination) return null;
+        if (!destination) {
+            console.log("❌ No existe destino con ese slug");
+            return null;
+        }
 
-        const gallery = await GalleryService.getGallery(destination.id);
-        const servicesNearby = await ServiceRepository.getByDestination(destination.id);
-        const events = await EventRepository.getByDestination(destination.id);
+        try {
+            const gallery = await GalleryService.getGallery(destination.id);
+            const servicesNearby = await ServiceRepository.getByDestination(destination.id);
+            const events = await EventRepository.getByDestination(destination.id);
 
-        return {
-            ...destination,
-            gallery,
-            servicesNearby,
-            events
-        };
+            return {
+                ...destination,
+                gallery,
+                servicesNearby,
+                events
+            };
+
+        } catch (err) {
+            console.error("🔥 ERROR dentro de findBySlug():", err);
+            throw err;
+        }
     }
+
 
 
     // Obtener destinos por categoría

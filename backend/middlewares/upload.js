@@ -59,29 +59,40 @@ export const upload = multer({
 export function saveUploadedFiles(req, res, next) {
   if (!req.files) return next();
 
+  // Caso 1: upload.array() → req.files es un ARRAY
+  if (Array.isArray(req.files)) {
+    req.files.forEach(file => {
+      processFile(file);
+    });
+    return next();
+  }
+
+  // Caso 2: upload.fields() → req.files es un OBJETO por campos
   for (const field in req.files) {
     req.files[field].forEach(file => {
-      const ext = path.extname(file.originalname).toLowerCase();
-
-      // Hash del archivo
-      const hash = generateFileHash(file.buffer);
-      const finalName = `${hash}${ext}`;
-      const finalPath = path.join(uploadDir, finalName);
-
-      // Verificar si ya existe una imagen igual
-      if (!fs.existsSync(finalPath)) {
-        // Guardar solo si NO existe
-        fs.writeFileSync(finalPath, file.buffer);
-        console.log(`Imagen nueva guardada: ${finalName}`);
-      } else {
-        console.log(`Imagen duplicada detectada, NO se guardó: ${finalName}`);
-      }
-
-      // Modificar file para que Multer devuelva la ruta correcta
-      file.filename = finalName;
-      file.path = finalPath;
+      processFile(file);
     });
   }
 
-  next();
+  return next();
+}
+
+/* Función que guarda el archivo evitando duplicados */
+function processFile(file) {
+  const ext = path.extname(file.originalname).toLowerCase();
+  const hash = generateFileHash(file.buffer);
+  const finalName = `${hash}${ext}`;
+  const finalPath = path.join(uploadDir, finalName);
+
+  // Guardar solo si NO existe
+  if (!fs.existsSync(finalPath)) {
+    fs.writeFileSync(finalPath, file.buffer);
+    console.log(`Imagen nueva guardada: ${finalName}`);
+  } else {
+    console.log(`Imagen duplicada detectada, NO se guardó: ${finalName}`);
+  }
+
+  // Ajustar salida del archivo
+  file.filename = finalName;
+  file.path = finalPath;
 }

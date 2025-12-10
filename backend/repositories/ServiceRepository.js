@@ -187,4 +187,25 @@ export class ServiceRepository {
         return rows;
     }
 
+    static async getByDestination(destinationId) {
+        const [rows] = await db.query(
+            `
+        SELECT 
+            s.id,
+            s.name,
+            s.description,
+            s.location,
+            s.image_url
+        FROM destination_services ds
+        INNER JOIN services s ON s.id = ds.service_id
+        WHERE ds.destination_id = ?
+        `,
+            [destinationId]
+        );
+
+        return rows;
+    }
+
+
+
 }

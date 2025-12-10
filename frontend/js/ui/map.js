@@ -22,17 +22,22 @@ function initMap() {
     const mapDiv = document.getElementById("mapContainer");
     if (!mapDiv) return;
 
-    // Inicializa el mapa (coordenadas de Perú, puedes cambiarlo)
+    // ✔ Detectamos si estamos en destination.html
+    const url = window.location.pathname;
+
+    if (url.includes("destination.html")) {
+        // NO cargar marcadores globales
+        return; 
+    }
+
+    // Si NO estamos en destination.html → mapa general
     const map = L.map("mapContainer").setView([-12.046374, -77.042793], 6);
 
-    // Capa base (OpenStreetMap)
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: "© OpenStreetMap contributors"
     }).addTo(map);
 
-    // MARCADOR (Reemplazar por Local Fisico de la Empresa)
-    L.marker([-12.046374, -77.042793])
-        .addTo(map)
-        .bindPopup("<b>Perú</b><br>Lima - Plaza Mayor")
-        .openPopup();
+    loadDestinationMarkers(map);
 }
+
+

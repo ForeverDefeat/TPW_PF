@@ -33,7 +33,8 @@ export function initGalleryPage() {
         galleryList.innerHTML = `Cargando...`;
 
         const res = await apiGet(`/gallery/destination/${id}`);
-        const images = res.gallery || [];
+        const images = res.images || [];
+
 
         if (!images.length) {
             galleryList.innerHTML = `<p>No hay imágenes registradas.</p>`;
@@ -41,16 +42,20 @@ export function initGalleryPage() {
         }
 
         galleryList.innerHTML = images
-            .map(
-                img => `
-                <div class="admin-gallery-item">
-                    <img src="/uploads/${img.image_url}" alt="Imagen galería">
-                    <button class="admin-gallery-delete" data-id="${img.id}">
-                        ✕
-                    </button>
-                </div>`
-            )
+            .map(img => {
+                const url = img.image_url?.startsWith("/uploads/")
+                    ? img.image_url
+                    : `/uploads/${img.image_url}`;
+
+                return `
+            <div class="admin-gallery-item">
+                <img src="${url}" alt="Imagen galería">
+                <button class="admin-gallery-delete" data-id="${img.id}">✕</button>
+            </div>
+        `;
+            })
             .join("");
+
     }
 
     /* ================================
@@ -65,19 +70,19 @@ export function initGalleryPage() {
         if (!id) return alert("Seleccione un destino primero.");
 
         const fd = new FormData();
-        fd.append("destination_id", id);
 
         for (const file of filesInput.files) {
-            fd.append("images", file);
+            fd.append("images", file); // nombre correcto para Multer
         }
 
-        await apiPostFile("/gallery/upload", fd);
+        await apiPostFile(`/gallery/destination/${id}`, fd);
 
         filesInput.value = "";
         uploadBtn.disabled = true;
 
         loadGallery();
     });
+
 
     /* ================================
        4. ELIMINAR IMAGEN

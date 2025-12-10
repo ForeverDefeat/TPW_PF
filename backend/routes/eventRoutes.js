@@ -1,7 +1,7 @@
 import express from "express";
 import { EventController } from "../controllers/EventController.js";
 import { createEventValidator, updateEventValidator } from "../validations/eventValidator.js";
-import { upload } from "../middlewares/upload.js";
+import { upload, saveUploadedFiles } from "../middlewares/upload.js";
 
 const router = express.Router();
 
@@ -11,6 +11,7 @@ router.get("/:id", EventController.getById);
 
 router.get("/destination/:id", EventController.getByDestinationId);
 
+router.get("/followed/:userId", EventController.getFollowedByUser);
 
 // POST (con imagen)
 router.post(
@@ -22,11 +23,12 @@ router.post(
 
 // PUT (con imagen) ← ESTA ES LA PARTE QUE FALTABA
 router.put(
-    "/:id",
-    upload.fields([{ name: "image", maxCount: 1 }]),
-    updateEventValidator,
-    EventController.update
+  "/:id",
+  upload.fields([{ name: "image", maxCount: 1 }]),
+  saveUploadedFiles,
+  EventController.update
 );
+
 
 // DELETE
 router.delete("/:id", EventController.delete);

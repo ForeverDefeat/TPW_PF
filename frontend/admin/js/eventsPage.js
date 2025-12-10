@@ -29,11 +29,6 @@ function formatEventDate(dateStr) {
 /* ===========================================================================
    1. RENDER PRINCIPAL
    =========================================================================== */
-
-/**
- * Renderiza la tabla de eventos.
- * Obtiene también los destinos para los selects de los modales.
- */
 export async function renderEvents() {
     const tbody = document.getElementById("eventsTableBody");
     tbody.innerHTML = `<tr><td colspan="7">Cargando eventos...</td></tr>`;
@@ -50,21 +45,29 @@ export async function renderEvents() {
         events.forEach(evt => {
             const destName = destinations.find(d => d.id === evt.destination_id)?.name || "-";
 
+
+            const imgSrc = evt.image_url
+                ? `/uploads/${evt.image_url}`
+                : "assets/placeholder.png";
+
             const tr = document.createElement("tr");
 
             tr.innerHTML = `
                 <td>${evt.id}</td>
-                <td><img src="/uploads/${evt.image_url}" class="admin-thumb"></td>
                 <td>${evt.title}</td>
                 <td>${destName}</td>
-                <td>${evt.event_date.substring(0,10)}</td>
+                <td>${evt.event_date ? evt.event_date.substring(0,10) : "-"}</td>
                 <td>${evt.location || "-"}</td>
+                <td>
+                    ${evt.image_url 
+                        ? `<img src="/uploads/${evt.image_url}" class="admin-thumb">`
+                        : `<img src="/assets/placeholder.png" class="admin-thumb">`}
+                </td>
 
                 <td class="actions-cell">
                     <button class="admin-btn small edit-btn" data-id="${evt.id}">
                         Editar
                     </button>
-
                     <button class="admin-btn small delete-btn" data-id="${evt.id}">
                         Eliminar
                     </button>
@@ -74,6 +77,7 @@ export async function renderEvents() {
 
             tbody.appendChild(tr);
         });
+
 
         setupAddEventModal(destinations);
         setupEditButtons(destinations);
@@ -123,7 +127,6 @@ function setupAddEventModal(destinations) {
             fd.append("destination_id", document.getElementById("eventDestinationId").value);
             fd.append("title", document.getElementById("eventTitle").value);
             fd.append("description", document.getElementById("eventDescription").value);
-            // IMPORTANTE: nombre de campo = event_date (como en la BD / backend)
             fd.append("event_date", document.getElementById("eventDate").value);
             fd.append("location", document.getElementById("eventLocation").value);
 
@@ -139,12 +142,13 @@ function setupAddEventModal(destinations) {
 }
 
 /* ===========================================================================
-   3. MODAL: EDITAR EVENTO
+   3. MODAL: EDITAR EVENTO (VERSIÓN CORREGIDA)
    =========================================================================== */
 
 function setupEditButtons(destinations) {
     document.querySelectorAll(".edit-btn").forEach(btn => {
         btn.onclick = async () => {
+
             const id = btn.dataset.id;
             const container = document.getElementById("eventModalContainer");
 
@@ -153,24 +157,22 @@ function setupEditButtons(destinations) {
 
             await new Promise(res => setTimeout(res, 20));
 
-            // ❌ Antes:
-            // const evtRes = await apiGet(`/events/${id}`);
-            // const evt = evtRes.data;
-
-            // ✅ Ahora:
+            // OBTENER EVENTO
             const evt = await apiGet(`/events/${id}`);
             console.log("EVT EN EDIT:", evt);
 
-            // Rellenar campos
+            // RELLENAR CAMPOS
             document.getElementById("editEventId").value = evt.id;
             document.getElementById("editEventTitle").value = evt.title;
             document.getElementById("editEventDescription").value = evt.description || "";
             document.getElementById("editEventLocation").value = evt.location || "";
 
             if (evt.event_date) {
-                document.getElementById("editEventDate").value = evt.event_date.substring(0, 10);
+                document.getElementById("editEventDate").value =
+                    evt.event_date.substring(0, 10);
             }
 
+            // SELECT DESTINO
             document.getElementById("editEventDestinationId").innerHTML =
                 destinations.map(d => `
                     <option value="${d.id}" ${d.id === evt.destination_id ? "selected" : ""}>
@@ -178,10 +180,33 @@ function setupEditButtons(destinations) {
                     </option>
                 `).join("");
 
+            // MOSTRAR IMAGEN ACTUAL
+            document.getElementById("currentEventImage").src =
+                evt.image_url
+                    ? `/uploads/${evt.image_url}`
+                    : "/assets/placeholder.png";   // Ruta correcta según tu estructura
+
+
+            // PREVIEW NUEVA IMAGEN
+            const newImgInput = document.getElementById("editEventImage");
+            const preview = document.getElementById("previewNewEventImage");
+
+            newImgInput.addEventListener("change", () => {
+                const file = newImgInput.files[0];
+                if (!file) {
+                    preview.style.display = "none";
+                    return;
+                }
+                preview.src = URL.createObjectURL(file);
+                preview.style.display = "block";
+            });
+
+            // CERRAR MODAL
             document.getElementById("closeEditEvent").onclick = () => {
                 container.innerHTML = "";
             };
 
+            // SUBMIT EDITAR
             document.getElementById("formEditEvent").onsubmit = async (e) => {
                 e.preventDefault();
 
@@ -189,19 +214,27 @@ function setupEditButtons(destinations) {
                 fd.append("title", document.getElementById("editEventTitle").value);
                 fd.append("description", document.getElementById("editEventDescription").value);
                 fd.append("destination_id", document.getElementById("editEventDestinationId").value);
-                fd.append("date", document.getElementById("editEventDate").value);
+
+                // 🔥 CORRECCIÓN IMPORTANTE:
+                fd.append("event_date", document.getElementById("editEventDate").value);
+
                 fd.append("location", document.getElementById("editEventLocation").value);
 
-                const newImg = document.getElementById("editEventImage").files[0];
+                const newImg = newImgInput.files[0];
                 if (newImg) fd.append("image", newImg);
 
+                console.log("IMAGEN ENVIADA:", newImg);
+
+
                 await apiPutFile(`/events/${id}`, fd);
+
                 container.innerHTML = "";
                 renderEvents();
             };
         };
     });
 }
+
 
 
 /* ===========================================================================

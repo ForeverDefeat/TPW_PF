@@ -68,12 +68,37 @@ export class EventRepository {
         return result.affectedRows > 0;
     }
 
-    static async getByDestination(destination_id) {
+    static async getByDestination(destinationId) {
         const [rows] = await db.query(
-            "SELECT * FROM events WHERE destination_id = ?",
-            [destination_id]
+            `SELECT e.*
+         FROM events e
+         WHERE e.destination_id = ?`,
+            [destinationId]
         );
+
         return rows;
     }
+
+    static async getFollowedByUser(userId) {
+        const [rows] = await db.query(`
+        SELECT 
+            ef.id,
+            e.title,
+            e.description,
+            e.image_url,
+            e.event_date,
+            d.slug AS destination_slug
+        FROM events_followed ef
+        JOIN events e ON e.id = ef.event_id
+        JOIN destinations d ON d.id = e.destination_id
+        WHERE ef.user_id = ?
+        ORDER BY ef.id DESC
+
+    `, [userId]);
+
+        return rows;
+    }
+
+
 
 }

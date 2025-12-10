@@ -1,8 +1,23 @@
 // frontend/js/templates.js
+
+function fixImagePath(path) {
+    if (!path) return "/assets/placeholder.jpg";
+
+    // Si ya viene con /uploads/... devolver tal cual
+    if (path.startsWith("/uploads/")) return path;
+
+    // Si NO tiene uploads, lo agregamos
+    return `/uploads/${path}`;
+}
+
+
+/* ============================================================
+   TARJETA DE DESTINO EN CARRUSEL
+   ============================================================ */
 export function destinationCarouselItemTemplate(d) {
     return `
         <div class="carousel-item" data-slug="${d.slug}">
-            <img src="${d.image_url || d.main_image_url || '/uploads/default.jpg'}" alt="${d.name}">
+            <img src="${fixImagePath(d.main_image_url || d.image_url)}" alt="${d.name}">
             <h4>${d.name}</h4>
             <p>${(d.summary || d.description || "").substring(0, 80)}...</p>
         </div>
@@ -10,16 +25,16 @@ export function destinationCarouselItemTemplate(d) {
 }
 
 
-export function destinationCardTemplate(d) {
-    const img = d.image_url || d.main_image_url;
 
-    const fixedImg = img?.startsWith("/uploads/")
-        ? img
-        : `/uploads/${img}`;
+/* ============================================================
+   TARJETA DE DESTINO (GRID)
+   ============================================================ */
+export function destinationCardTemplate(d) {
+    const img = fixImagePath(d.main_image_url || d.image_url);
 
     return `
         <div class="cat-card hover-card" data-slug="${d.slug}">
-            <img src="${fixedImg}" alt="${d.name}">
+            <img src="${img}" alt="${d.name}">
             <h4>${d.name}</h4>
             <p>${d.summary ?? d.description.substring(0, 80)}...</p>
         </div>
@@ -27,19 +42,19 @@ export function destinationCardTemplate(d) {
 }
 
 
-/* export function galleryImageTemplate(img) {
-    return `<img src="/uploads/${img}" alt="Foto del destino">`;
-} */
-export function galleryImageTemplate(url) {
-    const fixedImg = url.startsWith("/uploads/")
-        ? url
-        : `/uploads/${url}`;
 
-    return `
-        <img class="gallery-img" src="${fixedImg}" alt="">
-    `;
+/* ============================================================
+   IMÁGENES DE GALERÍA
+   ============================================================ */
+export function galleryImageTemplate(url) {
+    return `<img class="gallery-img" src="${fixImagePath(url)}" alt="">`;
 }
 
+
+
+/* ============================================================
+   TARJETA DE SERVICIOS
+   ============================================================ */
 export function serviceCardTemplate(s) {
     return `
         <div class="pro-card">
@@ -49,13 +64,23 @@ export function serviceCardTemplate(s) {
     `;
 }
 
+
+/* ============================================================
+   TARJETA DE EVENTO (EN DESTINO)
+   ============================================================ */
 export function eventCardTemplate(e) {
+    const img = fixImagePath(e.image_url);
+
     return `
         <div class="pro-card">
-            <h4>${e.name}</h4>
-            <p><b>Fecha:</b> ${new Date(e.event_date).toLocaleDateString()}</p>
-            <p>${e.description}</p>
+            <img src="${img}" class="event-img" alt="${e.title}">
+            <h4>${e.title}</h4>
+            <p><b>Fecha:</b> ${e.event_date ? new Date(e.event_date).toLocaleDateString() : "-"}</p>
+            <p>${e.description || ""}</p>
+
+            <button class="btn-secondary" onclick="followEvent(${e.id})">
+                👁‍🗨 Seguir evento
+            </button>
         </div>
     `;
 }
-

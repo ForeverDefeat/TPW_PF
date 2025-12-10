@@ -137,29 +137,14 @@ export class ServiceController {
 
     static async getByDestination(req, res) {
         try {
-            const id = Number(req.params.id);
+            const destinationId = parseInt(req.params.id);
+            const services = await ServiceService.getByDestination(destinationId);
 
-            if (isNaN(id)) {
-                return res.status(400).json({
-                    ok: false,
-                    message: "ID de destino inválido"
-                });
-            }
-
-            const services = await ServiceService.getByDestination(id);
-
-            res.json({
-                ok: true,
-                services
-            });
-
+            return res.json({ ok: true, services });
         } catch (err) {
-            console.error("Error getByDestination:", err);
-            res.status(500).json({
-                ok: false,
-                message: "Error interno del servidor"
-            });
+            return res.status(500).json({ ok: false, message: "Error obteniendo servicios", error: err.message });
         }
     }
+
 
 }

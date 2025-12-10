@@ -21,12 +21,26 @@
       <label for="editEventLocation">Ubicación:</label>
       <input type="text" id="editEventLocation" />
 
-      <!-- Preview de la imagen actual (si existe) -->
+      <!-- Imagen actual -->
       <label>Imagen actual:</label>
-      <img id="currentEventImage" class="admin-thumb" alt="Imagen del evento" />
+      <img 
+        id="currentEventImage" 
+        class="admin-thumb"
+        style="max-width: 120px; border-radius: 6px"
+        alt="Imagen del evento"
+      />
 
-      <label for="editEventImage">Imagen nueva (opcional):</label>
-      <input type="file" id="editEventImage" accept="image/*" />
+      <!-- Imagen nueva -->
+      <label for="editEventImage">Nueva imagen (opcional):</label>
+      <input type="file" id="editEventImage" name="image" accept="image/*" />
+
+
+      <!-- Vista previa imagen nueva -->
+      <img 
+        id="previewNewEventImage" 
+        class="admin-thumb" 
+        style="display:none; max-width:120px; margin-top:10px;"
+      />
 
       <button type="submit" class="admin-btn admin-btn-primary">
         Guardar Cambios

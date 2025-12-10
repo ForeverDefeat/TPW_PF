@@ -1,158 +1,138 @@
 /**
  * @file controllers/authController.js
- * @description Controlador HTTP para autenticación (login / register / me).
- * @module controllers/authController
+ * @description Controlador de autenticación (register, login, me)
  */
 
-import { UserRepository } from "../repositories/UserRepository.js";
+import bcrypt from "bcryptjs";
+import { db } from "../config/db.js";
 
-/**
- * @typedef {Object} RegisterRequestBody
- * @property {string} full_name
- * @property {string} email
- * @property {string} password
- */
-
-/**
- * @typedef {Object} LoginRequestBody
- * @property {string} email
- * @property {string} password
- */
-
-/**
- * POST /api/auth/register
- * Registra un nuevo usuario con rol "user".
- */
+/* ============================================================
+   REGISTER
+   ============================================================ */
 export const register = async (req, res) => {
-  try {
-    /** @type {RegisterRequestBody} */
-    const { full_name, email, password } = req.body;
+    try {
+        const { full_name, email, password } = req.body;
 
-    if (!full_name || !email || !password) {
-      return res.status(400).json({
-        ok: false,
-        message: "fullName, email y password son obligatorios",
-      });
+        if (!full_name || !email || !password) {
+            return res.status(400).json({
+                ok: false,
+                message: "Faltan campos obligatorios"
+            });
+        }
+
+        // Verificar email único
+        const [exists] = await db.query(
+            "SELECT id FROM users WHERE email = ? LIMIT 1",
+            [email]
+        );
+
+        if (exists.length > 0) {
+            return res.status(400).json({
+                ok: false,
+                message: "El email ya está registrado"
+            });
+        }
+
+        const hashed = await bcrypt.hash(password, 10);
+
+        const [result] = await db.query(
+            "INSERT INTO users (full_name, email, password) VALUES (?, ?, ?)",
+            [full_name, email, hashed]
+        );
+
+        res.status(201).json({
+            ok: true,
+            message: "Usuario registrado correctamente",
+            user_id: result.insertId
+        });
+
+    } catch (error) {
+        console.error("REGISTER ERROR:", error);
+        res.status(500).json({ ok: false, message: "Error en el servidor" });
     }
-
-    // ¿ya existe?
-    const existing = await UserRepository.findByEmail(email);
-    if (existing) {
-      return res.status(400).json({
-        ok: false,
-        message: "El email ya está registrado",
-      });
-    }
-
-    const id = await UserRepository.create({
-      full_name,
-      email,
-      password, // ⚠ texto plano solo para entorno académico
-      role: "user",
-    });
-
-    return res.status(201).json({
-      ok: true,
-      message: "Usuario registrado correctamente",
-      user: {
-        id,
-        full_name,
-        email,
-        role: "user",
-      },
-    });
-  } catch (err) {
-    console.error("Error en register:", err);
-    return res.status(500).json({
-      ok: false,
-      message: "Error del servidor en registro",
-    });
-  }
 };
 
-/**
- * POST /api/auth/login
- * Inicia sesión comparando email + password en texto plano.
- */
+
+/* ============================================================
+   LOGIN
+   ============================================================ */
 export const login = async (req, res) => {
-  try {
-    /** @type {LoginRequestBody} */
-    const { email, password } = req.body;
+    try {
+        const { email, password } = req.body;
 
-    if (!email || !password) {
-      return res.status(400).json({
-        ok: false,
-        message: "email y password son obligatorios",
-      });
+        if (!email || !password) {
+            return res.status(400).json({
+                ok: false,
+                message: "Faltan campos"
+            });
+        }
+
+        const [rows] = await db.query(
+            "SELECT * FROM users WHERE email = ? LIMIT 1",
+            [email]
+        );
+
+        if (rows.length === 0) {
+            return res.status(401).json({
+                ok: false,
+                message: "Usuario no encontrado"
+            });
+        }
+
+        const user = rows[0];
+
+        const match = await bcrypt.compare(password, user.password);
+
+        if (!match) {
+            return res.status(401).json({
+                ok: false,
+                message: "Contraseña incorrecta"
+            });
+        }
+
+        // 🔥 IMPORTANTE: devolver user.id para guardarlo en localStorage
+        res.json({
+            ok: true,
+            message: "Login correcto",
+            user: {
+                id: user.id,
+                full_name: user.full_name,
+                email: user.email,
+                role: user.role
+            }
+        });
+
+    } catch (error) {
+        console.error("LOGIN ERROR:", error);
+        res.status(500).json({ ok: false, message: "Error en el servidor" });
     }
-
-    const user = await UserRepository.findByEmail(email);
-    if (!user || user.password !== password) {
-      return res.status(401).json({
-        ok: false,
-        message: "Credenciales inválidas",
-      });
-    }
-
-    // En un sistema real aquí se generaría un JWT
-    return res.json({
-      ok: true,
-      message: "Login correcto",
-      user: {
-        id: user.id,
-        full_name: user.full_name,
-        email: user.email,
-        role: user.role,
-      },
-    });
-  } catch (err) {
-    console.error("Error en login:", err);
-    return res.status(500).json({
-      ok: false,
-      message: "Error del servidor en login",
-    });
-  }
 };
 
-/**
- * GET /api/auth/me
- * Endpoint de ejemplo estilo "me".
- * Por ahora NO usa JWT, solo acepta ?email=...
- * (sirve para pruebas y para mostrar el patrón).
- */
+
+/* ============================================================
+   ME (simulado)
+   ============================================================ */
 export const me = async (req, res) => {
-  try {
-    const { email } = req.query;
+    try {
+        const { email } = req.query;
 
-    if (!email) {
-      return res.status(400).json({
-        ok: false,
-        message: "Parámetro 'email' requerido (por ahora sin JWT)",
-      });
+        if (!email) {
+            return res.status(400).json({ ok: false, message: "Email requerido" });
+        }
+
+        const [rows] = await db.query(
+            "SELECT id, full_name, email, role FROM users WHERE email = ? LIMIT 1",
+            [email]
+        );
+
+        if (rows.length === 0) {
+            return res.status(404).json({ ok: false, message: "Usuario no encontrado" });
+        }
+
+        res.json({ ok: true, user: rows[0] });
+
+    } catch (error) {
+        console.error("ME ERROR:", error);
+        res.status(500).json({ ok: false, message: "Error en el servidor" });
     }
-
-    const user = await UserRepository.findByEmail(email);
-    if (!user) {
-      return res.status(404).json({
-        ok: false,
-        message: "Usuario no encontrado",
-      });
-    }
-
-    return res.json({
-      ok: true,
-      user: {
-        id: user.id,
-        full_name: user.full_name,
-        email: user.email,
-        role: user.role,
-      },
-    });
-  } catch (err) {
-    console.error("Error en me:", err);
-    return res.status(500).json({
-      ok: false,
-      message: "Error del servidor en /me",
-    });
-  }
 };

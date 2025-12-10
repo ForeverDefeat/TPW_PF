@@ -48,32 +48,26 @@ export class EventController {
 
     static async update(req, res) {
         try {
-            const id = parseInt(req.params.id);
+            const id = Number(req.params.id);
+            if (isNaN(id)) return res.status(400).json({ ok: false, message: "ID inválido" });
 
-            // 📌 obtener filename si se sube imagen
             const imageFile = req.files?.image?.[0] ?? null;
 
             const body = {
                 title: req.body.title ?? null,
                 description: req.body.description ?? null,
-                date: req.body.date ?? null,
+                event_date: req.body.event_date ?? null,
                 destination_id: req.body.destination_id ?? null,
                 location: req.body.location ?? null,
-                image_url: imageFile ? imageFile.filename : null   // <--- JAMÁS undefined
+                image_url: imageFile ? imageFile.filename : undefined  // 🔥 FIX
             };
 
             const updated = await EventService.update(id, body);
 
-            if (!updated) {
-                return res.status(404).json({
-                    ok: false,
-                    message: "Evento no encontrado"
-                });
-            }
-
             return res.json({
                 ok: true,
-                message: "Evento actualizado correctamente"
+                message: "Evento actualizado correctamente",
+                data: updated
             });
 
         } catch (error) {
@@ -81,7 +75,6 @@ export class EventController {
             return res.status(400).json({ ok: false, error: error.message });
         }
     }
-
 
 
 
@@ -112,4 +105,27 @@ export class EventController {
             res.status(500).json({ ok: false, message: err.message });
         }
     }
+
+    static async getFollowedByUser(req, res) {
+        try {
+            const userId = Number(req.params.userId);
+
+            if (isNaN(userId)) {
+                return res.status(400).json({ ok: false, message: "ID inválido" });
+            }
+
+            const events = await EventService.getFollowedByUser(userId);
+
+            return res.json({
+                ok: true,
+                data: events
+            });
+
+        } catch (err) {
+            console.error(err);
+            return res.status(500).json({ ok: false, message: "Error obteniendo eventos seguidos" });
+        }
+    }
+
+
 }

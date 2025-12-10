@@ -1,5 +1,5 @@
-import { apiGet, apiExists } from "./api.js";
-import { galleryImageTemplate, serviceCardTemplate, eventCardTemplate } from "./templates.js";
+import { apiGet, apiPost } from "./api.js";
+import { galleryImageTemplate, serviceCardTemplate } from "./templates.js";
 
 document.addEventListener("componentsLoaded", loadDestination);
 
@@ -14,24 +14,61 @@ async function loadDestination() {
         const res = await apiGet(`/destinations/slug/${slug}`);
         const d = res.data;
 
-        // HERO
-        document.getElementById("destinationHero").style.backgroundImage =
-            `url('/uploads/${d.hero_image_url}')`;
+        let heroImg = d.hero_image_url;
+
+        // Si NO empieza con "/uploads", lo agregamos
+        if (heroImg && !heroImg.startsWith("/uploads/")) {
+            heroImg = `/uploads/${heroImg}`;
+        }
+
+        // Si es null → placeholder
+        if (!heroImg) {
+            heroImg = "/assets/placeholder-hero.jpg";
+        }
+
+        document.getElementById("destinationHero").style.backgroundImage = `url('${heroImg}')`;
+
 
         document.getElementById("destinationName").textContent = d.name;
         document.getElementById("destinationSummary").textContent = d.summary;
         document.getElementById("destinationDescription").textContent = d.description;
 
-        // 2. Galería
-        /* const gallery = [];
-        if (d.main_image_url) gallery.push(d.main_image_url);
-        if (d.hero_image_url) gallery.push(d.hero_image_url);
+        // --------------------------
+        // ⭐ BOTÓN: AGREGAR A FAVORITOS
+        // --------------------------
+        const favBtn = document.createElement("button");
+        favBtn.textContent = "⭐ Agregar a Favoritos";
+        favBtn.classList.add("btn-primary");
+        favBtn.style.margin = "10px 0";
 
-        document.getElementById("galleryImages").innerHTML =
-            gallery.map(galleryImageTemplate).join(""); */
-            
+        favBtn.onclick = () => addToFavorites(d.id);
+
+        document.querySelector(".destination-info").prepend(favBtn);
+
+        async function addToFavorites(destinationId) {
+            const userId = localStorage.getItem("userId");
+
+            if (!userId) {
+                alert("Debes iniciar sesión para agregar favoritos.");
+                return;
+            }
+
+            const res = await apiPost("/favorites", {
+                user_id: userId,
+                destination_id: destinationId
+            });
+
+            if (res.ok) {
+                alert("Destino agregado a favoritos ⭐");
+            } else {
+                alert(res.message || "No se pudo guardar el favorito.");
+            }
+        }
+
+        // --------------------------
         // 2. Galería real
-        if (d.gallery && d.gallery.length > 0) {
+        // --------------------------
+        if (d.gallery?.length > 0) {
             document.getElementById("galleryImages").innerHTML =
                 d.gallery.map(img => galleryImageTemplate(img.image_url)).join("");
         } else {
@@ -40,7 +77,9 @@ async function loadDestination() {
         }
 
 
+        // --------------------------
         // 3. Servicios cercanos
+        // --------------------------
         try {
             const serv = await apiGet(`/services/destination/${d.id}`);
             document.getElementById("servicesList").innerHTML =
@@ -52,28 +91,82 @@ async function loadDestination() {
                 "<p>No hay servicios cercanos.</p>";
         }
 
-        // 4. Eventos (solo si el endpoint existe)
-        /* const hasEvents = await apiExists(`/events/destination/${d.id}`);
+        // --------------------------
+        // 4. EVENTOS + botón SEGUIR
+        // --------------------------
+        const eventsList = document.getElementById("eventsList");
 
-        if (hasEvents) {
-            const evt = await apiGet(`/events/destination/${d.id}`);
-            document.getElementById("eventsList").innerHTML =
-                evt.events?.length
-                    ? evt.events.map(eventCardTemplate).join("")
-                    : "<p>No hay eventos registrados.</p>";
-        } else {
-            document.getElementById("eventsList").innerHTML =
-                "<p>No hay eventos registrados.</p>";
-        } */
+        if (d.events?.length > 0) {
 
-        if (d.events && d.events.length > 0) {
-            document.getElementById("eventsList").innerHTML =
-                d.events.map(eventCardTemplate).join("");
+            eventsList.innerHTML = ""; // limpiar
+
+            d.events.forEach(ev => {
+                const card = document.createElement("div");
+                card.classList.add("pro-card");
+
+                card.innerHTML = `
+                    <img src="/uploads/${ev.image_url}" class="event-img">
+                    <h4>${ev.title}</h4>
+                    <p><b>Fecha:</b> ${new Date(ev.event_date).toLocaleDateString()}</p>
+                    <p>${ev.description.substring(0, 120)}...</p>
+                    <button class="follow-btn" data-id="${ev.id}">
+                        ⭐ Seguir Evento
+                    </button>
+                `;
+
+                eventsList.appendChild(card);
+            });
+
+            // Activar botones seguir
+            document.querySelectorAll(".follow-btn").forEach(btn => {
+                btn.addEventListener("click", async () => {
+                    const eventId = btn.dataset.id;
+                    followEvent(eventId, btn);
+                });
+            });
+
         } else {
-            document.getElementById("eventsList").innerHTML =
-                "<p>No hay eventos registrados.</p>";
+            eventsList.innerHTML = "<p>No hay eventos registrados.</p>";
         }
 
+        async function followEvent(eventId, btn) {
+            const userId = localStorage.getItem("userId");
+
+            if (!userId) {
+                alert("Debes iniciar sesión para seguir eventos.");
+                return;
+            }
+
+            const res = await apiPost("/events-followed", {
+                user_id: userId,
+                event_id: eventId
+            });
+
+            if (res.ok) {
+                btn.textContent = "✓ Siguiendo";
+                btn.disabled = true;
+            } else {
+                alert(res.message || "No se pudo seguir el evento.");
+            }
+        }
+
+        // --------------------------
+        // 5. MAPA DEL DESTINO
+        // --------------------------
+        if (d.latitude && d.longitude) {
+            const map = L.map("map").setView(
+                [parseFloat(d.latitude), parseFloat(d.longitude)],
+                13
+            );
+
+            L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                attribution: "© OpenStreetMap contributors"
+            }).addTo(map);
+
+            L.marker([parseFloat(d.latitude), parseFloat(d.longitude)])
+                .addTo(map)
+                .bindPopup(`<b>${d.name}</b>`);
+        }
 
     } catch (err) {
         console.error("Error cargando destino:", err);

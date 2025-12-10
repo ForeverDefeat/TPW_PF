@@ -32,6 +32,9 @@ consideraciones: se debe tener instalado node.js y python
         npm install express cors dotenv multer mysql2 router uuid
         npm install -D nodemon
 
+        npm install bcryptjs
+
+
 4. en mySQL 
 
     inicializar un base de datos:

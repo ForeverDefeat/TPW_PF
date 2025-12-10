@@ -90,8 +90,9 @@ export class ServiceService {
         }
     }
 
-    static async getByDestination(destination_id) {
-        return await ServiceRepository.findByDestination(destination_id);
+    static async getByDestination(destinationId) {
+        return await ServiceRepository.getByDestination(destinationId);
     }
+
 
 }
