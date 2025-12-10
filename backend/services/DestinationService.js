@@ -5,12 +5,14 @@
 
 import { DestinationRepository } from "../repositories/DestinationRepository.js";
 import { CategoryRepository } from "../repositories/CategoryRepository.js";
+import { EventRepository } from "../repositories/EventRepository.js";
+import { ServiceRepository } from "../repositories/ServiceRepository.js";
+import { GalleryRepository } from "../repositories/GalleryRepository.js";
+
 import { db } from "../config/db.js";
 export class DestinationService {
 
-    /* ============================================================
-       VALIDACIONES — Usado en create y update (parcial)
-    ============================================================ */
+    // VALIDACIONES — Usado en create y update (parcial)
     static validateDestinationInput(data) {
         const errors = [];
 
@@ -34,23 +36,17 @@ export class DestinationService {
         }
     }
 
-    /* ============================================================
-       GET ALL
-    ============================================================ */
+    // GET ALL
     static async getAllDestinations() {
         return await DestinationRepository.findAll();
     }
 
-    /* ============================================================
-       GET BY ID
-    ============================================================ */
+    // GET BY ID
     static async getDestinationById(id) {
         return await DestinationRepository.findById(id);
     }
 
-    /* ============================================================
-       CREATE
-    ============================================================ */
+    // CREATE
     static async createDestination(data) {
         this.validateDestinationInput(data);
 
@@ -79,55 +75,7 @@ export class DestinationService {
         return await DestinationRepository.create(destinationData);
     }
 
-    /* ============================================================
-       UPDATE — CORREGIDO POR COMPLETO
-    ============================================================ */
-    /* static async updateDestination(id, data) {
-
-        // Mapeo seguro de campos
-        const mappedData = {
-            ...(data.name !== undefined && { name: data.name }),
-            ...(data.summary !== undefined && { summary: data.summary }),
-            ...(data.description !== undefined && { description: data.description }),
-            ...(data.category_id !== undefined && { categoryId: Number(data.category_id) }),
-            ...(data.is_featured !== undefined && { isFeatured: Number(data.is_featured) === 1 }),
-
-            // Imágenes: SOLO filename real, nunca el objeto entero de Multer
-            ...(data.main_image !== undefined && {
-                mainImageUrl: data.main_image || null
-            }),
-            ...(data.hero_image !== undefined && {
-                heroImageUrl: data.hero_image || null
-            })
-        };
-
-        // Validar input si se envió algo clave
-        if (mappedData.name || mappedData.description || mappedData.categoryId) {
-            this.validateDestinationInput({
-                name: mappedData.name ?? "temp",
-                description: mappedData.description ?? "descripcion minima 123456789012345678",
-                category_id: mappedData.categoryId ?? 1
-            });
-        }
-
-        // Validar categoría si cambió
-        if (mappedData.categoryId) {
-            const category = await CategoryRepository.findById(mappedData.categoryId);
-            if (!category) {
-                throw Object.assign(new Error("La categoría asignada no existe"), { status: 404 });
-            }
-        }
-
-        // Nuevo slug si cambia el nombre
-        if (mappedData.name) {
-            mappedData.slug = mappedData.name
-                .toLowerCase()
-                .replace(/\s+/g, "-")
-                .replace(/[^a-z0-9\-]/g, "");
-        }
-
-        return await DestinationRepository.update(id, mappedData);
-    } */
+    // UPDATE 
     static async update(id, data) {
         const {
             name,
@@ -180,9 +128,7 @@ export class DestinationService {
         };
     }
 
-    /* ============================================================
-       DELETE
-    ============================================================ */
+    // DELETE
     static async deleteDestination(id) {
         const dest = await DestinationRepository.findById(id);
 
@@ -200,13 +146,34 @@ export class DestinationService {
     }
 
     // Buscar por slug
-    static async findBySlug(slug) {
+    /* static async findBySlug(slug) {
         const [rows] = await db.query(
             `SELECT * FROM destinations WHERE slug = ? LIMIT 1`,
             [slug]
         );
         return rows[0] || null;
+    } */
+    static async findBySlug(slug) {
+        const [rows] = await db.query(
+            `SELECT * FROM destinations WHERE slug = ? LIMIT 1`,
+            [slug]
+        );
+
+        const destination = rows[0];
+        if (!destination) return null;
+
+        const gallery = await GalleryService.getGallery(destination.id);
+        const servicesNearby = await ServiceRepository.getByDestination(destination.id);
+        const events = await EventRepository.getByDestination(destination.id);
+
+        return {
+            ...destination,
+            gallery,
+            servicesNearby,
+            events
+        };
     }
+
 
     // Obtener destinos por categoría
     static async findByCategory(categoryId) {

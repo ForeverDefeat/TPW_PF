@@ -1,0 +1,42 @@
+<div class="admin-page">
+
+    <!-- Encabezado -->
+    <div class="admin-page-header">
+        <h2>Galería de Destinos</h2>
+
+        <div class="admin-header-actions">
+            <select id="destinationSelect" class="admin-input">
+                <option value="">Seleccione un destino...</option>
+            </select>
+
+            <button id="loadGalleryBtn" class="admin-btn admin-btn-primary">
+                Cargar
+            </button>
+        </div>
+    </div>
+
+    <!-- CONTENEDOR GRID DE DOS COLUMNAS -->
+    <div class="admin-grid-two">
+
+        <!-- CARD IZQUIERDA -->
+        <div class="admin-card">
+            <h3>Subir nuevas imágenes</h3>
+
+            <input type="file" id="galleryInput" multiple class="admin-input-file">
+
+            <button id="uploadBtn" class="admin-btn admin-btn-success" disabled>
+                Subir imágenes
+            </button>
+        </div>
+
+        <!-- CARD DERECHA -->
+        <div class="admin-card">
+            <h3>Galería Actual</h3>
+
+            <div id="galleryList" class="admin-gallery-grid">
+                <!-- imágenes -->
+            </div>
+        </div>
+
+    </div>
+</div>

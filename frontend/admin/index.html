@@ -6,41 +6,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Panel de Administración - Turismo</title>
 
-    <!-- Icono -->
     <link rel="icon" href="../icons/logo FD.jpg" type="image/jpg" />
 
-    <!-- Estilos globales (modo oscuro, tipografías, variables) -->
-    <!-- <link rel="stylesheet" href="../css/estiloGlobal.css" /> -->
-
-    <!-- Estilos exclusivos del Admin Panel -->
     <link rel="stylesheet" href="css/StyleAdmin.css" />
-
-    <!-- Chart.js (para Dashboards y Reportes) -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
 
-    <!-- Header del panel de administración -->
-    <div id="admin-header-container"></div>
+    <div id="admin-header-container" role="banner"></div>
 
-    <!-- Sidebar de navegación del panel -->
-    <div id="admin-sidebar-container"></div>
+    <div id="admin-sidebar-container" role="navigation"></div>
 
-    <!-- Contenido dinámico del Panel Admin SPA -->
-    <main id="adminMain">
+    <main id="adminMain" role="main">
         <h2>Cargando panel...</h2>
     </main>
 
-    <!-- SCRIPTS DEL PANEL ADMIN (SPA) -->
-    <script type="module" src="js/adminComponents.js"></script>
-    <script type="module" src="js/adminRouter.js"></script>
-    <script type="module" src="js/adminApi.js"></script>
+    <script async src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- Chart.js CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <script type="module" src="js/adminApp.js"></script>
+    <script type="module" src="/admin/js/adminComponents.js"></script>
+    <script type="module" src="/admin/js/adminRouter.js"></script>
+    <script type="module" src="/admin/js/adminApi.js"></script>
+    
+    <script type="module" src="/admin/js/adminApp.js"></script>
 
 </body>
 

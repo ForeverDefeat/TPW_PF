@@ -23,12 +23,22 @@ async function loadDestination() {
         document.getElementById("destinationDescription").textContent = d.description;
 
         // 2. Galería
-        const gallery = [];
+        /* const gallery = [];
         if (d.main_image_url) gallery.push(d.main_image_url);
         if (d.hero_image_url) gallery.push(d.hero_image_url);
 
         document.getElementById("galleryImages").innerHTML =
-            gallery.map(galleryImageTemplate).join("");
+            gallery.map(galleryImageTemplate).join(""); */
+            
+        // 2. Galería real
+        if (d.gallery && d.gallery.length > 0) {
+            document.getElementById("galleryImages").innerHTML =
+                d.gallery.map(img => galleryImageTemplate(img.image_url)).join("");
+        } else {
+            document.getElementById("galleryImages").innerHTML =
+                "<p>No hay imágenes en la galería.</p>";
+        }
+
 
         // 3. Servicios cercanos
         try {
@@ -43,7 +53,7 @@ async function loadDestination() {
         }
 
         // 4. Eventos (solo si el endpoint existe)
-        const hasEvents = await apiExists(`/events/destination/${d.id}`);
+        /* const hasEvents = await apiExists(`/events/destination/${d.id}`);
 
         if (hasEvents) {
             const evt = await apiGet(`/events/destination/${d.id}`);
@@ -54,7 +64,16 @@ async function loadDestination() {
         } else {
             document.getElementById("eventsList").innerHTML =
                 "<p>No hay eventos registrados.</p>";
+        } */
+
+        if (d.events && d.events.length > 0) {
+            document.getElementById("eventsList").innerHTML =
+                d.events.map(eventCardTemplate).join("");
+        } else {
+            document.getElementById("eventsList").innerHTML =
+                "<p>No hay eventos registrados.</p>";
         }
+
 
     } catch (err) {
         console.error("Error cargando destino:", err);

@@ -27,8 +27,17 @@ export function destinationCardTemplate(d) {
 }
 
 
-export function galleryImageTemplate(img) {
+/* export function galleryImageTemplate(img) {
     return `<img src="/uploads/${img}" alt="Foto del destino">`;
+} */
+export function galleryImageTemplate(url) {
+    const fixedImg = url.startsWith("/uploads/")
+        ? url
+        : `/uploads/${url}`;
+
+    return `
+        <img class="gallery-img" src="${fixedImg}" alt="">
+    `;
 }
 
 export function serviceCardTemplate(s) {

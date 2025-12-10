@@ -26,7 +26,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     await loadComponent("#header-container", "components/header.html");
     setupDarkMode();
-    
+    // Logo y nombre → retornar al index
+    document.addEventListener("click", (e) => {
+        const brand = e.target.closest(".brand");
+        if (brand) {
+            window.location.href = "index.html";
+        }
+    });
+
     await loadComponent("#authArea", "components/auth.html");
     await loadComponent("#sidebar-container", "components/sidebar.html");
     await loadComponent("#footer-container", "components/footer.html");

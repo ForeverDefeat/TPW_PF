@@ -67,7 +67,7 @@ export async function loadAdminHeader() {
     const container = document.getElementById("admin-header-container");
     if (!container) return;
 
-    const html = await loadHTML("components/adminHeader.html");
+    const html = await loadHTML("/admin/components/adminHeader.html");
     container.innerHTML = html;
 }
 
@@ -124,7 +124,7 @@ export async function loadAdminPage(pageName) {
         .map(part => capitalize(part))
         .join("");
 
-    const pagePath = `components/admin${normalized}.html`;
+    const pagePath = `/admin/components/admin${normalized}.html`;
 
     const html = await loadHTML(pagePath);
     main.innerHTML = html;

@@ -16,6 +16,8 @@ import { initEventsPage } from "./eventsPage.js";
 import { initUsersPage } from "./usersPage.js";
 import { initFavoritesPage } from "./favoritesPage.js";
 import { initEventsFollowedPage } from "./eventsFollowedPage.js";
+import { initGalleryPage } from "./galleryPage.js";
+
 import { initBannersPage } from "./bannersPage.js";
 
 /**
@@ -32,7 +34,7 @@ const validRoutes = [
     "users",
     "favorites",
     "events-followed",
-    "settings"
+    "gallery"
 ];
 
 /**
@@ -116,8 +118,8 @@ export async function handleRoute() {
             initBannersPage();
             break;
 
-        case "settings":
-            console.log("⚙ Settings page (por implementar)");
+        case "gallery":
+            initGalleryPage();
             break;
     }
 

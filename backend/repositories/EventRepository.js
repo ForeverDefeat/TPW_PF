@@ -41,40 +41,6 @@ export class EventRepository {
         return result.insertId;
     }
 
-    /* static async update(id, data) {
-        const {
-            title,
-            description,
-            event_date,
-            location,
-            destination_id,
-            image_url
-        } = data;
-
-        const sql = `
-        UPDATE events SET
-            title = ?,
-            description = ?,
-            event_date = ?,
-            location = ?,
-            destination_id = ?,
-            image_url = ?
-        WHERE id = ?
-    `;
-
-        const params = [
-            title,
-            description,
-            event_date,
-            location,
-            destination_id,
-            image_url ?? null,
-            id
-        ];
-
-        const [result] = await db.execute(sql, params);
-        return result.affectedRows > 0;
-    } */
     static async update(id, data) {
         const { title, description, event_date, location, destination_id, image_url } = data;
 
