@@ -61,19 +61,26 @@ export class DestinationService {
             .replace(/[^a-z0-9\-]/g, "");
 
         const destinationData = {
-            categoryId: Number(data.category_id),
-            locationId: data.location_id || null,
+            category_id: Number(data.category_id),
             name: data.name,
             slug,
             summary: data.summary || null,
             description: data.description,
-            mainImageUrl: data.main_image || null,
-            heroImageUrl: data.hero_image || null,
-            isFeatured: Number(data.is_featured) === 1
+
+            // NUEVOS CAMPOS
+            latitude: data.latitude ?? null,
+            longitude: data.longitude ?? null,
+
+            // Imágenes
+            main_image_url: data.main_image || null,
+            hero_image_url: data.hero_image || null,
+
+            is_featured: Number(data.is_featured) === 1
         };
 
         return await DestinationRepository.create(destinationData);
     }
+
 
     // UPDATE 
     static async update(id, data) {
@@ -82,35 +89,46 @@ export class DestinationService {
             summary,
             description,
             category_id,
+            latitude,
+            longitude,
             main_image_url,
             hero_image_url
         } = data;
 
-        // Obtenemos primero el destino existente
+        // Obtener destino existente
         const [rows] = await db.query(
             "SELECT * FROM destinations WHERE id = ? LIMIT 1",
             [id]
         );
 
-        if (rows.length === 0) throw new Error("Destino no encontrado");
+        if (rows.length === 0) {
+            throw new Error("Destino no encontrado");
+        }
 
         const existing = rows[0];
 
-        // Si no mandas imagen → conservar la existente
+        // Mantener imágenes existentes si no se envían nuevas
         const finalMainImage = main_image_url ?? existing.main_image_url;
         const finalHeroImage = hero_image_url ?? existing.hero_image_url;
 
-        // Actualizar en BD
+        // Mantener lat/lng existentes si no se envían nuevas
+        const finalLatitude = latitude ?? existing.latitude;
+        const finalLongitude = longitude ?? existing.longitude;
+
+        // Ejecutar update COMPLETO
         await db.query(
             `UPDATE destinations 
-             SET name = ?, summary = ?, description = ?, category_id = ?, 
-                 main_image_url = ?, hero_image_url = ?
-             WHERE id = ?`,
+         SET name = ?, summary = ?, description = ?, category_id = ?, 
+             latitude = ?, longitude = ?,
+             main_image_url = ?, hero_image_url = ?
+         WHERE id = ?`,
             [
                 name,
                 summary,
                 description,
                 category_id,
+                finalLatitude,
+                finalLongitude,
                 finalMainImage,
                 finalHeroImage,
                 id
@@ -123,10 +141,13 @@ export class DestinationService {
             summary,
             description,
             category_id,
+            latitude: finalLatitude,
+            longitude: finalLongitude,
             main_image_url: finalMainImage,
             hero_image_url: finalHeroImage
         };
     }
+
 
     // DELETE
     static async deleteDestination(id) {
@@ -146,13 +167,6 @@ export class DestinationService {
     }
 
     // Buscar por slug
-    /* static async findBySlug(slug) {
-        const [rows] = await db.query(
-            `SELECT * FROM destinations WHERE slug = ? LIMIT 1`,
-            [slug]
-        );
-        return rows[0] || null;
-    } */
     static async findBySlug(slug) {
         const [rows] = await db.query(
             `SELECT * FROM destinations WHERE slug = ? LIMIT 1`,

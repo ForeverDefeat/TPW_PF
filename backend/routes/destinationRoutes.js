@@ -4,12 +4,12 @@
 
 import { Router } from "express";
 import { DestinationController } from "../controllers/destinationController.js";
-import { upload } from "../middlewares/upload.js";
+import { upload, saveUploadedFiles} from "../middlewares/upload.js";
 
 const router = Router();
 
 /* ===========================
-   🔵 RUTAS NUEVAS NECESARIAS
+   Rutas públicas
 =========================== */
 
 /** Obtener destino por slug */
@@ -21,17 +21,22 @@ router.get("/category/:id", DestinationController.getByCategory);
 /** Buscar destinos */
 router.get("/search", DestinationController.search);
 
-
 /* ===========================
-   🟢 CRUD EXISTENTE
+   CRUD ADMIN
 =========================== */
 
 router.get("/", DestinationController.getAll);
 router.get("/:id", DestinationController.getById);
 
-router.post("/", upload.single("image"), DestinationController.create);
-
-/* router.put("/:id", upload.single("image"), DestinationController.update); */
+router.post(
+  "/",
+  upload.fields([
+    { name: "main_image", maxCount: 1 },
+    { name: "hero_image", maxCount: 1 },
+  ]),
+  saveUploadedFiles,
+  DestinationController.create
+);
 
 router.put(
   "/:id",
@@ -39,10 +44,11 @@ router.put(
     { name: "main_image", maxCount: 1 },
     { name: "hero_image", maxCount: 1 }
   ]),
+  saveUploadedFiles,
   DestinationController.update
 );
 
-
+/** DELETE DESTINATION */
 router.delete("/:id", DestinationController.delete);
 
 export default router;

@@ -31,6 +31,9 @@ export async function renderDestinations() {
             <td><img src="${imgSrc}" class="admin-thumb"></td>
             <td>${dest.name}</td>
             <td>${categories.find(c => c.id === dest.category_id)?.name || "-"}</td>
+
+            <td>${dest.latitude ?? "-"} / ${dest.longitude ?? "-"}</td>
+
             <td>${dest.is_featured ? "⭐" : ""}</td>
             <td class="actions-cell">
                 <button class="admin-btn-small edit-btn" data-id="${dest.id}">Editar</button>
@@ -69,6 +72,9 @@ function setupAddDestinationModal(categories) {
             fd.append("category_id", sel.value);
             fd.append("is_featured", document.getElementById("addDestIsFeatured").checked ? 1 : 0);
 
+            fd.append("latitude", document.getElementById("addDestLatitude").value || "");
+            fd.append("longitude", document.getElementById("addDestLongitude").value || "");
+
             if (document.getElementById("addDestImage").files[0])
                 fd.append("main_image", document.getElementById("addDestImage").files[0]);
 
@@ -100,6 +106,10 @@ function setupEditButtons(categories) {
 
             document.getElementById("editDestId").value = dest.id;
             document.getElementById("editDestName").value = dest.name;
+
+            document.getElementById("editDestLatitude").value = dest.latitude ?? "";
+            document.getElementById("editDestLongitude").value = dest.longitude ?? "";
+
             document.getElementById("editDestSummary").value = dest.summary || "";
             document.getElementById("editDestDescription").value = dest.description || "";
             document.getElementById("editDestIsFeatured").checked = dest.is_featured == 1;
@@ -124,6 +134,10 @@ function setupEditButtons(categories) {
                 fd.append("description", document.getElementById("editDestDescription").value);
                 fd.append("category_id", sel.value);
                 fd.append("is_featured", document.getElementById("editDestIsFeatured").checked ? 1 : 0);
+
+                fd.append("latitude", document.getElementById("editDestLatitude").value || "");
+                fd.append("longitude", document.getElementById("editDestLongitude").value || "");
+
 
                 if (document.getElementById("editDestImage").files[0])
                     fd.append("main_image", document.getElementById("editDestImage").files[0]);

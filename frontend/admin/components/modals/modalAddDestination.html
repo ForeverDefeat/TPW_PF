@@ -7,31 +7,39 @@
 
       <!-- Nombre -->
       <label for="destName">Nombre:</label>
-      <input type="text" id="destName" required />
+      <input type="text" id="addDestName" required />
 
       <!-- Categoría -->
       <label for="destCategory">Categoría:</label>
-      <select id="destCategory" required></select>
+      <select id="addDestCategory" required></select>
 
       <!-- Descripción corta -->
       <label for="destSummary">Resumen:</label>
-      <textarea id="destSummary" rows="2"></textarea>
+      <textarea id="addDestSummary" rows="2"></textarea>
 
       <!-- Descripción larga -->
       <label for="destDescription">Descripción:</label>
-      <textarea id="destDescription" rows="4"></textarea>
+      <textarea id="addDestDescription" rows="4"></textarea>
+
+
+      <label for="latitude">Latitud</label>
+      <input type="number" step="0.000001" id="addDestLatitude" class="admin-input" required>
+
+      <label for="longitude">Longitud</label>
+      <input type="number" step="0.000001" id="addDestLongitude" class="admin-input" required>
+
 
       <!-- Imagen principal -->
       <label for="destImage">Imagen principal:</label>
-      <input type="file" id="destImage" accept="image/*" required />
+      <input type="file" id="addDestImage" accept="image/*" required />
 
       <!-- Imagen hero -->
       <label for="destHeroImage">Imagen hero:</label>
-      <input type="file" id="destHeroImage" accept="image/*" />
+      <input type="file" id="addDestHeroImage" accept="image/*" />
 
       <!-- Destacado -->
       <label>
-        <input type="checkbox" id="destIsFeatured" />
+        <input type="checkbox" id="addDestIsFeatured" />
         ¿Destacado?
       </label>
 

@@ -5,9 +5,11 @@
 import { DestinationRepository } from "../repositories/DestinationRepository.js";
 import { DestinationService } from "../services/DestinationService.js";
 
-
 export class DestinationController {
 
+    /** =========================================================
+     * GET ALL
+     ========================================================= */
     static async getAll(req, res) {
         try {
             const rows = await DestinationRepository.getAll();
@@ -18,6 +20,9 @@ export class DestinationController {
         }
     }
 
+    /** =========================================================
+     * GET BY ID
+     ========================================================= */
     static async getById(req, res) {
         try {
             const id = req.params.id;
@@ -33,23 +38,28 @@ export class DestinationController {
         }
     }
 
+    /** =========================================================
+     * GET BY SLUG
+     ========================================================= */
     static async getBySlug(req, res) {
         try {
             const slug = req.params.slug;
             const item = await DestinationService.findBySlug(slug);
 
-            if (!item) {
+            if (!item)
                 return res.status(404).json({ ok: false, message: "No encontrado" });
-            }
 
             res.json({ ok: true, data: item });
+
         } catch (err) {
             console.error(err);
             res.status(500).json({ ok: false, message: "Error obteniendo destino por slug" });
         }
     }
 
-
+    /** =========================================================
+     * GET BY CATEGORY
+     ========================================================= */
     static async getByCategory(req, res) {
         try {
             const list = await DestinationService.findByCategory(req.params.id);
@@ -60,7 +70,9 @@ export class DestinationController {
         }
     }
 
-
+    /** =========================================================
+     * SEARCH
+     ========================================================= */
     static async search(req, res) {
         try {
             const results = await DestinationService.search(req.query.q || "");
@@ -71,8 +83,10 @@ export class DestinationController {
         }
     }
 
-
-    /* CRUD ADMIN (create, update, delete) */
+    /** =========================================================
+     * CREATE DESTINATION
+     * (Admin Panel)
+     ========================================================= */
     static async create(req, res) {
         try {
             const data = req.body;
@@ -82,6 +96,9 @@ export class DestinationController {
 
             const created = await DestinationRepository.create({
                 ...data,
+                latitude: data.latitude || null,
+                longitude: data.longitude || null,
+
                 main_image_url: main ? main.filename : null,
                 hero_image_url: hero ? hero.filename : null
             });
@@ -94,28 +111,9 @@ export class DestinationController {
         }
     }
 
-    /* static async update(req, res) {
-        try {
-            const { id } = req.params;
-            const data = req.body;
-
-            const main = req.files?.main_image?.[0];
-            const hero = req.files?.hero_image?.[0];
-
-            const updated = await DestinationRepository.update(id, {
-                ...data,
-                main_image_url: main ? main.filename : data.main_image_url,
-                hero_image_url: hero ? hero.filename : data.hero_image_url
-            });
-
-            res.json({ ok: true, destination: updated });
-
-        } catch (err) {
-            console.error("Error update:", err);
-            res.status(500).json({ ok: false, message: "Error interno" });
-        }
-    } */
-
+    /** =========================================================
+     * UPDATE DESTINATION (Admin Panel)
+     ========================================================= */
     static async update(req, res) {
     try {
         const id = Number(req.params.id);
@@ -123,9 +121,16 @@ export class DestinationController {
         if (isNaN(id))
             return res.status(400).json({ ok: false, message: "ID inválido" });
 
-        const { name, description, summary, category_id } = req.body;
+        const {
+            name,
+            description,
+            summary,
+            category_id,
+            latitude,
+            longitude
+        } = req.body;
 
-        // Leer archivos SOLO si existen
+        // Leer archivos SOLO si llegan
         const main_image_url = req.files?.main_image
             ? `/uploads/${req.files.main_image[0].filename}`
             : undefined;
@@ -139,6 +144,8 @@ export class DestinationController {
             description,
             summary,
             category_id: category_id ? Number(category_id) : null,
+            latitude: latitude ? Number(latitude) : null,
+            longitude: longitude ? Number(longitude) : null,
             main_image_url,
             hero_image_url
         });
@@ -152,6 +159,9 @@ export class DestinationController {
 }
 
 
+    /** =========================================================
+     * DELETE DESTINATION
+     ========================================================= */
     static async delete(req, res) {
         try {
             const { id } = req.params;
