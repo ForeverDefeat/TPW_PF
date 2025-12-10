@@ -56,13 +56,25 @@ export function galleryImageTemplate(url) {
    TARJETA DE SERVICIOS
    ============================================================ */
 export function serviceCardTemplate(s) {
+    const img = fixImagePath(s.image_url);
+
     return `
-        <div class="pro-card">
-            <h4>${s.name}</h4>
-            <p>${s.description}</p>
+        <div class="service-card">
+            <img src="${img}" class="service-img" alt="${s.name}">
+
+            <div class="service-info">
+                <h4>${s.name}</h4>
+                <p>${s.description}</p>
+
+                <p><b>Ubicación:</b> ${s.location || "No disponible"}</p>
+                
+                
+            </div>
         </div>
     `;
 }
+
+
 
 
 /* ============================================================
